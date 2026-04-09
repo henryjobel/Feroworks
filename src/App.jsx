@@ -4,6 +4,7 @@ import HeroBanner from './components/HeroBanner'
 import WatFernaSection from './components/WatFernaSection'
 import ClientLogosSection from './components/ClientLogosSection'
 import WatOnsAndersMaakt from './components/WatOnsAndersMaakt'
+import StatsSection from './components/StatsSection'
 
 function HomePage() {
   return (
@@ -12,6 +13,7 @@ function HomePage() {
       <WatFernaSection />
       <ClientLogosSection />
       <WatOnsAndersMaakt />
+      <StatsSection />
     </>
   )
 }
