@@ -7,6 +7,7 @@ import WatOnsAndersMaakt from './components/WatOnsAndersMaakt'
 import StatsSection from './components/StatsSection'
 import OnzeSectorenSection from './components/OnzeSectorenSection'
 import UwProjectSection from './components/UwProjectSection'
+import ProjectenSlider from './components/ProjectenSlider'
 import FaqSection from './components/FaqSection'
 import Footer from './components/Footer'
 
@@ -19,6 +20,7 @@ function HomePage() {
       <WatOnsAndersMaakt />
       <StatsSection />
       <OnzeSectorenSection />
+      <ProjectenSlider />
       <UwProjectSection />
       <FaqSection />
     </>
