@@ -8,6 +8,7 @@ import StatsSection from './components/StatsSection'
 import OnzeSectorenSection from './components/OnzeSectorenSection'
 import UwProjectSection from './components/UwProjectSection'
 import FaqSection from './components/FaqSection'
+import Footer from './components/Footer'
 
 function HomePage() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path="/blog" element={<div>Blog</div>} />
         <Route path="/contact" element={<div>Contact</div>} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   )
 }
