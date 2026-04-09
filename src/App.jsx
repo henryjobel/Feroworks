@@ -7,6 +7,7 @@ import WatOnsAndersMaakt from './components/WatOnsAndersMaakt'
 import StatsSection from './components/StatsSection'
 import OnzeSectorenSection from './components/OnzeSectorenSection'
 import UwProjectSection from './components/UwProjectSection'
+import FaqSection from './components/FaqSection'
 
 function HomePage() {
   return (
@@ -18,6 +19,7 @@ function HomePage() {
       <StatsSection />
       <OnzeSectorenSection />
       <UwProjectSection />
+      <FaqSection />
     </>
   )
 }
