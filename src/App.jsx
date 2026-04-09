@@ -5,6 +5,8 @@ import WatFernaSection from './components/WatFernaSection'
 import ClientLogosSection from './components/ClientLogosSection'
 import WatOnsAndersMaakt from './components/WatOnsAndersMaakt'
 import StatsSection from './components/StatsSection'
+import OnzeSectorenSection from './components/OnzeSectorenSection'
+import UwProjectSection from './components/UwProjectSection'
 
 function HomePage() {
   return (
@@ -14,6 +16,8 @@ function HomePage() {
       <ClientLogosSection />
       <WatOnsAndersMaakt />
       <StatsSection />
+      <OnzeSectorenSection />
+      <UwProjectSection />
     </>
   )
 }
