@@ -3,6 +3,7 @@ import Navbar from './components/Navbar'
 import HeroBanner from './components/HeroBanner'
 import WatFernaSection from './components/WatFernaSection'
 import ClientLogosSection from './components/ClientLogosSection'
+import WatOnsAndersMaakt from './components/WatOnsAndersMaakt'
 
 function HomePage() {
   return (
@@ -10,6 +11,7 @@ function HomePage() {
       <HeroBanner />
       <WatFernaSection />
       <ClientLogosSection />
+      <WatOnsAndersMaakt />
     </>
   )
 }
