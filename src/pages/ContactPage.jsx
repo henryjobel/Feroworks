@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import heroBg from "../assets/hero-background.jpeg";
+import { useCms } from "../cms/CmsContext";
 
 function useInView(threshold = 0.12) {
   const ref = useRef(null);
@@ -45,9 +46,18 @@ function PageHero() {
 /* ── 2. CONTACT FORMULIER + INFO ──────────────────────────────────────── */
 function ContactMain() {
   const [ref, vis] = useInView(0.08);
+  const { cms } = useCms();
+  const c = cms.contact || {};
   const [formData, setFormData] = useState({ naam: "", bedrijf: "", email: "", telefoon: "", bericht: "" });
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
+
+  const tel = c.tel || "+31 (0)165 205 601";
+  const email = c.email || "info@ferroworks.nl";
+  const adres = c.adres || "Westelijke Havendijk 31\n4703 RL Roosendaal";
+  const openingstijden = c.openingstijden
+    ? c.openingstijden.split("\n").map(line => { const parts = line.split(":"); const time = parts.slice(1).join(":").trim(); return [parts[0].trim(), time]; }).filter(p => p[0])
+    : [["Maandag \u2013 Vrijdag", "07:30 \u2013 17:00"], ["Zaterdag", "Op afspraak"], ["Zondag", "Gesloten"]];
 
   function handleChange(e) {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -251,8 +261,8 @@ function ContactMain() {
                 </svg>
               ),
               label: "Telefoon",
-              value: "+31 (0)165 205 601",
-              href: "tel:+31165205601",
+              value: tel,
+              href: `tel:${tel.replace(/[\s()]/g, "")}`,
             },
             {
               icon: (
@@ -262,8 +272,8 @@ function ContactMain() {
                 </svg>
               ),
               label: "E-mail",
-              value: "info@ferroworks.nl",
-              href: "mailto:info@ferroworks.nl",
+              value: email,
+              href: `mailto:${email}`,
             },
             {
               icon: (
@@ -273,8 +283,8 @@ function ContactMain() {
                 </svg>
               ),
               label: "Adres",
-              value: "Westelijke Havendijk 31\n4703 RL Roosendaal",
-              href: "https://maps.google.com/?q=Westelijke+Havendijk+31+Roosendaal",
+              value: adres,
+              href: `https://maps.google.com/?q=${encodeURIComponent(adres.replace(/\n/g, " "))}`,
             },
           ].map((item, i) => (
             <a
@@ -299,12 +309,8 @@ function ContactMain() {
           {/* Opening hours */}
           <div style={{ marginTop: "32px", background: "#f4f4f4", padding: "24px 24px" }}>
             <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase", color: "#c8d400", marginBottom: "16px" }}>OPENINGSTIJDEN</div>
-            {[
-              ["Maandag – Vrijdag", "07:30 – 17:00"],
-              ["Zaterdag", "Op afspraak"],
-              ["Zondag", "Gesloten"],
-            ].map(([dag, tijd], i) => (
-              <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0", borderBottom: i < 2 ? "1px solid #e4e4e4" : "none" }}>
+            {openingstijden.map(([dag, tijd], i) => (
+              <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0", borderBottom: i < openingstijden.length - 1 ? "1px solid #e4e4e4" : "none" }}>
                 <span style={{ fontSize: "13px", color: "#555" }}>{dag}</span>
                 <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", color: "#1c1c1c" }}>{tijd}</span>
               </div>
@@ -318,12 +324,16 @@ function ContactMain() {
 
 /* ── 3. KAART ────────────────────────────────────────────────────────── */
 function MapSection() {
+  const { cms } = useCms();
+  const c = cms.contact || {};
+  const adres = c.adres || "Westelijke Havendijk 31\n4703 RL Roosendaal";
+  const mapSrc = c.mapEmbed || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2478.8!2d4.4630!3d51.5300!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c417d4d3e40000%3A0x0!2sWestelijke+Havendijk+31%2C+4703+RL+Roosendaal!5e0!3m2!1snl!2snl!4v1";
   return (
     <section style={{ background: "#f4f4f4", padding: "0" }}>
       <div style={{ width: "100%", height: "420px", position: "relative", overflow: "hidden" }}>
         <iframe
           title="FerroWorks locatie"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2478.8!2d4.4630!3d51.5300!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c417d4d3e40000%3A0x0!2sWestelijke+Havendijk+31%2C+4703+RL+Roosendaal!5e0!3m2!1snl!2snl!4v1"
+          src={mapSrc}
           width="100%"
           height="420"
           style={{ border: 0, display: "block", filter: "grayscale(0.3)" }}
@@ -331,10 +341,9 @@ function MapSection() {
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
         />
-        {/* Overlay label */}
         <div style={{ position: "absolute", top: "24px", left: "24px", background: "#1c1c1c", padding: "14px 20px", display: "flex", alignItems: "center", gap: "10px" }}>
           <div style={{ width: "8px", height: "8px", background: "#c8d400", flexShrink: 0 }} />
-          <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", color: "#fff", letterSpacing: "0.5px" }}>Westelijke Havendijk 31 · Roosendaal</span>
+          <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", color: "#fff", letterSpacing: "0.5px" }}>{adres.replace("\n", " \xB7 ")}</span>
         </div>
       </div>
     </section>
@@ -344,6 +353,25 @@ function MapSection() {
 /* ── 4. SNELLE CONTACTINFO STRIP ─────────────────────────────────────── */
 function ContactStrip() {
   const [ref, vis] = useInView(0.2);
+  const { cms } = useCms();
+  const c = cms.contact || {};
+  const tel = c.tel || "+31 (0)165 205 601";
+  const email = c.email || "info@ferroworks.nl";
+  const adres = c.adres || "Westelijke Havendijk 31\nRoosendaal";
+  const items = [
+    {
+      icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.1 11.9a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+      title: "BELLEN", value: tel, href: `tel:${tel.replace(/[\s()]/g, "")}`,
+    },
+    {
+      icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><polyline points="22,6 12,13 2,6" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+      title: "MAILEN", value: email, href: `mailto:${email}`,
+    },
+    {
+      icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="12" cy="10" r="3" stroke="#c8d400" strokeWidth="2"/></svg>,
+      title: "BEZOEKEN", value: adres, href: `https://maps.google.com/?q=${encodeURIComponent(adres.replace(/\n/g, " "))}`,
+    },
+  ];
   return (
     <section style={{ background: "#1c1c1c", padding: "52px 0" }}>
       <style>{`
@@ -354,42 +382,14 @@ function ContactStrip() {
       `}</style>
       <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 " + (vis ? "cs-on" : "")}
         style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0", alignItems: "stretch" }}>
-        {[
-          {
-            icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.1 11.9a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
-            title: "BELLEN",
-            value: "+31 (0)165 205 601",
-            href: "tel:+31165205601",
-          },
-          {
-            icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><polyline points="22,6 12,13 2,6" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
-            title: "MAILEN",
-            value: "info@ferroworks.nl",
-            href: "mailto:info@ferroworks.nl",
-          },
-          {
-            icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="12" cy="10" r="3" stroke="#c8d400" strokeWidth="2"/></svg>,
-            title: "BEZOEKEN",
-            value: "Westelijke Havendijk 31\nRoosendaal",
-            href: "https://maps.google.com/?q=Westelijke+Havendijk+31+Roosendaal",
-          },
-        ].map((item, i) => (
+        {items.map((item, i) => (
           <a
             key={i}
             href={item.href}
             target={item.title === "BEZOEKEN" ? "_blank" : undefined}
             rel={item.title === "BEZOEKEN" ? "noopener noreferrer" : undefined}
             className="cs-item"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "12px",
-              padding: "36px 24px",
-              textDecoration: "none",
-              borderRight: i < 2 ? "1px solid #333" : "none",
-              transition: "background .2s",
-            }}
+            style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px", padding: "36px 24px", textDecoration: "none", borderRight: i < 2 ? "1px solid #333" : "none", transition: "background .2s" }}
             onMouseEnter={e => e.currentTarget.style.background = "#252525"}
             onMouseLeave={e => e.currentTarget.style.background = "transparent"}
           >

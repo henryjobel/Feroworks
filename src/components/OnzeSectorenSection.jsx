@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useCms } from "../cms/CmsContext";
 
 const sectorItems = [
   {
@@ -81,6 +82,13 @@ function SectorCard({ item }) {
 }
 
 function OnzeSectoren() {
+  const { cms } = useCms();
+  // Merge CMS text into sectorItems (keep SVG icons)
+  const mergedItems = sectorItems.map((item, i) => ({
+    ...item,
+    title: (cms.sectoren && cms.sectoren[i]) ? cms.sectoren[i].naam.replace(" & ", " &\n") : item.title,
+    description: (cms.sectoren && cms.sectoren[i]) ? cms.sectoren[i].description : item.description,
+  }));
   return (
     <section className="w-full bg-[#f3f3f3] pt-[48px] pb-[100px]">
       <div className="max-w-[1200px] mx-auto px-6">
@@ -101,7 +109,7 @@ function OnzeSectoren() {
         </div>
 
         <div className="flex justify-center gap-[42px] flex-wrap mb-[42px]">
-          {sectorItems.map((item, index) => (
+          {mergedItems.map((item, index) => (
             <SectorCard key={index} item={item} />
           ))}
         </div>

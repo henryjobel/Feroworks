@@ -7,6 +7,9 @@ import imgPost3 from "../assets/past work/Afwerking-staalconstructie-met-natlak-
 import imgPost4 from "../assets/past work/lascertificaat-verplicht-featured-300x158.webp";
 import imgPost5 from "../assets/over-ons1.png";
 import imgPost6 from "../assets/over-ons2.png";
+import { useCms } from "../cms/CmsContext";
+
+const BLOG_FALLBACK_IMAGES = [imgPost1, imgPost2, imgPost3, imgPost4, imgPost5, imgPost6];
 
 function useInView(threshold = 0.1) {
   const ref = useRef(null);
@@ -23,7 +26,7 @@ function useInView(threshold = 0.1) {
 }
 
 /* ── ALL POSTS DATA (shared) ─────────────────────────────────────────── */
-export const posts = [
+export const FALLBACK_POSTS = [
   {
     id: 1,
     category: "Vakmanschap",
@@ -389,10 +392,10 @@ export const posts = [
 ];
 
 /* ── HERO ─────────────────────────────────────────────────────────────── */
-function PostHero({ post }) {
+function PostHero({ post, imgSrc }) {
   return (
     <section style={{ position: "relative", width: "100%", minHeight: "400px", display: "flex", alignItems: "flex-end", overflow: "hidden", background: "#141616" }}>
-      <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${post.img})`, backgroundSize: "cover", backgroundPosition: "center" }} />
+      <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${imgSrc})`, backgroundSize: "cover", backgroundPosition: "center" }} />
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(20,22,22,0.97) 0%, rgba(20,22,22,0.7) 50%, rgba(20,22,22,0.35) 100%)" }} />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8" style={{ paddingBottom: "56px", paddingTop: "96px" }}>
@@ -429,7 +432,7 @@ function PostHero({ post }) {
 }
 
 /* ── ARTICLE BODY ─────────────────────────────────────────────────────── */
-function ArticleBody({ post }) {
+function ArticleBody({ post, allPosts }) {
   const [ref, vis] = useInView(0.05);
 
   return (
@@ -528,15 +531,15 @@ function ArticleBody({ post }) {
         </article>
 
         {/* Sidebar */}
-        <Sidebar post={post} />
+        <Sidebar post={post} allPosts={allPosts} />
       </div>
     </section>
   );
 }
 
 /* ── SIDEBAR ──────────────────────────────────────────────────────────── */
-function Sidebar({ post }) {
-  const others = posts.filter(p => p.id !== post.id).slice(0, 3);
+function Sidebar({ post, allPosts }) {
+  const others = allPosts.filter(p => p.id !== post.id).slice(0, 3);
 
   return (
     <aside style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
@@ -591,7 +594,7 @@ function Sidebar({ post }) {
               onMouseEnter={e => e.currentTarget.querySelector(".rel-title").style.color = "#c8d400"}
               onMouseLeave={e => e.currentTarget.querySelector(".rel-title").style.color = "#1c1c1c"}
             >
-              <img src={p.img} alt={p.title} style={{ width: "64px", height: "48px", objectFit: "cover", flexShrink: 0 }} />
+              <img src={p.image || BLOG_FALLBACK_IMAGES[allPosts.indexOf(p) % BLOG_FALLBACK_IMAGES.length]} alt={p.title} style={{ width: "64px", height: "48px", objectFit: "cover", flexShrink: 0 }} />
               <div>
                 <div style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "1px", color: "#c8d400", textTransform: "uppercase", marginBottom: "4px" }}>{p.category}</div>
                 <div className="rel-title" style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", color: "#1c1c1c", lineHeight: 1.3, transition: "color .2s" }}>{p.title}</div>
@@ -605,9 +608,9 @@ function Sidebar({ post }) {
 }
 
 /* ── MORE POSTS ───────────────────────────────────────────────────────── */
-function MorePosts({ currentId }) {
+function MorePosts({ currentId, allPosts }) {
   const [ref, vis] = useInView(0.1);
-  const related = posts.filter(p => p.id !== currentId).slice(0, 3);
+  const related = allPosts.filter(p => p.id !== currentId).slice(0, 3);
 
   return (
     <section style={{ background: "#1c1c1c", padding: "72px 0" }}>
@@ -648,7 +651,7 @@ function MorePosts({ currentId }) {
               onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
             >
               <div style={{ overflow: "hidden", height: "180px" }}>
-                <img src={p.img} alt={p.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform .4s ease" }}
+                <img src={p.image || BLOG_FALLBACK_IMAGES[allPosts.indexOf(p) % BLOG_FALLBACK_IMAGES.length]} alt={p.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform .4s ease" }}
                   onMouseEnter={e => e.currentTarget.style.transform = "scale(1.05)"}
                   onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
                 />
@@ -699,8 +702,12 @@ function CtaStrip() {
 export default function BlogDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { cms } = useCms();
 
-  const post = posts.find(p => p.id === parseInt(id, 10));
+  const allPosts = (cms.blog && cms.blog.length) ? cms.blog : FALLBACK_POSTS;
+  const post = allPosts.find(p => p.id === parseInt(id, 10)) || allPosts.find(p => String(p.id) === String(id));
+  const postIdx = allPosts.indexOf(post);
+  const imgSrc = post ? (post.image || BLOG_FALLBACK_IMAGES[postIdx % BLOG_FALLBACK_IMAGES.length]) : null;
 
   useEffect(() => {
     if (!post) navigate("/blog", { replace: true });
@@ -711,9 +718,9 @@ export default function BlogDetailPage() {
 
   return (
     <>
-      <PostHero post={post} />
-      <ArticleBody post={post} />
-      <MorePosts currentId={post.id} />
+      <PostHero post={post} imgSrc={imgSrc} />
+      <ArticleBody post={post} allPosts={allPosts} />
+      <MorePosts currentId={post.id} allPosts={allPosts} />
       <CtaStrip />
     </>
   );

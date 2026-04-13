@@ -7,6 +7,9 @@ import imgPost3 from "../assets/past work/Afwerking-staalconstructie-met-natlak-
 import imgPost4 from "../assets/past work/lascertificaat-verplicht-featured-300x158.webp";
 import imgPost5 from "../assets/over-ons1.png";
 import imgPost6 from "../assets/over-ons2.png";
+import { useCms } from "../cms/CmsContext";
+
+const BLOG_FALLBACK_IMAGES = [imgPost1, imgPost2, imgPost3, imgPost4, imgPost5, imgPost6];
 
 function useInView(threshold = 0.1) {
   const ref = useRef(null);
@@ -22,8 +25,8 @@ function useInView(threshold = 0.1) {
   return [ref, vis];
 }
 
-/* ── DATA ─────────────────────────────────────────────────────────────── */
-const posts = [
+/* ── STATIC DATA (fallback) ──────────────────────────────────────────── */
+const FALLBACK_POSTS = [
   {
     id: 1,
     category: "Vakmanschap",
@@ -32,8 +35,7 @@ const posts = [
     title: "Waarom kwaliteitscontrole bij lassen het verschil maakt",
     excerpt:
       "In de metaalbewerking is lassen een van de meest kritische processen. Een kleine fout in de las kan grote gevolgen hebben voor de veiligheid en levensduur van een constructie. Ontdek hoe FerroWorks kwaliteitscontrole inzet als standaard — niet als uitzondering.",
-    img: imgPost1,
-    featured: true,
+  img: imgPost1, featured: true,
   },
   {
     id: 2,
@@ -43,8 +45,7 @@ const posts = [
     title: "Staalconstructies voor offshore: eisen en uitdagingen",
     excerpt:
       "Offshore staalwerk staat bloot aan extreme omstandigheden: zout water, hoge druk en constante mechanische belasting. Wij leggen uit welke materialen en coatings wij inzetten voor duurzame offshore constructies.",
-    img: imgPost2,
-    featured: false,
+  img: imgPost2, featured: false,
   },
   {
     id: 3,
@@ -54,8 +55,7 @@ const posts = [
     title: "Natlak vs. poedercoating: wat past bij uw project?",
     excerpt:
       "De keuze tussen natlak en poedercoating heeft invloed op zowel de uitstraling als de beschermingsgraad van een staalconstructie. We zetten de voor- en nadelen van beide methoden op een rij.",
-    img: imgPost3,
-    featured: false,
+  img: imgPost3, featured: false,
   },
   {
     id: 4,
@@ -65,8 +65,7 @@ const posts = [
     title: "Lascertificaat verplicht? Alles wat u moet weten over EN-1090",
     excerpt:
       "Sinds de invoering van de EN-1090 norm is een lascertificaat voor veel staalconstructies verplicht. Maar wat houdt dat precies in, en wanneer is het van toepassing? FerroWorks legt het u helder uit.",
-    img: imgPost4,
-    featured: false,
+  img: imgPost4, featured: false,
   },
   {
     id: 5,
@@ -76,8 +75,7 @@ const posts = [
     title: "Van tekening tot product: zo werkt ons productieproces",
     excerpt:
       "Hoe gaat een metaalproject van CAD-tekening naar afgewerkt product? We nemen u stap voor stap mee door het productieproces van FerroWorks: van intake en engineering tot productie, afwerking en montage.",
-    img: imgPost5,
-    featured: false,
+  img: imgPost5, featured: false,
   },
   {
     id: 6,
@@ -87,8 +85,7 @@ const posts = [
     title: "Maatwerk staal voor de industrie: 5 veelgemaakte fouten vermeden",
     excerpt:
       "Bij industrieel staalmaatwerk gaat het soms mis — niet door slechte intenties, maar door gebrek aan kennis of slechte communicatie. We bespreken vijf veelgemaakte fouten en hoe u ze kunt voorkomen.",
-    img: imgPost6,
-    featured: false,
+  img: imgPost6, featured: false,
   },
 ];
 
@@ -121,7 +118,7 @@ function PageHero() {
 }
 
 /* ── FEATURED POST ────────────────────────────────────────────────────── */
-function FeaturedPost({ post }) {
+function FeaturedPost({ post, imgSrc }) {
   const [ref, vis] = useInView();
   return (
     <section style={{ background: "#f4f4f4", padding: "72px 0" }}>
@@ -139,7 +136,7 @@ function FeaturedPost({ post }) {
         <div className="fp-left" style={{ position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", top: "-12px", left: "-12px", width: "64px", height: "64px", background: "#c8d400", zIndex: 0 }} />
           <img
-            src={post.img}
+            src={imgSrc}
             alt={post.title}
             style={{ position: "relative", zIndex: 1, width: "100%", height: "400px", objectFit: "cover", display: "block", boxShadow: "0 8px 32px rgba(0,0,0,0.14)" }}
           />
@@ -179,7 +176,7 @@ function FeaturedPost({ post }) {
 }
 
 /* ── BLOG CARD ────────────────────────────────────────────────────────── */
-function BlogCard({ post, delay = 0 }) {
+function BlogCard({ post, imgSrc, delay = 0 }) {
   return (
     <div
       className="blog-card"
@@ -203,7 +200,7 @@ function BlogCard({ post, delay = 0 }) {
       {/* Image */}
       <div style={{ position: "relative", overflow: "hidden", height: "200px" }}>
         <img
-          src={post.img}
+          src={imgSrc}
           alt={post.title}
           style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform .4s ease" }}
           onMouseEnter={e => e.currentTarget.style.transform = "scale(1.04)"}
@@ -246,7 +243,7 @@ function BlogCard({ post, delay = 0 }) {
 }
 
 /* ── BLOG GRID ────────────────────────────────────────────────────────── */
-function BlogGrid() {
+function BlogGrid({ posts }) {
   const [ref, vis] = useInView(0.05);
   const [activeCategory, setActiveCategory] = useState("Alle");
 
@@ -301,7 +298,7 @@ function BlogGrid() {
         {/* Cards grid */}
         <div className="bg-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "28px" }}>
           {filtered.length > 0 ? filtered.map((post, i) => (
-            <BlogCard key={post.id} post={post} delay={i * 0.1} />
+            <BlogCard key={post.id} post={post} imgSrc={post.image || BLOG_FALLBACK_IMAGES[i % BLOG_FALLBACK_IMAGES.length]} delay={i * 0.1} />
           )) : (
             <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "60px 0", color: "#aaa", fontFamily: "Arial Black, Arial, sans-serif", fontSize: "14px", textTransform: "uppercase", letterSpacing: "1px" }}>
               Geen artikelen gevonden in deze categorie.
@@ -400,12 +397,16 @@ function CtaStrip() {
 
 /* ── PAGE EXPORT ──────────────────────────────────────────────────────── */
 export default function BlogPage() {
-  const featured = posts.find(p => p.featured);
+  const { cms } = useCms();
+  const posts = (cms.blog && cms.blog.length) ? cms.blog : FALLBACK_POSTS;
+  const featIdx = posts.findIndex(p => p.featured);
+  const featured = featIdx >= 0 ? posts[featIdx] : null;
+  const featuredImgSrc = featured ? (featured.image || BLOG_FALLBACK_IMAGES[0]) : null;
   return (
     <>
       <PageHero />
-      {featured && <FeaturedPost post={featured} />}
-      <BlogGrid />
+      {featured && <FeaturedPost post={featured} imgSrc={featuredImgSrc} />}
+      <BlogGrid posts={posts} />
       <NewsletterCta />
       <CtaStrip />
     </>

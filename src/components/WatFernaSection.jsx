@@ -1,6 +1,7 @@
 ﻿import { useEffect, useRef, useState } from "react";
 import imgLandscape from "../assets/over-ons2.png";
 import imgPortrait from "../assets/over-ons3.png";
+import { useCms } from "../cms/CmsContext";
 
 const bulletItems = [
   "Heldere afspraken, zonder verrassingen.",
@@ -13,6 +14,8 @@ const bulletItems = [
 ];
 
 function WatFernaSection() {
+  const { cms } = useCms();
+  const wf = cms.watFerna || {};
   const ref = useRef(null);
   const [vis, setVis] = useState(false);
 
@@ -59,13 +62,13 @@ function WatFernaSection() {
               letterSpacing:"-0.2px",
             }}
           >
-            <span style={{ color:"#c8d400" }}>WAT FERROWORKS VOOR JE</span>
+            <span style={{ color:"#c8d400" }}>{wf.title1}</span>
             <br />
-            <span style={{ color:"#1c1c1c" }}>DOET</span>
+            <span style={{ color:"#1c1c1c" }}>{wf.title2}</span>
           </h2>
 
           <ul style={{ listStyle:"none", margin:0, padding:0, display:"flex", flexDirection:"column", gap:"13px" }}>
-            {bulletItems.map((item, i) => (
+            {(wf.bulletItems || bulletItems).map((item, i) => (
               <li key={i} style={{ display:"flex", alignItems:"flex-start", gap:"9px" }}>
                 <span style={{
                   width:"5px", height:"5px", borderRadius:"50%",
@@ -109,7 +112,7 @@ function WatFernaSection() {
             }}
           >
             <img
-              src={imgLandscape}
+              src={wf.image1 || imgLandscape}
               alt="Ferna werkplaats"
               style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }}
             />
@@ -130,7 +133,7 @@ function WatFernaSection() {
             }}
           >
             <img
-              src={imgPortrait}
+              src={wf.image2 || imgPortrait}
               alt="Ferna medewerker"
               style={{ width:"100%", height:"100%", objectFit:"cover", objectPosition:"top", display:"block" }}
             />

@@ -6,6 +6,9 @@ import imgAbout2 from "../assets/about/about-us2.jpeg";
 import imgAbout3 from "../assets/about/about-us3.jpeg";
 import imgMachine from "../assets/over-ons1.png";
 import imgLandscape from "../assets/over-ons2.png";
+import { useCms } from "../cms/CmsContext";
+
+const FALLBACK_IMAGES = { engineering: imgAbout1, productie: imgMachine, coating: imgLandscape, montage: imgAbout2, reparatie: imgAbout3 };
 
 function useInView(threshold = 0.1) {
   const ref = useRef(null);
@@ -21,8 +24,8 @@ function useInView(threshold = 0.1) {
   return [ref, vis];
 }
 
-/* ── SHARED DATA ──────────────────────────────────────────────────────── */
-export const diensten = [
+/* ── LEGACY DATA (fallback only, CMS takes precedence) ──────────────── */
+const diensten_fallback = [
   {
     id: "engineering",
     nr: "01",
@@ -311,7 +314,7 @@ export const diensten = [
 function DienstHero({ dienst }) {
   return (
     <section style={{ position: "relative", width: "100%", minHeight: "400px", display: "flex", alignItems: "flex-end", overflow: "hidden", background: "#141616" }}>
-      <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${dienst.img})`, backgroundSize: "cover", backgroundPosition: "center" }} />
+      <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${dienst.image || FALLBACK_IMAGES[dienst.id] || imgAbout1})`, backgroundSize: "cover", backgroundPosition: "center" }} />
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(20,22,22,0.97) 0%, rgba(20,22,22,0.72) 50%, rgba(20,22,22,0.35) 100%)" }} />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8" style={{ paddingBottom: "56px", paddingTop: "96px" }}>
@@ -343,7 +346,7 @@ function DienstHero({ dienst }) {
 }
 
 /* ── ARTICLE BODY ─────────────────────────────────────────────────────── */
-function DienstBody({ dienst }) {
+function DienstBody({ dienst, allDiensten = [] }) {
   const [ref, vis] = useInView(0.05);
 
   return (
@@ -422,35 +425,44 @@ function DienstBody({ dienst }) {
 
         {/* Main article */}
         <article className="db-wrap db-article">
-          {dienst.body.map((block, i) => {
-            if (block.type === "intro")   return <p key={i} className="intro-p">{block.text}</p>;
-            if (block.type === "h2")      return <h2 key={i}>{block.text}</h2>;
-            if (block.type === "quote")   return <blockquote key={i}>"{block.text}"</blockquote>;
-            if (block.type === "bullets") return (
-              <ul key={i}>{block.items.map((item, j) => <li key={j}>{item}</li>)}</ul>
-            );
-            return <p key={i}>{block.text}</p>;
-          })}
+          {typeof dienst.body === "string"
+            ? dienst.body.split("\n\n").map((para, i) =>
+                i === 0
+                  ? <p key={i} className="intro-p">{para}</p>
+                  : <p key={i}>{para}</p>
+              )
+            : (dienst.body || []).map((block, i) => {
+                if (block.type === "intro")   return <p key={i} className="intro-p">{block.text}</p>;
+                if (block.type === "h2")      return <h2 key={i}>{block.text}</h2>;
+                if (block.type === "quote")   return <blockquote key={i}>"{block.text}"</blockquote>;
+                if (block.type === "bullets") return (
+                  <ul key={i}>{block.items.map((item, j) => <li key={j}>{item}</li>)}</ul>
+                );
+                return <p key={i}>{block.text}</p>;
+              })
+          }
 
           {/* Tags */}
-          <div style={{ marginTop: "48px", paddingTop: "32px", borderTop: "1.5px solid #e0e0e0" }}>
-            <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "1.5px", textTransform: "uppercase", color: "#aaa", marginRight: "12px" }}>Tags:</span>
-            {dienst.tags.map((tag, i) => (
-              <span key={i} style={{ display: "inline-block", background: "#e8e8e8", color: "#555", fontSize: "12px", fontWeight: 700, padding: "4px 12px", marginRight: "8px", marginBottom: "8px", letterSpacing: "0.3px" }}>{tag}</span>
-            ))}
-          </div>
+          {dienst.tags && dienst.tags.length > 0 && (
+            <div style={{ marginTop: "48px", paddingTop: "32px", borderTop: "1.5px solid #e0e0e0" }}>
+              <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "1.5px", textTransform: "uppercase", color: "#aaa", marginRight: "12px" }}>Tags:</span>
+              {dienst.tags.map((tag, i) => (
+                <span key={i} style={{ display: "inline-block", background: "#e8e8e8", color: "#555", fontSize: "12px", fontWeight: 700, padding: "4px 12px", marginRight: "8px", marginBottom: "8px", letterSpacing: "0.3px" }}>{tag}</span>
+              ))}
+            </div>
+          )}
         </article>
 
         {/* Sidebar */}
-        <Sidebar dienst={dienst} />
+        <Sidebar dienst={dienst} allDiensten={allDiensten} />
       </div>
     </section>
   );
 }
 
 /* ── SIDEBAR ──────────────────────────────────────────────────────────── */
-function Sidebar({ dienst }) {
-  const others = diensten.filter(d => d.id !== dienst.id);
+function Sidebar({ dienst, allDiensten = [] }) {
+  const others = allDiensten.filter(d => d.id !== dienst.id);
 
   return (
     <aside style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
@@ -460,7 +472,7 @@ function Sidebar({ dienst }) {
           WAT WIJ <span style={{ color: "#c8d400" }}>LEVEREN</span>
         </h3>
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-          {dienst.checkitems.map((item, i) => (
+          {(typeof dienst.checklist === "string" ? dienst.checklist.split("\n").filter(Boolean) : (dienst.checkitems || [])).map((item, i) => (
             <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
               <svg width="16" height="16" viewBox="0 0 22 22" fill="none" style={{ flexShrink: 0, marginTop: "2px" }}>
                 <polyline points="3,11 9,17 20,5" stroke="#c8d400" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
@@ -520,9 +532,9 @@ function Sidebar({ dienst }) {
 }
 
 /* ── MORE DIENSTEN ────────────────────────────────────────────────────── */
-function MeerDiensten({ currentId }) {
+function MeerDiensten({ currentId, allDiensten }) {
   const [ref, vis] = useInView(0.1);
-  const related = diensten.filter(d => d.id !== currentId).slice(0, 3);
+  const related = allDiensten.filter(d => d.id !== currentId).slice(0, 3);
 
   return (
     <section style={{ background: "#1c1c1c", padding: "72px 0" }}>
@@ -563,7 +575,7 @@ function MeerDiensten({ currentId }) {
               onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}
             >
               <div style={{ overflow: "hidden", height: "180px" }}>
-                <img src={d.img} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform .4s ease" }}
+                <img src={d.image || FALLBACK_IMAGES[d.id] || imgAbout1} alt={d.title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", transition: "transform .4s ease" }}
                   onMouseEnter={e => e.currentTarget.style.transform = "scale(1.05)"}
                   onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
                 />
@@ -624,8 +636,10 @@ function CtaStrip() {
 export default function DienstDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { cms } = useCms();
 
-  const dienst = diensten.find(d => d.id === id);
+  const allDiensten = cms.diensten && cms.diensten.length ? cms.diensten : diensten_fallback;
+  const dienst = allDiensten.find(d => d.id === id);
 
   useEffect(() => {
     if (!dienst) navigate("/diensten", { replace: true });
@@ -637,8 +651,8 @@ export default function DienstDetailPage() {
   return (
     <>
       <DienstHero dienst={dienst} />
-      <DienstBody dienst={dienst} />
-      <MeerDiensten currentId={dienst.id} />
+      <DienstBody dienst={dienst} allDiensten={allDiensten} />
+      <MeerDiensten currentId={dienst.id} allDiensten={allDiensten} />
       <CtaStrip />
     </>
   );

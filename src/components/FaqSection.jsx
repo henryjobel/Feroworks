@@ -1,23 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-
-const faqs = [
-  {
-    q: "WIJ HEBBEN AL EEN VASTE STAALPARTNER. WAAROM ZOUDEN WE MET FERNA PRATEN?",
-    a: "Omdat Ferna zich richt op de complexe, maatwerk opdrachten die vaak buiten het profiel van een standaard staalpartner vallen. We werken snel, nauwkeurig en volledig in eigen beheer — zonder onderaannemers.",
-  },
-  {
-    q: "ZIJN JULLIE GROOT GENOEG VOOR ONZE PROJECTEN?",
-    a: "Met 16 gespecialiseerde vakmensen en een volledig eigen machinepark — inclusief watersnijder 6 x 3 meter — zijn we toegerust voor complexe industriële projecten. Gecertificeerd voor de meest veeleisende opdrachtgevers.",
-  },
-  {
-    q: "WELKE CERTIFICERINGEN HEEFT FERNA?",
-    a: "Ferna is Lloyd's-gecertificeerd en voldoet aan de strenge eisen voor offshore- en petrochemische projecten. We leveren volledige documentatie en kwaliteitsborging mee.",
-  },
-  {
-    q: "HOE ZEKER IS DE LEVERTIJD VAN 2 TOT 4 WEKEN?",
-    a: "De levertijd van 2 tot 4 weken is een belofte, geen schatting. Doordat alles in eigen werkplaats gebeurt, hebben we volledige controle over planning en kwaliteit. Bij urgente projecten denken we graag mee.",
-  },
-];
+import { useCms } from "../cms/CmsContext";
 
 function FaqItem({ q, a }) {
   const [open, setOpen] = useState(false);
@@ -104,6 +86,8 @@ function FaqItem({ q, a }) {
 }
 
 function FaqSection() {
+  const { cms } = useCms();
+  const faqs = cms.faq || [];
   const ref = useRef(null);
   const [vis, setVis] = useState(false);
 
@@ -146,7 +130,7 @@ function FaqSection() {
         {/* FAQ items — centered column */}
         <div style={{ maxWidth: "720px", margin: "0 auto" }}>
           {faqs.map((item, i) => (
-            <FaqItem key={i} q={item.q} a={item.a} />
+            <FaqItem key={item.q + i} q={item.q} a={item.a} />
           ))}
         </div>
       </div>

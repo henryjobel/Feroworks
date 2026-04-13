@@ -1,11 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-
-const stats = [
-  { number: "15+", desc: "jaar ervaring in metaalmaatwerk" },
-  { number: "3",   desc: "materialen: Staal, RVS & Aluminium" },
-  { number: "100%", desc: "eigen productie, geen onderaannemers" },
-  { number: "A-Z",  desc: "van ontwerp en engineering tot montage" },
-];
+import { useCms } from "../cms/CmsContext";
 
 function StatItem({ number, desc, delay }) {
   return (
@@ -61,6 +55,8 @@ function StatItem({ number, desc, delay }) {
 }
 
 function StatsSection() {
+  const { cms } = useCms();
+  const stats = cms.stats || [];
   const ref = useRef(null);
   const [vis, setVis] = useState(false);
 

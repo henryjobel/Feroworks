@@ -7,6 +7,7 @@ import imgMachine from "../assets/over-ons1.png";
 import imgAbout1 from "../assets/about/about-us1.jpeg";
 import imgAbout2 from "../assets/about/about-us2.jpeg";
 import imgAbout3 from "../assets/about/about-us3.jpeg";
+import { useCms } from "../cms/CmsContext";
 
 function useInView(threshold = 0.12) {
   const ref = useRef(null);
@@ -59,6 +60,8 @@ function PageHero() {
 /* 2. ONS VERHAAL */
 function OnsVerhaal() {
   const [ref, vis] = useInView();
+  const { cms } = useCms();
+  const v = (cms.overOns && cms.overOns.verhaal) || {};
   return (
     <section style={{ background: "#f4f4f4", padding: "80px 0" }}>
       <style>{`
@@ -76,27 +79,27 @@ function OnsVerhaal() {
         <div className="ov-left">
           <p style={{ margin: "0 0 12px 0", color: "#c8d400", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>ONS VERHAAL</p>
           <h2 style={{ margin: "0 0 24px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(20px, 2.4vw, 30px)", lineHeight: 1.1, textTransform: "uppercase", letterSpacing: "-0.3px" }}>
-            <span style={{ color: "#c8d400" }}>GEBOUWD OP</span><br />
-            <span style={{ color: "#1c1c1c" }}>VAKMANSCHAP</span>
+            <span style={{ color: "#c8d400" }}>{v.title1 || "GEBOUWD OP"}</span><br />
+            <span style={{ color: "#1c1c1c" }}>{v.title2 || "VAKMANSCHAP"}</span>
           </h2>
           <p style={{ color: "#555", fontSize: "15px", lineHeight: 1.75, margin: "0 0 18px 0" }}>
-            FerroWorks is een familiebedrijf met meer dan 15 jaar ervaring in metaalmaatwerk. We begeleiden projecten van A tot Z — van ontwerp en engineering tot productie, coating en montage op locatie.
+            {v.tekst1 || "FerroWorks is een familiebedrijf met meer dan 15 jaar ervaring in metaalmaatwerk. We begeleiden projecten van A tot Z — van ontwerp en engineering tot productie, coating en montage op locatie."}
           </p>
           <p style={{ color: "#555", fontSize: "15px", lineHeight: 1.75, margin: "0 0 18px 0" }}>
-            Specialist in maatwerk staal, RVS en aluminium voor industrie, bouw & utiliteit, architectuur & design en maritieme toepassingen.
+            {v.tekst2 || "Specialist in maatwerk staal, RVS en aluminium voor industrie, bouw & utiliteit, architectuur & design en maritieme toepassingen."}
           </p>
           <p style={{ color: "#555", fontSize: "15px", lineHeight: 1.75, margin: 0 }}>
-            Heldere afspraken, transparante kosten en één aanspreekpunt van begin tot eind. Dat is hoe wij werken.
+            {v.tekst3 || "Heldere afspraken, transparante kosten en één aanspreekpunt van begin tot eind. Dat is hoe wij werken."}
           </p>
         </div>
 
         <div className="ov-photos" style={{ position: "relative", height: "380px" }}>
           <div className="ov-sq" style={{ position: "absolute", top: 0, right: 0, width: "80px", height: "80px", background: "#c8d400", zIndex: 1 }} />
           <div className="ov-img1" style={{ position: "absolute", top: "40px", left: 0, width: "56%", height: "65%", overflow: "hidden", zIndex: 2, boxShadow: "0 4px 18px rgba(0,0,0,0.13)" }}>
-            <img src={imgLandscape} alt="FerroWorks productie" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }} />
+            <img src={v.image1 || imgLandscape} alt="FerroWorks productie" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }} />
           </div>
           <div className="ov-img2" style={{ position: "absolute", bottom: 0, right: 0, width: "52%", height: "60%", overflow: "hidden", zIndex: 3, boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }}>
-            <img src={imgPortrait} alt="FerroWorks medewerker" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }} />
+            <img src={v.image2 || imgPortrait} alt="FerroWorks medewerker" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }} />
           </div>
         </div>
       </div>
@@ -105,15 +108,10 @@ function OnsVerhaal() {
 }
 
 /* 3. STATS */
-const stats = [
-  { number: "15+",  label: "jaar ervaring",      sub: "in metaalmaatwerk" },
-  { number: "3",    label: "materialen",          sub: "Staal, RVS & Aluminium" },
-  { number: "100%", label: "eigen productie",     sub: "geen onderaannemers" },
-  { number: "A-Z",  label: "volledig ontzorgd",   sub: "van ontwerp tot montage" },
-];
-
 function StatsRow() {
   const [ref, vis] = useInView(0.15);
+  const { cms } = useCms();
+  const stats = cms.stats || [];
   return (
     <section style={{ background: "#1c1c1c", padding: "60px 0" }}>
       <style>{`
@@ -124,12 +122,11 @@ function StatsRow() {
         .st2-on .st2-item:nth-child(4) { opacity:1; transform:none; transition-delay:.36s; }
       `}</style>
       <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 " + (vis ? "st2-on" : "")}
-        style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "32px" }}>
+        style={{ display: "grid", gridTemplateColumns: `repeat(${stats.length || 4}, 1fr)`, gap: "32px" }}>
         {stats.map((s, i) => (
           <div key={i} className="st2-item" style={{ borderLeft: "3px solid #c8d400", paddingLeft: "20px" }}>
             <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(28px, 3vw, 40px)", color: "#c8d400", lineHeight: 1, letterSpacing: "-0.5px" }}>{s.number}</div>
-            <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", color: "#fff", textTransform: "uppercase", letterSpacing: "0.3px", marginTop: "6px" }}>{s.label}</div>
-            <div style={{ fontSize: "12px", color: "#888", marginTop: "4px", lineHeight: 1.4 }}>{s.sub}</div>
+            <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", color: "#fff", textTransform: "uppercase", letterSpacing: "0.3px", marginTop: "6px" }}>{s.desc}</div>
           </div>
         ))}
       </div>
@@ -138,7 +135,7 @@ function StatsRow() {
 }
 
 /* 4. WAT FERROWORKS VOOR JE DOET */
-const services = [
+const FALLBACK_SERVICES = [
   "Heldere afspraken, zonder verrassingen.",
   "Totaal ontzorgen van ontwerp tot montage.",
   "Reparatie en onderhoud op locatie.",
@@ -150,6 +147,11 @@ const services = [
 
 function WatWeDoen() {
   const [ref, vis] = useInView();
+  const { cms } = useCms();
+  const wwd = (cms.overOns && cms.overOns.watWeDoen) || {};
+  const services = wwd.items
+    ? (typeof wwd.items === "string" ? wwd.items.split("\n").filter(Boolean) : wwd.items)
+    : FALLBACK_SERVICES;
   return (
     <section style={{ background: "#fff", padding: "80px 0" }}>
       <style>{`
@@ -181,7 +183,7 @@ function WatWeDoen() {
         <div className="wwd-right" style={{ position: "relative" }}>
           <div style={{ position: "absolute", bottom: "-16px", right: "-16px", width: "64px", height: "64px", background: "#c8d400", zIndex: 0 }} />
           <div style={{ position: "relative", zIndex: 1, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.12)" }}>
-            <img src={imgMachine} alt="FerroWorks productie" style={{ width: "100%", height: "340px", objectFit: "cover", objectPosition: "center", display: "block" }} />
+            <img src={wwd.image || imgMachine} alt="FerroWorks productie" style={{ width: "100%", height: "340px", objectFit: "cover", objectPosition: "center", display: "block" }} />
           </div>
         </div>
       </div>
@@ -190,23 +192,18 @@ function WatWeDoen() {
 }
 
 /* 5. WAT ONS ANDERS MAAKT */
-const differentiators = [
-  {
-    title: "GROOT GENOEG OM REGIE TE VOEREN",
-    desc: "Wij hebben de slagkracht en expertise om technische metaalprojecten volledig te realiseren.",
-  },
-  {
-    title: "KLEIN GENOEG OM DIRECT TE SCHAKELEN",
-    desc: "Direct contact, snel schakelen en meebewegen met jouw planning.",
-  },
-  {
-    title: "PERSOONLIJK GENOEG OM VOORUIT TE DENKEN",
-    desc: "We adviseren, optimaliseren en zorgen dat jouw project van begin tot eind klopt.",
-  },
+const FALLBACK_DIFFERENTIATORS = [
+  { title: "GROOT GENOEG OM REGIE TE VOEREN", desc: "Wij hebben de slagkracht en expertise om technische metaalprojecten volledig te realiseren." },
+  { title: "KLEIN GENOEG OM DIRECT TE SCHAKELEN", desc: "Direct contact, snel schakelen en meebewegen met jouw planning." },
+  { title: "PERSOONLIJK GENOEG OM VOORUIT TE DENKEN", desc: "We adviseren, optimaliseren en zorgen dat jouw project van begin tot eind klopt." },
 ];
 
 function WatOnsAnders() {
   const [ref, vis] = useInView();
+  const { cms } = useCms();
+  const differentiators = (cms.overOns && cms.overOns.andersItems && cms.overOns.andersItems.length)
+    ? cms.overOns.andersItems
+    : FALLBACK_DIFFERENTIATORS;
   return (
     <section style={{ background: "#f4f4f4", padding: "80px 0" }}>
       <style>{`
@@ -245,6 +242,11 @@ function WatOnsAnders() {
 /* 6. TEAM FOTO */
 function TeamSection() {
   const [ref, vis] = useInView();
+  const { cms } = useCms();
+  const team = (cms.overOns && cms.overOns.team) || {};
+  const teamItems = team.items
+    ? (typeof team.items === "string" ? team.items.split("\n").filter(Boolean) : team.items)
+    : ["Ruim 15 jaar ervaring in metaalmaatwerk", "Maakbaar, praktisch en doordacht", "Reparatie en onderhoud op locatie"];
   return (
     <section style={{ background: "#fff", padding: "80px 0" }}>
       <style>{`
@@ -263,29 +265,29 @@ function TeamSection() {
         <div className="tm2-photos" style={{ position: "relative", height: "480px" }}>
           <div className="tm2-sq" style={{ position: "absolute", bottom: 0, left: "6%", width: "84px", height: "84px", background: "#c8d400", zIndex: 1 }} />
           <div className="tm2-img1" style={{ position: "absolute", top: "60px", left: 0, width: "44%", height: "66%", overflow: "hidden", zIndex: 2, boxShadow: "0 4px 18px rgba(0,0,0,0.13)" }}>
-            <img src={imgAbout2} alt="FerroWorks medewerker" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }} />
+            <img src={team.image1 || imgAbout2} alt="FerroWorks medewerker" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }} />
           </div>
           <div className="tm2-img2" style={{ position: "absolute", top: 0, left: "36%", width: "30%", height: "30%", overflow: "hidden", zIndex: 3, boxShadow: "0 4px 18px rgba(0,0,0,0.13)" }}>
-            <img src={imgAbout1} alt="FerroWorks werkplaats" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }} />
+            <img src={team.image2 || imgAbout1} alt="FerroWorks werkplaats" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }} />
           </div>
           <div className="tm2-img3" style={{ position: "absolute", bottom: 0, right: 0, width: "54%", height: "60%", overflow: "hidden", zIndex: 4, boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }}>
-            <img src={imgAbout3} alt="FerroWorks team" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }} />
+            <img src={team.image3 || imgAbout3} alt="FerroWorks team" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }} />
           </div>
         </div>
 
         <div className="tm2-right">
           <p style={{ margin: "0 0 12px 0", color: "#c8d400", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>ONS TEAM</p>
           <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px, 2.6vw, 34px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px", margin: "0 0 24px 0" }}>
-            <span style={{ color: "#1c1c1c" }}>VAKMANNEN MET </span><span style={{ color: "#c8d400" }}>EÉN DOEL</span>
+            <span style={{ color: "#1c1c1c" }}>{team.title1 || "VAKMANNEN MET "}</span><span style={{ color: "#c8d400" }}>{team.title2 || "EÉN DOEL"}</span>
           </h2>
           <p style={{ color: "#555", fontSize: "15px", lineHeight: 1.75, margin: "0 0 18px 0" }}>
-            Ons team bestaat uit gespecialiseerde metaalbewerkers, lassers, engineers en projectleiders. Elk met diepgaande kennis van staal, RVS en aluminium.
+            {team.tekst1 || "Ons team bestaat uit gespecialiseerde metaalbewerkers, lassers, engineers en projectleiders. Elk met diepgaande kennis van staal, RVS en aluminium."}
           </p>
           <p style={{ color: "#555", fontSize: "15px", lineHeight: 1.75, margin: "0 0 32px 0" }}>
-            Wij werken nauw samen met onze klanten: van de eerste tekening tot de laatste bout op locatie. Altijd één aanspreekpunt, altijd persoonlijk.
+            {team.tekst2 || "Wij werken nauw samen met onze klanten: van de eerste tekening tot de laatste bout op locatie. Altijd één aanspreekpunt, altijd persoonlijk."}
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-            {["Ruim 15 jaar ervaring in metaalmaatwerk", "Maakbaar, praktisch en doordacht", "Reparatie en onderhoud op locatie"].map((item, i) => (
+            {teamItems.map((item, i) => (
               <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
                 <CheckIcon />
                 <span style={{ color: "#555", fontSize: "15px", lineHeight: 1.6 }}>{item}</span>

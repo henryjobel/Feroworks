@@ -1,14 +1,10 @@
 ﻿import { Link } from "react-router-dom";
 import heroBg from "../assets/hero-background.jpeg";
-
-const checkItems = [
-  { text: "Ruim 15 jaar ervaring" },
-  { text: "VCA, EN-1090 & CE gecertificeerd" },
-  { text: "Staal, RVS & Aluminium maatwerk" },
-  { text: "Ontwerp, productie & montage" },
-];
+import { useCms } from "../cms/CmsContext";
 
 function HeroBanner() {
+  const { cms } = useCms();
+  const hero = cms.hero || {};
   return (
     <section
       style={{
@@ -26,7 +22,7 @@ function HeroBanner() {
         style={{
           position: "absolute",
           inset: 0,
-          backgroundImage: "url(" + heroBg + ")",
+          backgroundImage: `url(${hero.image || heroBg})`,
           backgroundSize: "cover",
           backgroundPosition: "center right",
           backgroundRepeat: "no-repeat",
@@ -74,7 +70,7 @@ function HeroBanner() {
             fontWeight: 900,
           }}
         >
-          VORMGEVERS IN METAAL.
+          {hero.line1}
         </h1>
 
         <h2
@@ -90,7 +86,7 @@ function HeroBanner() {
             fontWeight: 900,
           }}
         >
-          VAN ONTWERP TOT MONTAGE.
+          {hero.line2}
         </h2>
 
         {/* Subtitle */}
@@ -105,8 +101,7 @@ function HeroBanner() {
             maxWidth: "480px",
           }}
         >
-          FerroWorks begeleidt metaalprojecten van ontwerp en engineering<br />
-          tot productie en montage. Specialist in Staal, RVS & Aluminium.
+          {hero.subtitle.split("\n").map((line, i) => <span key={i}>{line}{i < hero.subtitle.split("\n").length - 1 && <br />}</span>)}
         </p>
 
         {/* Divider - full width */}
@@ -124,13 +119,13 @@ function HeroBanner() {
           className="grid grid-cols-2 md:grid-cols-4"
           style={{ gap: "12px", marginBottom: "42px" }}
         >
-          {checkItems.map((item, i) => (
+          {(hero.checkItems || []).map((text, i) => (
             <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
               <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0, marginTop: "2px" }}>
                 <path d="M2 8.5L6 12.5L14 4.5" stroke="#C8D400" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               <span style={{ color: "#D8D8D8", fontSize: "13px", lineHeight: 1.45, fontWeight: 400 }}>
-                {item.text}
+                {text}
               </span>
             </div>
           ))}
@@ -156,7 +151,7 @@ function HeroBanner() {
           onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#b3be00")}
           onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#C8D400")}
         >
-          STUUR UW TEKENING OP
+          {hero.cta}
         </Link>
       </div>
     </section>

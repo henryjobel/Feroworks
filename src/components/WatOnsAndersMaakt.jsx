@@ -1,19 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import imgMachine from "../assets/over-ons1.png";
+import { useCms } from "../cms/CmsContext";
 
-const items = [
-  {
-    title: "GROOT GENOEG OM REGIE TE VOEREN",
-    desc: "Wij hebben de slagkracht en expertise om technische metaalprojecten volledig te realiseren.",
-  },
-  {
-    title: "KLEIN GENOEG OM DIRECT TE SCHAKELEN",
-    desc: "Direct contact, snel schakelen en meebewegen met jouw planning.",
-  },
-  {
-    title: "PERSOONLIJK GENOEG OM VOORUIT TE DENKEN",
-    desc: "We adviseren, optimaliseren en zorgen dat jouw project van begin tot eind klopt.",
-  },
+const defaultItems = [
+  { title: "GROOT GENOEG OM REGIE TE VOEREN", desc: "Wij hebben de slagkracht en expertise om technische metaalprojecten volledig te realiseren." },
+  { title: "KLEIN GENOEG OM DIRECT TE SCHAKELEN", desc: "Direct contact, snel schakelen en meebewegen met jouw planning." },
+  { title: "PERSOONLIJK GENOEG OM VOORUIT TE DENKEN", desc: "We adviseren, optimaliseren en zorgen dat jouw project van begin tot eind klopt." },
 ];
 
 function CheckIcon() {
@@ -37,6 +29,9 @@ function CheckIcon() {
 }
 
 function WatOnsAndersMaakt() {
+  const { cms } = useCms();
+  const items = (cms.anders && cms.anders.items) || defaultItems;
+  const andersImage = (cms.anders && cms.anders.image) || null;
   const ref = useRef(null);
   const [vis, setVis] = useState(false);
 
@@ -133,7 +128,7 @@ function WatOnsAndersMaakt() {
             }}
           >
             <img
-              src={imgMachine}
+              src={andersImage || imgMachine}
               alt="Ferna machinepark"
               style={{
                 width: "100%",

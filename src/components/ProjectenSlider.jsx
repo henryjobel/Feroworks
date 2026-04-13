@@ -3,31 +3,36 @@ import img1 from "../assets/past work/Afwerking-staalconstructie-met-natlak-300x
 import img2 from "../assets/past work/kwaliteitscontrole-lassen-featured-300x225.webp";
 import img3 from "../assets/past work/lascertificaat-verplicht-featured-300x158.webp";
 import img4 from "../assets/past work/Offshore-constructie-300x190.webp";
+import { useCms } from "../cms/CmsContext";
 
-const slides = [
+const FALLBACK_IMAGES = [img1, img2, img3, img4];
+
+const defaultSlides = [
   {
-    img: img1,
     title: "MEETBUIZEN T.B.V. VLOEISTOFTANK",
     desc: "Voor deze klant hebben we maatwerk meetbuizen ten behoeve van een vloeistoftank geproduceerd.",
+    image: null,
   },
   {
-    img: img2,
     title: "STAALCONSTRUCTIE OFFSHORE PLATFORM",
     desc: "Complexe staalconstructie vervaardigd voor een offshore platform, volledig Lloyd's-gecertificeerd.",
+    image: null,
   },
   {
-    img: img3,
     title: "PIJPLEIDINGWERK PETROCHEMIE",
     desc: "Maatwerkpiping en koppelstukken geleverd voor een raffinaderij in de petrochemische sector.",
+    image: null,
   },
   {
-    img: img4,
     title: "TANKBOUW INDUSTRIEEL COMPLEX",
     desc: "Walsdelen, daksecties en mangaten geproduceerd voor een groot industrieel tankbouwproject.",
+    image: null,
   },
 ];
 
 function ProjectenSlider() {
+  const { cms } = useCms();
+  const slides = cms.projecten && cms.projecten.length ? cms.projecten : defaultSlides;
   const [current, setCurrent] = useState(0);
   const [animating, setAnimating] = useState(false);
   const ref = useRef(null);
@@ -54,7 +59,8 @@ function ProjectenSlider() {
   const prev = () => goTo((current - 1 + slides.length) % slides.length);
   const next = () => goTo((current + 1) % slides.length);
 
-  const slide = slides[current];
+  const slide = slides[Math.min(current, slides.length - 1)] || defaultSlides[0];
+  const slideImg = slide.image || FALLBACK_IMAGES[Math.min(current, FALLBACK_IMAGES.length - 1)] || FALLBACK_IMAGES[0];
 
   return (
     <section style={{ background: "#efefef", padding: "72px 0 64px" }}>
@@ -121,7 +127,7 @@ function ProjectenSlider() {
             {/* Image */}
             <div style={{ overflow: "hidden", lineHeight: 0 }}>
               <img
-                src={slide.img}
+                src={slideImg}
                 alt={slide.title}
                 style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", minHeight: "240px" }}
               />
