@@ -16,7 +16,7 @@ function Navbar() {
 
   return (
     <nav className="w-full bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
-      <div className="max-w-7xl mx-auto px-6 md:px-8 flex items-center justify-between" style={{ height: "72px" }}>
+      <div className="max-w-7xl mx-auto px-6 md:px-8 flex items-center justify-between" style={{ height: "78px" }}>
 
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 shrink-0 no-underline">
@@ -26,22 +26,22 @@ function Navbar() {
           </svg>
           <div className="flex flex-col leading-none">
             <div className="flex items-baseline">
-              <span className="text-[22px] font-black text-gray-900 tracking-tight">FERRO</span>
-              <span className="text-[22px] font-black tracking-tight" style={{ color: "#c8d400" }}>WORKS</span>
+              <span className="text-[24px] font-black text-gray-900 tracking-tight">FERRO</span>
+              <span className="text-[24px] font-black tracking-tight" style={{ color: "#c8d400" }}>WORKS</span>
             </div>
-            <span className="text-[12px] italic text-gray-500 font-normal" style={{ fontFamily: "Georgia, serif" }}>
+            <span className="text-[13px] italic text-gray-500 font-normal" style={{ fontFamily: "Georgia, serif" }}>
               {t("nav.brandTagline", "metalwork")}
             </span>
           </div>
         </Link>
 
         {/* Desktop nav links */}
-        <ul className="hidden md:flex items-center gap-8 list-none flex-1 justify-center m-0 p-0">
+        <ul className="hidden md:flex items-center gap-9 list-none flex-1 justify-center m-0 p-0">
           {navLinks.map((item) => (
             <li key={item.key}>
               <Link
                 to={item.to}
-                className="text-gray-800 text-[15px] no-underline hover:text-[#8ab61e] transition-colors duration-200 whitespace-nowrap"
+                className="text-gray-800 text-[17px] font-semibold tracking-[0.01em] no-underline hover:text-[#8ab61e] transition-colors duration-200 whitespace-nowrap"
               >
                 {t(`nav.${item.key}`, item.key)}
               </Link>
@@ -51,12 +51,12 @@ function Navbar() {
 
         {/* Desktop phone + CTA */}
         <div className="hidden md:flex items-center gap-6 shrink-0">
-          <a href="tel:+31165205617" className="text-gray-800 text-[15px] no-underline hover:text-[#8ab61e] transition-colors duration-200 whitespace-nowrap">
+          <a href="tel:+31165205617" className="text-gray-800 text-[16px] font-medium no-underline hover:text-[#8ab61e] transition-colors duration-200 whitespace-nowrap">
             +31 (0)165 205 617
           </a>
           <Link
             to="/contact"
-            className="no-underline text-white text-[13px] font-bold tracking-wide px-6 py-3 rounded-full whitespace-nowrap transition-colors duration-200"
+            className="no-underline text-white text-[14px] font-bold tracking-wide px-6 py-3 rounded-full whitespace-nowrap transition-colors duration-200"
             style={{ backgroundColor: "#8ab61e" }}
             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#7aa018")}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#8ab61e")}
@@ -93,18 +93,18 @@ function Navbar() {
             <Link
               key={item.key}
               to={item.to}
-              className="text-gray-800 text-[16px] no-underline py-2 border-b border-gray-100"
+              className="text-gray-800 text-[18px] font-semibold no-underline py-3 border-b border-gray-100"
               onClick={() => setMenuOpen(false)}
             >
               {t(`nav.${item.key}`, item.key)}
             </Link>
           ))}
-          <a href="tel:+31165205617" className="text-gray-800 text-[15px] no-underline py-2">
+          <a href="tel:+31165205617" className="text-gray-800 text-[16px] font-medium no-underline py-3">
             +31 (0)165 205 617
           </a>
           <Link
             to="/contact"
-            className="no-underline text-white text-[13px] font-bold tracking-wide px-6 py-3 rounded-full text-center"
+            className="no-underline text-white text-[14px] font-bold tracking-wide px-6 py-3 rounded-full text-center"
             style={{ backgroundColor: "#8ab61e" }}
             onClick={() => setMenuOpen(false)}
           >

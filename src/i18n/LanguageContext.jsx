@@ -2,24 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { SUPPORTED_LANGUAGES, translations } from "./translations";
 
 const LanguageContext = createContext(null);
-const DEFAULT_LANGUAGE = "en";
-
-function getInitialLanguage() {
-  if (typeof navigator !== "undefined") {
-    const browserLangs = Array.isArray(navigator.languages)
-      ? navigator.languages
-      : [navigator.language];
-
-    for (const raw of browserLangs) {
-      const code = String(raw || "").toLowerCase().split("-")[0];
-      if (SUPPORTED_LANGUAGES.some((l) => l.code === code)) {
-        return code;
-      }
-    }
-  }
-
-  return DEFAULT_LANGUAGE;
-}
+const DEFAULT_LANGUAGE = "nl";
 
 function getValueByPath(obj, path) {
   return path.split(".").reduce((acc, key) => {
@@ -31,7 +14,7 @@ function getValueByPath(obj, path) {
 }
 
 export function LanguageProvider({ children }) {
-  const [language, setLanguage] = useState(getInitialLanguage);
+  const [language, setLanguage] = useState(DEFAULT_LANGUAGE);
 
   useEffect(() => {
     if (typeof document !== "undefined") {
