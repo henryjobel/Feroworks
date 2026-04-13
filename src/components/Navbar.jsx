@@ -18,11 +18,11 @@ function Navbar() {
           </svg>
           <div className="flex flex-col leading-none">
             <div className="flex items-baseline">
-              <span className="text-[22px] font-black text-gray-900 tracking-tight">FER</span>
-              <span className="text-[22px] font-black tracking-tight" style={{ color: "#c8d400" }}>NA</span>
+              <span className="text-[22px] font-black text-gray-900 tracking-tight">FERRO</span>
+              <span className="text-[22px] font-black tracking-tight" style={{ color: "#c8d400" }}>WORKS</span>
             </div>
             <span className="text-[12px] italic text-gray-500 font-normal" style={{ fontFamily: "Georgia, serif" }}>
-              services
+              metaalwerk
             </span>
           </div>
         </Link>

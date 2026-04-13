@@ -2,133 +2,52 @@ import { Link } from "react-router-dom";
 
 const sectorItems = [
   {
-    title: "PETROCHEMIE",
+    title: "BOUW &\nUTILITEIT",
     description:
-      "Maatwerkpiping en koppelstukken voor raffinaderijen en procesinstallaties.",
+      "Staalconstructies, standaard hekwerken en prefab balkons voor bouw- en utiliteitsprojecten.",
     icon: (
-      <svg
-        width="54"
-        height="54"
-        viewBox="0 0 54 54"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="text-[#2f2f2f]"
-      >
-        <path
-          d="M17 11V24L23 31V43"
-          stroke="currentColor"
-          strokeWidth="2.2"
-          strokeLinecap="square"
-        />
-        <path
-          d="M37 11V24L31 31V43"
-          stroke="currentColor"
-          strokeWidth="2.2"
-          strokeLinecap="square"
-        />
-        <path
-          d="M23 11V18L27 24L31 18V11"
-          stroke="currentColor"
-          strokeWidth="2.2"
-          strokeLinecap="square"
-        />
-        <path d="M14 43H40" stroke="currentColor" strokeWidth="2.2" />
-        <path d="M20 43V47" stroke="currentColor" strokeWidth="2.2" />
-        <path d="M27 43V47" stroke="currentColor" strokeWidth="2.2" />
-        <path d="M34 43V47" stroke="currentColor" strokeWidth="2.2" />
+      <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#2f2f2f]">
+        <rect x="10" y="24" width="14" height="20" stroke="currentColor" strokeWidth="2.2" />
+        <rect x="30" y="16" width="14" height="28" stroke="currentColor" strokeWidth="2.2" />
+        <path d="M8 44H46" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+        <path d="M14 37H20M14 32H20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+        <path d="M34 37H40M34 32H40M34 27H40M34 22H40" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
       </svg>
     ),
   },
   {
-    title: "TANKBOUW",
+    title: "INDUSTRIE",
     description:
-      "Walsdelen, daksecties, mangaten, koppelstukken, bordessen en trappen voor tankinstallaties.",
+      "Machinebouw, maatwerk staalconstructies, industriële installaties en laswerkzaamheden op locatie.",
     icon: (
-      <svg
-        width="54"
-        height="54"
-        viewBox="0 0 54 54"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="text-[#2f2f2f]"
-      >
-        <ellipse
-          cx="27"
-          cy="15"
-          rx="10"
-          ry="4.5"
-          stroke="currentColor"
-          strokeWidth="2.2"
-        />
-        <path
-          d="M17 15V34C17 36.8 21.5 39 27 39C32.5 39 37 36.8 37 34V15"
-          stroke="currentColor"
-          strokeWidth="2.2"
-        />
-        <path d="M17 24C17 26.8 21.5 29 27 29C32.5 29 37 26.8 37 24" stroke="currentColor" strokeWidth="2.2" />
-        <path d="M17 34C17 36.8 21.5 39 27 39C32.5 39 37 36.8 37 34" stroke="currentColor" strokeWidth="2.2" />
+      <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#2f2f2f]">
+        <circle cx="27" cy="27" r="7" stroke="currentColor" strokeWidth="2.2" />
+        <path d="M27 11V16M27 38V43M11 27H16M38 27H43" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+        <path d="M15.9 15.9L19.4 19.4M34.6 34.6L38.1 38.1M38.1 15.9L34.6 19.4M19.4 34.6L15.9 38.1" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
       </svg>
     ),
   },
   {
-    title: "OFFSHORE",
+    title: "ARCHITECTUUR\n& DESIGN",
     description:
-      "Staalconstructies en frames, Lloyd’s-gecertificeerd.",
+      "Design trappen en interieur- en exterieur maatwerk voor architectuur- en designprojecten.",
     icon: (
-      <svg
-        width="54"
-        height="54"
-        viewBox="0 0 54 54"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="text-[#2f2f2f]"
-      >
-        <rect x="18" y="15" width="9" height="9" stroke="currentColor" strokeWidth="2.2" />
-        <rect x="27" y="15" width="9" height="9" stroke="currentColor" strokeWidth="2.2" />
-        <rect x="18" y="24" width="9" height="9" stroke="currentColor" strokeWidth="2.2" />
-        <rect x="27" y="24" width="9" height="9" stroke="currentColor" strokeWidth="2.2" />
-        <path d="M22 33L18 45" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-        <path d="M32 33L36 45" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-        <path d="M27 33V45" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-        <path d="M12 45C14 42 16 42 18 45C20 48 22 48 24 45C26 42 28 42 30 45C32 48 34 48 36 45C38 42 40 42 42 45" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+      <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#2f2f2f]">
+        <path d="M10 44H44" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+        <path d="M10 44V38H20V32H30V26H40V14" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="miter" strokeLinecap="round" />
       </svg>
     ),
   },
   {
-    title: "INDUSTRIEEL\nMAATWERK",
+    title: "MARITIEM",
     description:
-      "Staalconstructies, plaatwerk en laswerk voor de brede industrie.",
+      "Maatwerk staal- en aluminium constructies voor jachtbouw en maritieme toepassingen.",
     icon: (
-      <svg
-        width="54"
-        height="54"
-        viewBox="0 0 54 54"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="text-[#2f2f2f]"
-      >
-        <path
-          d="M17 11V24L23 31V43"
-          stroke="currentColor"
-          strokeWidth="2.2"
-          strokeLinecap="square"
-        />
-        <path
-          d="M37 11V24L31 31V43"
-          stroke="currentColor"
-          strokeWidth="2.2"
-          strokeLinecap="square"
-        />
-        <path
-          d="M23 11V18L27 24L31 18V11"
-          stroke="currentColor"
-          strokeWidth="2.2"
-          strokeLinecap="square"
-        />
-        <path d="M14 43H40" stroke="currentColor" strokeWidth="2.2" />
-        <path d="M20 43V47" stroke="currentColor" strokeWidth="2.2" />
-        <path d="M27 43V47" stroke="currentColor" strokeWidth="2.2" />
-        <path d="M34 43V47" stroke="currentColor" strokeWidth="2.2" />
+      <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#2f2f2f]">
+        <circle cx="27" cy="14" r="3.5" stroke="currentColor" strokeWidth="2.2" />
+        <path d="M27 17.5V43" stroke="currentColor" strokeWidth="2.2" />
+        <path d="M20 25H34" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+        <path d="M16 43C16 37 21 32.5 27 32.5C33 32.5 38 37 38 43" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
       </svg>
     ),
   },
@@ -177,7 +96,7 @@ function OnzeSectoren() {
             className="text-[#6f6f6f] uppercase font-black text-[16px] tracking-[-0.2px]"
             style={{ fontFamily: "Arial Black, Arial, sans-serif" }}
           >
-            GECERTIFICEERD MAATWERK PER SECTOR
+            MAATWERK VOOR ELKE SECTOR
           </p>
         </div>
 

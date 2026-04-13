@@ -3,13 +3,13 @@ import imgLandscape from "../assets/over-ons2.png";
 import imgPortrait from "../assets/over-ons3.png";
 
 const bulletItems = [
-  "Staalbouw en RVS specials van ieder formaat.",
-  "Ondersteuning voor reparatie en onderhoud op locatie.",
-  "Staal en RVS gesneden in verschillende productiehallen.",
-  "Staalbouw oplossingen van concept tot levering en installatie.",
-  "Volledige begeleiding en realisatie van jouw staalbouw project op maat.",
-  "Last-minute ondersteuning voor machines, leidingwerk, constructies, tanks en andere staalbouw op industriele faciliteiten.",
-  "Staalbouw oplossingen uitdenken, engineering, productie, vervaardiging, coating, herwaarmerken, transport, montage en installatie op locatie.",
+  "Heldere afspraken, zonder verrassingen.",
+  "Totaal ontzorgen van ontwerp tot montage.",
+  "Reparatie en onderhoud op locatie.",
+  "Advies en ondersteuning bij ontwerp en uitvoerbaarheid.",
+  "Eén partner voor het volledige traject.",
+  "Maakbaar, praktisch en doordacht.",
+  "Transparant in kosten en planning.",
 ];
 
 function WatFernaSection() {
@@ -59,7 +59,7 @@ function WatFernaSection() {
               letterSpacing:"-0.2px",
             }}
           >
-            <span style={{ color:"#c8d400" }}>WAT FERNA VOOR JE</span>
+            <span style={{ color:"#c8d400" }}>WAT FERROWORKS VOOR JE</span>
             <br />
             <span style={{ color:"#1c1c1c" }}>DOET</span>
           </h2>

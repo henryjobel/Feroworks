@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
 const stats = [
-  { number: "20+", desc: "jaar ervaring in industrieel maatwerk" },
-  { number: "2-4", desc: "weken gemiddelde levertijd" },
-  { number: "16",  desc: "gespecialiseerde vakmensen" },
+  { number: "15+", desc: "jaar ervaring in metaalmaatwerk" },
+  { number: "3",   desc: "materialen: Staal, RVS & Aluminium" },
   { number: "100%", desc: "eigen productie, geen onderaannemers" },
+  { number: "A-Z",  desc: "van ontwerp en engineering tot montage" },
 ];
 
 function StatItem({ number, desc, delay }) {

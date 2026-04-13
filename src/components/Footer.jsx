@@ -30,14 +30,14 @@ function Footer() {
                 fontSize: "22px",
                 color: "#fff",
                 letterSpacing: "-0.5px",
-              }}>FER</span>
+              }}>FERRO</span>
               <span style={{
                 fontFamily: "Arial Black, Arial, sans-serif",
                 fontWeight: 900,
                 fontSize: "22px",
                 color: "#c8d400",
                 letterSpacing: "-0.5px",
-              }}>NA</span>
+              }}>WORKS</span>
             </div>
             <div style={{
               fontFamily: "Georgia, serif",
@@ -46,7 +46,7 @@ function Footer() {
               color: "#c8d400",
               marginTop: "1px",
               letterSpacing: "0.5px",
-            }}>services</div>
+            }}>metaalwerk</div>
           </div>
         </div>
 
@@ -108,7 +108,7 @@ function Footer() {
         }}
       >
         <p style={{ color: "#888", fontSize: "12.5px", margin: 0 }}>
-          © Ferna. All Rights Reserved | Marketing door{" "}
+          © FerroWorks. All Rights Reserved | Marketing door{" "}
           <a href="https://leadi.nl" target="_blank" rel="noopener noreferrer"
             style={{ color: "#888", textDecoration: "underline" }}>
             Leadi

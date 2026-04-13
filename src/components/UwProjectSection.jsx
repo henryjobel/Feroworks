@@ -146,11 +146,11 @@ function UwProjectSection() {
           </h2>
 
           <p style={{ fontSize: "15px", color: "#555", lineHeight: 1.7, margin: "0 0 20px 0" }}>
-            Ferna is opgericht als familiebedrijf en werkt nog steeds zo. Korte lijnen, persoonlijke betrokkenheid, elke levertijd is een belofte.
+            FerroWorks is opgericht als familiebedrijf en werkt nog steeds zo. Korte lijnen, persoonlijke betrokkenheid, één partner voor het volledige traject.
           </p>
 
           <p style={{ fontSize: "15px", color: "#555", lineHeight: 1.7, margin: "0 0 36px 0" }}>
-            Onze opdrachtgevers zijn industriële aannemers en eindklanten in petrochemie, tankbouw en offshore. Niet de grootste projecten, wel de complexe maatwerkprojecten waar het verschil zit in vakmanschap en snelheid.
+            Van ontwerp en engineering tot productie, coating en montage op locatie. Specialist in maatwerk staal, RVS en aluminium projecten voor industrie, bouw, architectuur en maritiem.
           </p>
 
           <a

@@ -10,6 +10,13 @@ import UwProjectSection from './components/UwProjectSection'
 import ProjectenSlider from './components/ProjectenSlider'
 import FaqSection from './components/FaqSection'
 import Footer from './components/Footer'
+import OverOnsPage from './pages/OverOnsPage'
+import ContactPage from './pages/ContactPage'
+import BlogPage from './pages/BlogPage'
+import BlogDetailPage from './pages/BlogDetailPage'
+import DienstenPage from './pages/DienstenPage'
+import DienstDetailPage from './pages/DienstDetailPage'
+import SectorenPage from './pages/SectorenPage'
 
 function HomePage() {
   return (
@@ -33,11 +40,13 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/over-ons" element={<div>Over Ons</div>} />
-        <Route path="/diensten" element={<div>Diensten</div>} />
-        <Route path="/sectoren" element={<div>Sectoren</div>} />
-        <Route path="/blog" element={<div>Blog</div>} />
-        <Route path="/contact" element={<div>Contact</div>} />
+        <Route path="/over-ons" element={<OverOnsPage />} />
+        <Route path="/diensten" element={<DienstenPage />} />
+        <Route path="/diensten/:id" element={<DienstDetailPage />} />
+        <Route path="/sectoren" element={<SectorenPage />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:id" element={<BlogDetailPage />} />
+        <Route path="/contact" element={<ContactPage />} />
       </Routes>
       <Footer />
     </BrowserRouter>

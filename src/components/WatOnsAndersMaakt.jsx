@@ -3,16 +3,16 @@ import imgMachine from "../assets/over-ons1.png";
 
 const items = [
   {
-    title: "GROOT GENOEG VOOR COMPLEX INDUSTRIEEL WERK",
-    desc: "16 vakmensen, volledig eigen machinepark inclusief watersnijder 6 x 3 meter. Gecertificeerd voor de meest veeleisende industriële projecten.",
+    title: "GROOT GENOEG OM REGIE TE VOEREN",
+    desc: "Wij hebben de slagkracht en expertise om technische metaalprojecten volledig te realiseren.",
   },
   {
-    title: "KLEIN GENOEG OM SNEL TE SCHAKELEN",
-    desc: "Levertijd: 2 tot 4 weken. Ruimte voor urgente projecten.",
+    title: "KLEIN GENOEG OM DIRECT TE SCHAKELEN",
+    desc: "Direct contact, snel schakelen en meebewegen met jouw planning.",
   },
   {
-    title: "PERSOONLIJK GENOEG OM MEE TE DENKEN",
-    desc: "Wij bekijken elke tekening op maakbaarheid. Fouten vangen we op voordat de productie start.",
+    title: "PERSOONLIJK GENOEG OM VOORUIT TE DENKEN",
+    desc: "We adviseren, optimaliseren en zorgen dat jouw project van begin tot eind klopt.",
   },
 ];
 

@@ -2,10 +2,10 @@
 import heroBg from "../assets/hero-background.jpeg";
 
 const checkItems = [
-  { text: "Levertijd: 2 tot 4 weken" },
-  { text: "ISO 9001, VCA, EN-1090, Lloyd's" },
-  { text: "Snijden, walsen, zetten en lassen onder een dak" },
-  { text: "Vertrouwd door Verwater, Shell en De Kok" },
+  { text: "Ruim 15 jaar ervaring" },
+  { text: "VCA, EN-1090 & CE gecertificeerd" },
+  { text: "Staal, RVS & Aluminium maatwerk" },
+  { text: "Ontwerp, productie & montage" },
 ];
 
 function HeroBanner() {
@@ -74,7 +74,7 @@ function HeroBanner() {
             fontWeight: 900,
           }}
         >
-          COMPLEXE STAALPROJECTEN.
+          VORMGEVERS IN METAAL.
         </h1>
 
         <h2
@@ -90,7 +90,7 @@ function HeroBanner() {
             fontWeight: 900,
           }}
         >
-          VOLLEDIG UIT EIGEN WERKPLAATS.
+          VAN ONTWERP TOT MONTAGE.
         </h2>
 
         {/* Subtitle */}
@@ -105,8 +105,8 @@ function HeroBanner() {
             maxWidth: "480px",
           }}
         >
-          Maatwerkonderdelen in staal, RVS en aluminium voor<br />
-          de industrie. Petrochemie, tankbouw en offshore.
+          FerroWorks begeleidt metaalprojecten van ontwerp en engineering<br />
+          tot productie en montage. Specialist in Staal, RVS & Aluminium.
         </p>
 
         {/* Divider - full width */}
