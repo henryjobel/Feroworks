@@ -1,10 +1,18 @@
 ﻿import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useLanguage } from "../i18n/LanguageContext";
 
-const navLinks = ["Over ons", "Diensten", "Sectoren", "Blog", "Contact"];
+const navLinks = [
+  { key: "overOns", to: "/over-ons" },
+  { key: "diensten", to: "/diensten" },
+  { key: "sectoren", to: "/sectoren" },
+  { key: "blog", to: "/blog" },
+  { key: "contact", to: "/contact" },
+];
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <nav className="w-full bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
@@ -22,7 +30,7 @@ function Navbar() {
               <span className="text-[22px] font-black tracking-tight" style={{ color: "#c8d400" }}>WORKS</span>
             </div>
             <span className="text-[12px] italic text-gray-500 font-normal" style={{ fontFamily: "Georgia, serif" }}>
-              metaalwerk
+              {t("nav.brandTagline", "metalwork")}
             </span>
           </div>
         </Link>
@@ -30,12 +38,12 @@ function Navbar() {
         {/* Desktop nav links */}
         <ul className="hidden md:flex items-center gap-8 list-none flex-1 justify-center m-0 p-0">
           {navLinks.map((item) => (
-            <li key={item}>
+            <li key={item.key}>
               <Link
-                to={"/" + item.toLowerCase().replace(" ", "-")}
+                to={item.to}
                 className="text-gray-800 text-[15px] no-underline hover:text-[#8ab61e] transition-colors duration-200 whitespace-nowrap"
               >
-                {item}
+                {t(`nav.${item.key}`, item.key)}
               </Link>
             </li>
           ))}
@@ -53,7 +61,7 @@ function Navbar() {
             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#7aa018")}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#8ab61e")}
           >
-            NEEM CONTACT OP
+            {t("nav.cta", "CONTACT US")}
           </Link>
         </div>
 
@@ -61,7 +69,7 @@ function Navbar() {
         <button
           className="md:hidden flex flex-col justify-center items-center gap-1.5 w-10 h-10 bg-transparent border-none cursor-pointer p-0"
           onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
+          aria-label={t("nav.menuToggle", "Toggle menu")}
         >
           <span
             className="block w-6 h-0.5 bg-gray-800 transition-all duration-300"
@@ -83,12 +91,12 @@ function Navbar() {
         <div className="md:hidden bg-white border-t border-gray-100 px-6 py-4 flex flex-col gap-4">
           {navLinks.map((item) => (
             <Link
-              key={item}
-              to={"/" + item.toLowerCase().replace(" ", "-")}
+              key={item.key}
+              to={item.to}
               className="text-gray-800 text-[16px] no-underline py-2 border-b border-gray-100"
               onClick={() => setMenuOpen(false)}
             >
-              {item}
+              {t(`nav.${item.key}`, item.key)}
             </Link>
           ))}
           <a href="tel:+31165205617" className="text-gray-800 text-[15px] no-underline py-2">
@@ -100,7 +108,7 @@ function Navbar() {
             style={{ backgroundColor: "#8ab61e" }}
             onClick={() => setMenuOpen(false)}
           >
-            NEEM CONTACT OP
+            {t("nav.cta", "CONTACT US")}
           </Link>
         </div>
       )}
