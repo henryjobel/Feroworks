@@ -56,23 +56,23 @@ const sectorItems = [
 
 function SectorCard({ item }) {
   return (
-    <div className="w-[242px] min-h-[382px] bg-[#f6f6f6] shadow-[0_18px_34px_rgba(0,0,0,0.06)] px-[30px] pt-[42px] pb-[34px] flex flex-col">
-      <div className="mb-[34px]">{item.icon}</div>
+    <div className="home-sector-card bg-[#f6f6f6] shadow-[0_18px_34px_rgba(0,0,0,0.06)] flex flex-col">
+      <div className="home-sector-icon">{item.icon}</div>
 
       <h3
-        className="text-[#333333] font-black uppercase whitespace-pre-line leading-[1.08] text-[27px] tracking-[-0.6px] mb-[18px]"
+        className="home-sector-title text-[#333333] font-black uppercase whitespace-pre-line leading-[1.08] tracking-[-0.6px]"
         style={{ fontFamily: "Arial Black, Arial, sans-serif" }}
       >
         {item.title}
       </h3>
 
-      <p className="text-[#7b7b7b] text-[17px] leading-[1.42] font-medium mb-[26px]">
+      <p className="home-sector-desc text-[#7b7b7b] font-medium">
         {item.description}
       </p>
 
       <Link
         to="/contact"
-        className="mt-auto inline-block text-[#c8d400] font-black uppercase text-[15px] tracking-[-0.2px]"
+        className="home-sector-link mt-auto inline-block text-[#9ca600] font-black uppercase tracking-[-0.2px]"
         style={{ fontFamily: "Arial Black, Arial, sans-serif" }}
       >
         LEES MEER
@@ -91,6 +91,134 @@ function OnzeSectoren() {
   }));
   return (
     <section className="w-full bg-[#f3f3f3] pt-[48px] pb-[100px]">
+      <style>{`
+        .home-sector-grid {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 26px;
+          margin-bottom: 42px;
+        }
+
+        .home-sector-card {
+          min-height: 382px;
+          padding: 42px 30px 34px;
+          position: relative;
+          overflow: hidden;
+          border-top: 4px solid transparent;
+          transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+        }
+
+        .home-sector-card::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 46px;
+          height: 46px;
+          background: #c8d400;
+          opacity: .14;
+          transform: translate(16px, -16px);
+        }
+
+        .home-sector-card:hover {
+          transform: translateY(-4px);
+          border-color: #c8d400;
+          box-shadow: 0 18px 38px rgba(0,0,0,.1);
+        }
+
+        .home-sector-icon {
+          margin-bottom: 34px;
+          color: #2f2f2f;
+        }
+
+        .home-sector-title {
+          font-size: 27px;
+          margin-bottom: 18px;
+        }
+
+        .home-sector-desc {
+          font-size: 17px;
+          line-height: 1.42;
+          margin-bottom: 26px;
+        }
+
+        .home-sector-link {
+          font-size: 15px;
+        }
+
+        @media (max-width: 1024px) {
+          .home-sector-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .home-sector-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 32px;
+          }
+
+          .home-sector-card {
+            min-height: 258px;
+            padding: 18px 14px 16px;
+            border-top-color: #c8d400;
+          }
+
+          .home-sector-card::after {
+            width: 34px;
+            height: 34px;
+            transform: translate(12px, -12px);
+          }
+
+          .home-sector-icon {
+            margin-bottom: 16px;
+          }
+
+          .home-sector-icon svg {
+            width: 38px;
+            height: 38px;
+          }
+
+          .home-sector-title {
+            font-size: 15px;
+            line-height: 1.16;
+            letter-spacing: 0;
+            margin-bottom: 10px;
+          }
+
+          .home-sector-desc {
+            font-size: 12px;
+            line-height: 1.45;
+            margin-bottom: 16px;
+          }
+
+          .home-sector-link {
+            font-size: 11px;
+            color: #7f8900;
+          }
+        }
+
+        @media (max-width: 360px) {
+          .home-sector-grid {
+            gap: 10px;
+          }
+
+          .home-sector-card {
+            min-height: 244px;
+            padding: 16px 12px 14px;
+          }
+
+          .home-sector-title {
+            font-size: 13.5px;
+          }
+
+          .home-sector-desc {
+            font-size: 11.5px;
+          }
+        }
+      `}</style>
       <div className="max-w-[1200px] mx-auto px-6">
         <div className="text-center mb-[44px]">
           <h2
@@ -108,7 +236,7 @@ function OnzeSectoren() {
           </p>
         </div>
 
-        <div className="flex justify-center gap-[42px] flex-wrap mb-[42px]">
+        <div className="home-sector-grid">
           {mergedItems.map((item, index) => (
             <SectorCard key={index} item={item} />
           ))}

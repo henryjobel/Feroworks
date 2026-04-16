@@ -45,7 +45,7 @@ function WatFernaSection() {
       `}</style>
 
       <div
-        className={"max-w-7xl mx-auto px-6 md:px-8 " + (vis ? "wf-on" : "")}
+        className={"max-w-7xl mx-auto px-6 md:px-8 wf-grid " + (vis ? "wf-on" : "")}
         style={{ display:"grid", gridTemplateColumns:"1fr 1.4fr", gap:"72px", alignItems:"start" }}
       >
 
@@ -81,7 +81,7 @@ function WatFernaSection() {
         </div>
 
         {/* RIGHT — overlapping images */}
-        <div style={{ position:"relative", height:"360px" }}>
+        <div className="wf-visual" style={{ position:"relative", height:"360px" }}>
 
           {/* Lime square — bottom right, z=1 (behind portrait) */}
           <div
@@ -145,7 +145,7 @@ function WatFernaSection() {
       {/* Mobile responsive */}
       <style>{`
         @media (max-width: 768px) {
-          .max-w-7xl { grid-template-columns: 1fr !important; }
+          .wf-grid { grid-template-columns: 1fr !important; gap: 42px !important; }
         }
       `}</style>
     </section>

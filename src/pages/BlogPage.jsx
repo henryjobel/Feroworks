@@ -136,6 +136,7 @@ function FeaturedPost({ post, imgSrc }) {
         <div className="fp-left" style={{ position: "relative", overflow: "hidden" }}>
           <div style={{ position: "absolute", top: "-12px", left: "-12px", width: "64px", height: "64px", background: "#c8d400", zIndex: 0 }} />
           <img
+            className="fp-image"
             src={imgSrc}
             alt={post.title}
             style={{ position: "relative", zIndex: 1, width: "100%", height: "400px", objectFit: "cover", display: "block", boxShadow: "0 8px 32px rgba(0,0,0,0.14)" }}
@@ -147,7 +148,7 @@ function FeaturedPost({ post, imgSrc }) {
 
         {/* Text */}
         <div className="fp-right">
-          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
+          <div className="fp-meta" style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
             <span style={{ background: "#1c1c1c", color: "#c8d400", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "10px", letterSpacing: "1.5px", textTransform: "uppercase", padding: "4px 10px" }}>{post.category}</span>
             <span style={{ color: "#aaa", fontSize: "13px" }}>{post.date}</span>
             <span style={{ color: "#aaa", fontSize: "13px" }}>· {post.readTime} leestijd</span>
@@ -213,7 +214,7 @@ function BlogCard({ post, imgSrc, delay = 0 }) {
 
       {/* Body */}
       <div style={{ padding: "28px 24px", display: "flex", flexDirection: "column", flex: 1 }}>
-        <div style={{ display: "flex", gap: "12px", marginBottom: "12px" }}>
+        <div className="blog-meta" style={{ display: "flex", gap: "12px", marginBottom: "12px" }}>
           <span style={{ color: "#aaa", fontSize: "12px" }}>{post.date}</span>
           <span style={{ color: "#aaa", fontSize: "12px" }}>· {post.readTime} leestijd</span>
         </div>
@@ -296,7 +297,7 @@ function BlogGrid({ posts }) {
         </div>
 
         {/* Cards grid */}
-        <div className="bg-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "28px" }}>
+        <div className="bg-grid fw-three-col-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "28px" }}>
           {filtered.length > 0 ? filtered.map((post, i) => (
             <BlogCard key={post.id} post={post} imgSrc={post.image || BLOG_FALLBACK_IMAGES[i % BLOG_FALLBACK_IMAGES.length]} delay={i * 0.1} />
           )) : (
@@ -342,7 +343,7 @@ function NewsletterCta() {
               <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "14px", color: "#fff", textTransform: "uppercase" }}>Inschrijving gelukt! ✓</span>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} style={{ display: "flex", gap: "0", maxWidth: "480px", margin: "0 auto" }}>
+            <form className="nl-form" onSubmit={handleSubmit} style={{ display: "flex", gap: "0", maxWidth: "480px", margin: "0 auto" }}>
               <input
                 type="email"
                 value={email}
@@ -374,7 +375,7 @@ function CtaStrip() {
   return (
     <section style={{ background: "#f4f4f4", padding: "72px 0" }}>
       <div className="max-w-7xl mx-auto px-6 md:px-8">
-        <div style={{ background: "#1c1c1c", padding: "48px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "24px" }}>
+        <div className="fw-cta-box" style={{ background: "#1c1c1c", padding: "48px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "24px" }}>
           <div>
             <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(18px, 2.2vw, 26px)", textTransform: "uppercase", color: "#fff", margin: "0 0 8px 0", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
               EEN PROJECT IN <span style={{ color: "#c8d400" }}>GEDACHTEN?</span>
@@ -383,6 +384,7 @@ function CtaStrip() {
           </div>
           <Link
             to="/contact"
+            className="fw-primary-action"
             style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "#c8d400", padding: "16px 32px", textDecoration: "none", display: "inline-block", transition: "background .2s", flexShrink: 0 }}
             onMouseEnter={e => e.currentTarget.style.background = "#b3be00"}
             onMouseLeave={e => e.currentTarget.style.background = "#c8d400"}

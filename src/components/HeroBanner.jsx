@@ -7,6 +7,7 @@ function HeroBanner() {
   const hero = cms.hero || {};
   return (
     <section
+      className="home-hero"
       style={{
         position: "relative",
         width: "100%",
@@ -19,6 +20,7 @@ function HeroBanner() {
     >
       {/* Background image */}
       <div
+        className="hero-bg"
         style={{
           position: "absolute",
           inset: 0,
@@ -116,7 +118,7 @@ function HeroBanner() {
 
         {/* 4 check items - 2 cols on mobile, 4 on desktop */}
         <div
-          className="grid grid-cols-2 md:grid-cols-4"
+          className="grid grid-cols-2 md:grid-cols-4 hero-checks"
           style={{ gap: "12px", marginBottom: "42px" }}
         >
           {(hero.checkItems || []).map((text, i) => (

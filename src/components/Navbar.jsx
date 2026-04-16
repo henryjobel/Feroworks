@@ -16,10 +16,10 @@ function Navbar() {
 
   return (
     <nav className="w-full bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
-      <div className="max-w-7xl mx-auto px-6 md:px-8 flex items-center justify-between" style={{ height: "78px" }}>
+      <div className="w-full max-w-7xl mx-auto px-6 md:px-8 flex items-center justify-between" style={{ height: "78px" }}>
 
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 shrink-0 no-underline">
+        <Link to="/" className="flex items-center gap-2 shrink-0 no-underline" style={{ maxWidth: "calc(100% - 56px)" }}>
           <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="36" height="36" rx="4" fill="#c8d400" />
             <path d="M7 28 L11 14 L16 22 L21 14 L25 28" stroke="#1a1a1a" strokeWidth="2.5" fill="none" strokeLinejoin="round" />
@@ -36,7 +36,7 @@ function Navbar() {
         </Link>
 
         {/* Desktop nav links */}
-        <ul className="hidden md:flex items-center gap-9 list-none flex-1 justify-center m-0 p-0">
+        <ul className="hidden lg:flex items-center gap-7 xl:gap-9 list-none flex-1 justify-center m-0 p-0">
           {navLinks.map((item) => (
             <li key={item.key}>
               <Link
@@ -50,7 +50,7 @@ function Navbar() {
         </ul>
 
         {/* Desktop phone + CTA */}
-        <div className="hidden md:flex items-center gap-6 shrink-0">
+        <div className="hidden lg:flex items-center gap-5 xl:gap-6 shrink-0">
           <a href="tel:+31165205617" className="text-gray-800 text-[16px] font-medium no-underline hover:text-[#8ab61e] transition-colors duration-200 whitespace-nowrap">
             +31 (0)165 205 617
           </a>
@@ -67,7 +67,7 @@ function Navbar() {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden flex flex-col justify-center items-center gap-1.5 w-10 h-10 bg-transparent border-none cursor-pointer p-0"
+          className="site-menu-button lg:hidden flex flex-col justify-center items-center gap-1.5 w-10 h-10 bg-transparent border-none cursor-pointer p-0"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label={t("nav.menuToggle", "Toggle menu")}
         >
@@ -88,7 +88,7 @@ function Navbar() {
 
       {/* Mobile menu dropdown */}
       {menuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-100 px-6 py-4 flex flex-col gap-4">
+        <div className="lg:hidden bg-white border-t border-gray-100 px-6 py-4 flex flex-col gap-4">
           {navLinks.map((item) => (
             <Link
               key={item.key}

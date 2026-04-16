@@ -129,7 +129,7 @@ function ContactMain() {
           ) : (
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
               {/* Naam + Bedrijf */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+              <div className="form-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
                 <div>
                   <label style={labelStyle}>Naam *</label>
                   <input
@@ -158,7 +158,7 @@ function ContactMain() {
               </div>
 
               {/* Email + Telefoon */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+              <div className="form-row" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
                 <div>
                   <label style={labelStyle}>E-mailadres *</label>
                   <input
@@ -341,7 +341,7 @@ function MapSection() {
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
         />
-        <div style={{ position: "absolute", top: "24px", left: "24px", background: "#1c1c1c", padding: "14px 20px", display: "flex", alignItems: "center", gap: "10px" }}>
+        <div className="map-badge" style={{ position: "absolute", top: "24px", left: "24px", background: "#1c1c1c", padding: "14px 20px", display: "flex", alignItems: "center", gap: "10px" }}>
           <div style={{ width: "8px", height: "8px", background: "#c8d400", flexShrink: 0 }} />
           <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", color: "#fff", letterSpacing: "0.5px" }}>{adres.replace("\n", " \xB7 ")}</span>
         </div>
@@ -380,7 +380,7 @@ function ContactStrip() {
         .cs-on .cs-item:nth-child(2) { opacity:1; transform:none; transition-delay:.12s; }
         .cs-on .cs-item:nth-child(3) { opacity:1; transform:none; transition-delay:.24s; }
       `}</style>
-      <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 " + (vis ? "cs-on" : "")}
+      <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 contact-strip-grid " + (vis ? "cs-on" : "")}
         style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0", alignItems: "stretch" }}>
         {items.map((item, i) => (
           <a

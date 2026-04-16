@@ -121,7 +121,7 @@ function StatsRow() {
         .st2-on .st2-item:nth-child(3) { opacity:1; transform:none; transition-delay:.24s; }
         .st2-on .st2-item:nth-child(4) { opacity:1; transform:none; transition-delay:.36s; }
       `}</style>
-      <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 " + (vis ? "st2-on" : "")}
+      <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 st2-grid " + (vis ? "st2-on" : "")}
         style={{ display: "grid", gridTemplateColumns: `repeat(${stats.length || 4}, 1fr)`, gap: "32px" }}>
         {stats.map((s, i) => (
           <div key={i} className="st2-item" style={{ borderLeft: "3px solid #c8d400", paddingLeft: "20px" }}>
@@ -181,9 +181,9 @@ function WatWeDoen() {
         </div>
 
         <div className="wwd-right" style={{ position: "relative" }}>
-          <div style={{ position: "absolute", bottom: "-16px", right: "-16px", width: "64px", height: "64px", background: "#c8d400", zIndex: 0 }} />
+          <div className="wwd-accent" style={{ position: "absolute", bottom: "-16px", right: "-16px", width: "64px", height: "64px", background: "#c8d400", zIndex: 0 }} />
           <div style={{ position: "relative", zIndex: 1, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.12)" }}>
-            <img src={wwd.image || imgMachine} alt="FerroWorks productie" style={{ width: "100%", height: "340px", objectFit: "cover", objectPosition: "center", display: "block" }} />
+            <img className="wwd-image" src={wwd.image || imgMachine} alt="FerroWorks productie" style={{ width: "100%", height: "340px", objectFit: "cover", objectPosition: "center", display: "block" }} />
           </div>
         </div>
       </div>
@@ -223,7 +223,7 @@ function WatOnsAnders() {
           </h2>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "32px" }}>
+        <div className="fw-three-col-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "32px" }}>
           {differentiators.map((d, i) => (
             <div key={i} className="woa2-card" style={{ background: "#fff", padding: "36px 28px", borderBottom: "4px solid #c8d400" }}>
               <div style={{ width: "40px", height: "40px", background: "#c8d400", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "20px" }}>
@@ -330,7 +330,7 @@ function SectorenOverzicht() {
           </h2>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "24px" }}>
+        <div className="fw-four-col-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "24px" }}>
           {sectoren.map((s, i) => (
             <div key={i} className="so-card" style={{ background: "#2a2a2a", padding: "32px 24px", borderTop: "4px solid #c8d400" }}>
               <h3 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "16px", textTransform: "uppercase", color: "#fff", margin: "0 0 20px 0", letterSpacing: "-0.2px", lineHeight: 1.2 }}>{s.naam}</h3>
@@ -378,7 +378,7 @@ function Certificeringen() {
           </h2>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }}>
+        <div className="fw-three-col-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }}>
           {certs.map((c, i) => (
             <div key={i} className="ce2-card" style={{ border: "1.5px solid #e0e0e0", padding: "36px 28px", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "10px", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", top: 0, left: 0, width: "4px", height: "100%", background: "#c8d400" }} />
@@ -398,7 +398,7 @@ function CtaSection() {
   return (
     <section style={{ background: "#f4f4f4", padding: "80px 0" }}>
       <div className="max-w-7xl mx-auto px-6 md:px-8">
-        <div style={{ background: "#1c1c1c", padding: "56px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "28px" }}>
+        <div className="fw-cta-box" style={{ background: "#1c1c1c", padding: "56px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "28px" }}>
           <div>
             <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(20px, 2.4vw, 30px)", textTransform: "uppercase", color: "#fff", margin: "0 0 10px 0", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
               KLAAR OM <span style={{ color: "#c8d400" }}>TE STARTEN?</span>
@@ -407,7 +407,7 @@ function CtaSection() {
               Stuur uw tekening op of neem contact op — wij reageren binnen 24 uur.
             </p>
           </div>
-          <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+          <div className="fw-cta-actions" style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
             <Link
               to="/contact"
               style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "#c8d400", padding: "16px 32px", textDecoration: "none", display: "inline-block" }}

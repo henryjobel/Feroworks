@@ -601,14 +601,14 @@ function CtaStrip() {
   return (
     <section style={{ background: "#f4f4f4", padding: "72px 0" }}>
       <div className="max-w-7xl mx-auto px-6 md:px-8">
-        <div style={{ background: "#1c1c1c", padding: "48px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "24px" }}>
+        <div className="fw-cta-box" style={{ background: "#1c1c1c", padding: "48px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "24px" }}>
           <div>
             <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(18px, 2.2vw, 26px)", textTransform: "uppercase", color: "#fff", margin: "0 0 8px 0", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
               KLAAR VOOR UW <span style={{ color: "#c8d400" }}>PROJECT?</span>
             </h2>
             <p style={{ color: "#888", fontSize: "14px", margin: 0 }}>Stuur uw tekening op of bel ons direct — wij reageren binnen 24 uur.</p>
           </div>
-          <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
+          <div className="fw-cta-actions" style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
             <Link
               to="/contact"
               style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "#c8d400", padding: "16px 32px", textDecoration: "none", display: "inline-block", transition: "background .2s", flexShrink: 0 }}

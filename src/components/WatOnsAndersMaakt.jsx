@@ -57,7 +57,7 @@ function WatOnsAndersMaakt() {
 
       <div
         ref={ref}
-        className={"max-w-7xl mx-auto px-6 md:px-8 " + (vis ? "woa-on" : "")}
+        className={"max-w-7xl mx-auto px-6 md:px-8 woa-grid " + (vis ? "woa-on" : "")}
         style={{
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
@@ -137,6 +137,7 @@ function WatOnsAndersMaakt() {
                 objectPosition: "center",
                 display: "block",
               }}
+              className="woa-image"
             />
           </div>
 
@@ -159,7 +160,7 @@ function WatOnsAndersMaakt() {
       {/* Mobile */}
       <style>{`
         @media (max-width: 768px) {
-          .woa-on { grid-template-columns: 1fr !important; gap: 48px !important; }
+          .woa-grid { grid-template-columns: 1fr !important; gap: 42px !important; }
         }
       `}</style>
     </section>

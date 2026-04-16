@@ -61,7 +61,7 @@ function IntroStrip() {
   return (
     <section style={{ background: "#1c1c1c", padding: "56px 0" }}>
       <style>{`.is-sp{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease}.is-sp-on .is-sp{opacity:1;transform:none}`}</style>
-      <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 " + (vis ? "is-sp-on" : "")}
+      <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 is-sp-grid " + (vis ? "is-sp-on" : "")}
         style={{ display: "grid", gridTemplateColumns: `repeat(${stats.length},1fr)`, gap: "24px" }}>
         {stats.map((item, i) => (
           <div key={i} className="is-sp" style={{ borderLeft: "3px solid #c8d400", paddingLeft: "20px", transitionDelay: `${i * 0.1}s` }}>
@@ -109,9 +109,9 @@ function SectorBlock({ sector, index }) {
 
   const imageBlock = (
     <div style={{ position: "relative" }}>
-      <div style={{ position: "absolute", ...(isEven ? { top: "-16px", right: "-16px" } : { bottom: "-16px", left: "-16px" }), width: "72px", height: "72px", background: "#c8d400", zIndex: 0 }} />
+      <div className="sector-accent" style={{ position: "absolute", ...(isEven ? { top: "-16px", right: "-16px" } : { bottom: "-16px", left: "-16px" }), width: "72px", height: "72px", background: "#c8d400", zIndex: 0 }} />
       <div style={{ position: "relative", zIndex: 1, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.12)" }}>
-        <img src={img} alt={sector.naam} style={{ width: "100%", height: "400px", objectFit: "cover", objectPosition: "center", display: "block" }} />
+        <img className="sector-image" src={img} alt={sector.naam} style={{ width: "100%", height: "400px", objectFit: "cover", objectPosition: "center", display: "block" }} />
       </div>
     </div>
   );
@@ -124,7 +124,7 @@ function SectorBlock({ sector, index }) {
         .sb${index}-on .sb${index}-l,.sb${index}-on .sb${index}-r{opacity:1;transform:none}
         @media(max-width:768px){.sb${index}-g{grid-template-columns:1fr!important}}
       `}</style>
-      <div ref={ref} className={`max-w-7xl mx-auto px-6 md:px-8 sb${index}-g` + (vis ? ` sb${index}-on` : "")}
+      <div ref={ref} className={`max-w-7xl mx-auto px-6 md:px-8 fw-sector-grid sb${index}-g` + (vis ? ` sb${index}-on` : "")}
         style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "center" }}>
         <div className={`sb${index}-l`}>{isEven ? textBlock : imageBlock}</div>
         <div className={`sb${index}-r`}>{isEven ? imageBlock : textBlock}</div>
@@ -152,7 +152,7 @@ function DienstenBanner() {
             ONZE <span style={{ color: "#c8d400" }}>DIENSTEN</span>
           </h2>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: "16px" }}>
+        <div className="fw-five-col-grid" style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: "16px" }}>
           {items.map((item, i) => (
             <Link key={i} to={item.to} className="db-card"
               style={{ background: "#252525", padding: "24px 20px", display: "block", textDecoration: "none", borderTop: "3px solid #c8d400", transitionDelay: `${i * 0.08}s` }}
@@ -172,14 +172,14 @@ function CtaSection() {
   return (
     <section style={{ background: "#f4f4f4", padding: "80px 0" }}>
       <div className="max-w-7xl mx-auto px-6 md:px-8">
-        <div style={{ background: "#1c1c1c", padding: "56px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "28px" }}>
+        <div className="fw-cta-box" style={{ background: "#1c1c1c", padding: "56px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "28px" }}>
           <div>
             <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(20px,2.4vw,30px)", textTransform: "uppercase", color: "#fff", margin: "0 0 10px 0", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
               KLAAR OM <span style={{ color: "#c8d400" }}>TE STARTEN?</span>
             </h2>
             <p style={{ color: "#999", fontSize: "15px", margin: 0, lineHeight: 1.5 }}>Stuur uw tekening op of neem contact op — wij reageren binnen 24 uur.</p>
           </div>
-          <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+          <div className="fw-cta-actions" style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
             <Link to="/contact"
               style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "#c8d400", padding: "16px 32px", textDecoration: "none", display: "inline-block" }}
               onMouseEnter={e => e.currentTarget.style.background = "#b3be00"}

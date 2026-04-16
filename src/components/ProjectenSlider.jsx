@@ -104,7 +104,7 @@ function ProjectenSlider() {
         </h2>
 
         {/* Slider row */}
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+        <div className="ps-row" style={{ display: "flex", alignItems: "center", gap: "16px" }}>
           {/* Prev arrow */}
           <button className="ps-arrow" onClick={prev} aria-label="Vorige">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -134,7 +134,7 @@ function ProjectenSlider() {
             </div>
 
             {/* Text */}
-            <div style={{ padding: "36px 36px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+            <div className="ps-copy" style={{ padding: "36px 36px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
               <h3
                 style={{
                   fontFamily: "Arial Black, Arial, sans-serif",

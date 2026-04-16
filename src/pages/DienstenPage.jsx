@@ -65,7 +65,7 @@ function IntroStrip() {
   return (
     <section style={{ background: "#1c1c1c", padding: "48px 0" }}>
       <style>{`.is-d{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease}.is-d-on .is-d{opacity:1;transform:none}`}</style>
-      <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 " + (vis ? "is-d-on" : "")}
+      <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 is-d-grid " + (vis ? "is-d-on" : "")}
         style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", borderLeft: "3px solid #c8d400" }}>
         {items.map((item, i) => (
           <div key={i} className="is-d" style={{ padding: "8px 32px", borderRight: i < 2 ? "1px solid #333" : "none" }}>
@@ -118,9 +118,9 @@ function DienstBlock({ dienst, index }) {
 
   const imageBlock = (
     <div style={{ position: "relative" }}>
-      <div style={{ position: "absolute", ...(isEven ? { top: "-16px", right: "-16px" } : { bottom: "-16px", left: "-16px" }), width: "72px", height: "72px", background: "#c8d400", zIndex: 0 }} />
+      <div className="service-accent" style={{ position: "absolute", ...(isEven ? { top: "-16px", right: "-16px" } : { bottom: "-16px", left: "-16px" }), width: "72px", height: "72px", background: "#c8d400", zIndex: 0 }} />
       <div style={{ position: "relative", zIndex: 1, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.12)" }}>
-        <img src={img} alt={dienst.title} style={{ width: "100%", height: "380px", objectFit: "cover", objectPosition: "center", display: "block" }} />
+        <img className="service-image" src={img} alt={dienst.title} style={{ width: "100%", height: "380px", objectFit: "cover", objectPosition: "center", display: "block" }} />
       </div>
     </div>
   );
@@ -133,7 +133,7 @@ function DienstBlock({ dienst, index }) {
         .db${index}-on .db${index}-l,.db${index}-on .db${index}-r{opacity:1;transform:none}
         @media(max-width:768px){.db${index}-g{grid-template-columns:1fr!important}}
       `}</style>
-      <div ref={ref} className={`max-w-7xl mx-auto px-6 md:px-8 db${index}-g` + (vis ? ` db${index}-on` : "")}
+      <div ref={ref} className={`max-w-7xl mx-auto px-6 md:px-8 fw-service-grid db${index}-g` + (vis ? ` db${index}-on` : "")}
         style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "center" }}>
         <div className={`db${index}-l`}>{isEven ? textBlock : imageBlock}</div>
         <div className={`db${index}-r`}>{isEven ? imageBlock : textBlock}</div>
@@ -146,14 +146,14 @@ function CtaSection() {
   return (
     <section style={{ background: "#f4f4f4", padding: "80px 0" }}>
       <div className="max-w-7xl mx-auto px-6 md:px-8">
-        <div style={{ background: "#1c1c1c", padding: "56px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "28px" }}>
+        <div className="fw-cta-box" style={{ background: "#1c1c1c", padding: "56px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "28px" }}>
           <div>
             <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(20px,2.4vw,30px)", textTransform: "uppercase", color: "#fff", margin: "0 0 10px 0", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
               KLAAR OM <span style={{ color: "#c8d400" }}>TE STARTEN?</span>
             </h2>
             <p style={{ color: "#999", fontSize: "15px", margin: 0, lineHeight: 1.5 }}>Stuur uw tekening op of neem contact op — wij reageren binnen 24 uur.</p>
           </div>
-          <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+          <div className="fw-cta-actions" style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
             <Link to="/contact"
               style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "#c8d400", padding: "16px 32px", textDecoration: "none", display: "inline-block" }}
               onMouseEnter={e => e.currentTarget.style.background = "#b3be00"}
