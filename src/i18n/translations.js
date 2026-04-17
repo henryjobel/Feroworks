@@ -1,4 +1,4 @@
-import { SUPPORTED_LOCALES } from "../../../shared/i18n.js";
+import { SUPPORTED_LOCALES } from "./i18n.js";
 
 export const SUPPORTED_LANGUAGES = SUPPORTED_LOCALES;
 

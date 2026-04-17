@@ -24,7 +24,7 @@ import UwProjectSection from "../components/UwProjectSection";
 import FaqSection from "../components/FaqSection";
 import RichTextEditor from "../components/RichTextEditor";
 import { stripHtml } from "../components/RichTextContent";
-import { localizeCmsContent } from "../../../shared/content-localization.js";
+import { localizeCmsContent } from "../i18n/content-localization.js";
 import { DEFAULT_THEME_SETTINGS, FONT_OPTIONS } from "../theme/themeConfig";
 
 const DEFAULT_LOCALIZATION_SETTINGS = {

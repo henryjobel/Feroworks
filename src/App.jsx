@@ -24,8 +24,8 @@ import SectorenPage from './pages/SectorenPage'
 import ManagedContentPage from './pages/ManagedContentPage'
 import RouteSeo from './seo/RouteSeo'
 import ThemeStyles from './theme/ThemeStyles'
-import { getCanonicalPathname, getLocaleFromPathname, localizePath } from '../../shared/i18n.js'
-import { isLocalizationEnabled } from '../../shared/content-localization.js'
+import { getCanonicalPathname, getLocaleFromPathname, localizePath } from './i18n/i18n.js'
+import { isLocalizationEnabled } from './i18n/content-localization.js'
 
 const AdminPage = lazy(() => import('./pages/AdminPage'))
 

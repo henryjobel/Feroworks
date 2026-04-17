@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { DEFAULT_LOCALE, getCanonicalPathname, getLocaleFromPathname, localizePath } from "../../../shared/i18n.js";
+import { DEFAULT_LOCALE, getCanonicalPathname, getLocaleFromPathname, localizePath } from "./i18n.js";
 import { SUPPORTED_LANGUAGES, translations } from "./translations";
 
 const LanguageContext = createContext(null);

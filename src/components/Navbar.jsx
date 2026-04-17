@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useCms } from "../cms/CmsContext";
 import { useLanguage } from "../i18n/LanguageContext";
-import { getActiveLocales, isLocalizationEnabled } from "../../../shared/content-localization.js";
+import { getActiveLocales, isLocalizationEnabled } from "../i18n/content-localization.js";
 
 const navLinks = [
   { key: "overOns", to: "/over-ons" },

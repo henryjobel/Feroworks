@@ -97,7 +97,6 @@ function localizePath(pathname, locale = "nl") {
 	return canonicalPath === "/" ? `/${safeLocale}` : `/${safeLocale}${canonicalPath}`;
 }
 //#endregion
-//#region ../shared/content-localization.js
 function isPlainObject(value) {
 	return value && typeof value === "object" && !Array.isArray(value);
 }

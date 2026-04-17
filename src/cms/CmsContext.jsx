@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { isLocalizationEnabled, localizeCmsContent } from "../../../shared/content-localization.js";
+import { isLocalizationEnabled, localizeCmsContent } from "../i18n/content-localization.js";
 import { api } from "../api/client";
 import { useLanguage } from "../i18n/LanguageContext";
 import { DEFAULT_CMS } from "./defaultContent";

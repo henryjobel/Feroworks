@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useCms } from "../cms/CmsContext";
-import { DEFAULT_LOCALE, getCanonicalPathname, localizePath } from "../../../shared/i18n.js";
-import { getActiveLocales } from "../../../shared/content-localization.js";
+import { DEFAULT_LOCALE, getCanonicalPathname, localizePath } from "../i18n/i18n.js";
+import { getActiveLocales } from "../i18n/content-localization.js";
 
 function upsertMeta(name, value, property = false) {
   if (!value) return;
