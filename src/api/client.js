@@ -37,6 +37,17 @@ export const api = {
       body: JSON.stringify({ value }),
     }),
   getAdminLeads: () => request("/api/admin/leads"),
+  getStaff: () => request("/api/admin/staff"),
+  createStaff: (payload) =>
+    request("/api/admin/staff", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  updateStaff: (id, payload) =>
+    request(`/api/admin/staff/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    }),
   replyToLead: (id, payload) =>
     request(`/api/admin/leads/${id}/reply`, {
       method: "POST",

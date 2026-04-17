@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
 import { CmsProvider } from './cms/CmsContext'
 import Navbar from './components/Navbar'
@@ -19,8 +20,23 @@ import DienstenPage from './pages/DienstenPage'
 import DienstDetailPage from './pages/DienstDetailPage'
 import SectorenPage from './pages/SectorenPage'
 import ManagedContentPage from './pages/ManagedContentPage'
-import AdminPage from './pages/AdminPage'
 import RouteSeo from './seo/RouteSeo'
+
+const AdminPage = lazy(() => import('./pages/AdminPage'))
+
+function AdminRoute() {
+  return (
+    <Suspense
+      fallback={
+        <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', background: '#141616', color: '#fff', fontFamily: 'Arial Black, Arial, sans-serif', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+          Admin laden...
+        </div>
+      }
+    >
+      <AdminPage />
+    </Suspense>
+  )
+}
 
 function HomePage() {
   return (
@@ -64,7 +80,7 @@ export function AppRoutes() {
         <Route path="/privacy-policy" element={<ManagedContentPage />} />
         <Route path="/algemene-voorwaarden" element={<ManagedContentPage />} />
       </Route>
-      <Route path="/admin/*" element={<AdminPage />} />
+      <Route path="/admin/*" element={<AdminRoute />} />
     </Routes>
   )
 }

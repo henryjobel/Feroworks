@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Link,
   NavLink,
@@ -278,30 +278,31 @@ const NAV_GROUPS = [
   {
     label: "Overzicht",
     items: [
-      { to: "/admin/dashboard", label: "Dashboard", d: "M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z M9 22V12h6v10" },
+      { to: "/admin/dashboard", label: "Dashboard", permission: "dashboard.view", d: "M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z M9 22V12h6v10" },
     ],
   },
   {
     label: "Content",
     items: [
-      { to: "/admin/homepage", label: "Homepage Blocks", d: "M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z M9 22V12h6v10" },
-      { to: "/admin/over-ons", label: "Over Ons", d: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" },
-      { to: "/admin/pages", label: "Pages", d: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" },
+      { to: "/admin/homepage", label: "Homepage Blocks", permission: "content.homepage", d: "M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z M9 22V12h6v10" },
+      { to: "/admin/over-ons", label: "Over Ons", permission: "content.about", d: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" },
+      { to: "/admin/pages", label: "Pages", permission: "content.pages", d: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" },
     ],
   },
   {
     label: "Collections",
     items: [
-      { to: "/admin/blog", label: "Blog", d: "M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8" },
-      { to: "/admin/diensten", label: "Diensten", d: "M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5" },
-      { to: "/admin/sectoren", label: "Sectoren", d: "M1 6l11-5 11 5v6c0 5.5-4.67 10.74-11 12C5.67 22.74 1 17.5 1 12V6z" },
-      { to: "/admin/leads", label: "Contacts", d: "M21 8a2 2 0 01-2 2H5l-4 4V6a2 2 0 012-2h16a2 2 0 012 2z M8 14h8 M8 18h5" },
+      { to: "/admin/blog", label: "Blog", permission: "collections.blog", d: "M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8" },
+      { to: "/admin/diensten", label: "Diensten", permission: "collections.services", d: "M12 2L2 7l10 5 10-5-10-5z M2 17l10 5 10-5 M2 12l10 5 10-5" },
+      { to: "/admin/sectoren", label: "Sectoren", permission: "collections.sectors", d: "M1 6l11-5 11 5v6c0 5.5-4.67 10.74-11 12C5.67 22.74 1 17.5 1 12V6z" },
+      { to: "/admin/leads", label: "Contacts", permission: "leads.view", d: "M21 8a2 2 0 01-2 2H5l-4 4V6a2 2 0 012-2h16a2 2 0 012 2z M8 14h8 M8 18h5" },
     ],
   },
   {
     label: "Platform",
     items: [
-      { to: "/admin/instellingen", label: "Settings", d: "M12 15a3 3 0 100-6 3 3 0 000 6z M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" },
+      { to: "/admin/staff", label: "Staff", permission: "staff.manage", d: "M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2 M9 7a4 4 0 100-8 4 4 0 000 8z M23 21v-2a4 4 0 00-3-3.87 M16 3.13a4 4 0 010 7.75" },
+      { to: "/admin/instellingen", label: "Settings", permission: "settings.manage", d: "M12 15a3 3 0 100-6 3 3 0 000 6z M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" },
     ],
   },
 ];
@@ -316,6 +317,7 @@ function pageMeta(pathname) {
     { match: "/admin/homepage", title: "Homepage Blocks", sub: "Bewerk homepage-secties zonder het design te wijzigen" },
     { match: "/admin/over-ons", title: "Over Ons", sub: "Bewerk de content van de Over Ons-pagina" },
     { match: "/admin/pages", title: "Pages", sub: "Beheer pagina-meta, indexatie en statische pagina-inhoud" },
+    { match: "/admin/staff", title: "Staff", sub: "Beheer accounts, rollen en toegangsrechten" },
     { match: "/admin/instellingen", title: "Settings", sub: "Website, robots en e-mailconfiguratie" },
   ];
 
@@ -324,7 +326,12 @@ function pageMeta(pathname) {
 
 function Sidebar({ collapsed, setCollapsed }) {
   const location = useLocation();
+  const { can } = useAuth();
   const [openGroups, setOpenGroups] = useState(() => ({ Content: true, Collections: true, Platform: true, Overzicht: true }));
+  const groups = NAV_GROUPS.map((group) => ({
+    ...group,
+    items: group.items.filter((item) => !item.permission || can(item.permission)),
+  })).filter((group) => group.items.length);
 
   return (
     <aside style={{ width: collapsed ? 72 : 240, background: "#141616", minHeight: "100vh", display: "flex", flexDirection: "column", position: "fixed", top: 0, left: 0, zIndex: 200, height: "100vh", overflowY: "auto", transition: "width .2s ease", flexShrink: 0 }}>
@@ -343,7 +350,7 @@ function Sidebar({ collapsed, setCollapsed }) {
       </div>
 
       <nav style={{ padding: "12px 0", flex: 1 }}>
-        {NAV_GROUPS.map((group) => (
+        {groups.map((group) => (
           <div key={group.label} style={{ marginBottom: "10px" }}>
             {!collapsed ? (
               <button
@@ -401,19 +408,65 @@ function Sidebar({ collapsed, setCollapsed }) {
 
 function TopBar({ onLogout }) {
   const location = useLocation();
+  const { user } = useAuth();
   const meta = pageMeta(location.pathname);
+  const roleLabel = user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : "Staff";
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutside);
+    return () => document.removeEventListener("mousedown", handleOutside);
+  }, []);
 
   return (
-    <header style={{ background: "#fff", borderBottom: "1px solid #ebebeb", padding: "0 28px", height: "64px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
+    <header style={{ background: "#fff", borderBottom: "1px solid #ebebeb", padding: "0 28px", minHeight: "72px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "20px", flexShrink: 0 }}>
       <div>
         <h1 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "17px", textTransform: "uppercase", color: "#1c1c1c", margin: 0, letterSpacing: "-0.2px" }}>{meta.title}</h1>
         <p style={{ fontSize: "12px", color: "#aaa", margin: 0 }}>{meta.sub}</p>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        <div style={{ width: "34px", height: "34px", borderRadius: "50%", background: "#c8d400", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <SvgIcon d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2 M12 11a4 4 0 100-8 4 4 0 000 8z" size={16} stroke="#1c1c1c" strokeWidth={2.5} />
+      <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap", justifyContent: "flex-end" }}>
+        <div ref={menuRef} style={{ position: "relative" }}>
+          <button
+            type="button"
+            onClick={() => setMenuOpen((prev) => !prev)}
+            style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 10px", border: "1px solid #ececec", borderRadius: "999px", background: "#fafafa", cursor: "pointer" }}
+          >
+            <div style={{ textAlign: "right", minWidth: "74px" }}>
+              <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "11px", textTransform: "uppercase", color: "#1c1c1c", whiteSpace: "nowrap" }}>{user?.name || "Admin"}</div>
+              <div style={{ fontSize: "11px", color: "#888" }}>{roleLabel}</div>
+            </div>
+            <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#c8d400", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <SvgIcon d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2 M12 11a4 4 0 100-8 4 4 0 000 8z" size={15} stroke="#1c1c1c" strokeWidth={2.4} />
+            </div>
+            <ChevronIcon open={menuOpen} size={14} color="#666" />
+          </button>
+
+          {menuOpen ? (
+            <div style={{ position: "absolute", top: "calc(100% + 10px)", right: 0, minWidth: "180px", background: "#fff", border: "1px solid #ececec", borderRadius: "12px", boxShadow: "0 16px 40px rgba(0,0,0,0.12)", padding: "8px", zIndex: 30 }}>
+              <div style={{ padding: "10px 12px", borderBottom: "1px solid #f1f1f1", marginBottom: "6px" }}>
+                <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "11px", textTransform: "uppercase", color: "#1c1c1c" }}>{user?.name || "Admin"}</div>
+                <div style={{ fontSize: "11px", color: "#888", marginTop: "2px" }}>{user?.email || ""}</div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setMenuOpen(false);
+                  onLogout();
+                }}
+                style={{ width: "100%", textAlign: "left", border: "none", background: "#fff7f7", color: "#b42318", borderRadius: "8px", padding: "12px 14px", cursor: "pointer", fontFamily: "Arial Black, Arial, sans-serif", fontSize: "11px", textTransform: "uppercase" }}
+              >
+                Logout
+              </button>
+            </div>
+          ) : null}
         </div>
-        <SecondaryButton type="button" onClick={onLogout}>Logout</SecondaryButton>
       </div>
     </header>
   );
@@ -482,7 +535,49 @@ function AdminShell() {
   );
 }
 
+function ForbiddenPage({ title = "Geen toegang", text = "Je account heeft geen toegang tot dit onderdeel." }) {
+  return (
+    <Card style={{ padding: "28px", maxWidth: "720px" }}>
+      <h2 style={{ margin: "0 0 8px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "18px", textTransform: "uppercase", color: "#1c1c1c" }}>{title}</h2>
+      <p style={{ margin: 0, color: "#666", lineHeight: 1.7 }}>{text}</p>
+    </Card>
+  );
+}
+
+function PermissionRoute({ permission, children }) {
+  const { can } = useAuth();
+
+  if (!can(permission)) {
+    return <ForbiddenPage />;
+  }
+
+  return children;
+}
+
+function getDefaultAdminPath(can) {
+  const routeOrder = [
+    ["/admin/dashboard", "dashboard.view"],
+    ["/admin/homepage", "content.homepage"],
+    ["/admin/over-ons", "content.about"],
+    ["/admin/pages", "content.pages"],
+    ["/admin/blog", "collections.blog"],
+    ["/admin/diensten", "collections.services"],
+    ["/admin/sectoren", "collections.sectors"],
+    ["/admin/leads", "leads.view"],
+    ["/admin/staff", "staff.manage"],
+    ["/admin/instellingen", "settings.manage"],
+  ];
+
+  return routeOrder.find((item) => can(item[1]))?.[0] || "/admin/dashboard";
+}
+
+function DefaultAdminRedirect() {
+  const { can } = useAuth();
+  return <Navigate to={getDefaultAdminPath(can)} replace />;
+}
+
 function DashboardPage() {
+  const { can } = useAuth();
   const { cms } = useCms();
   const stats = [
     { label: "Blog Posts", value: String((cms.blog || []).length), color: "#c8d400", d: "M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8" },
@@ -493,12 +588,13 @@ function DashboardPage() {
 
   const recentBlog = [...(cms.blog || [])].slice(0, 4);
   const quickLinks = [
-    { label: "Nieuwe blogpost", to: "/admin/blog/new" },
-    { label: "Nieuwe dienst", to: "/admin/diensten/new" },
-    { label: "Nieuwe sector", to: "/admin/sectoren/new" },
-    { label: "Bekijk leads", to: "/admin/leads" },
-    { label: "SEO instellingen", to: "/admin/instellingen" },
-  ];
+    { label: "Nieuwe blogpost", to: "/admin/blog/new", permission: "collections.blog" },
+    { label: "Nieuwe dienst", to: "/admin/diensten/new", permission: "collections.services" },
+    { label: "Nieuwe sector", to: "/admin/sectoren/new", permission: "collections.sectors" },
+    { label: "Bekijk leads", to: "/admin/leads", permission: "leads.view" },
+    { label: "SEO instellingen", to: "/admin/instellingen", permission: "settings.manage" },
+    { label: "Staff beheren", to: "/admin/staff", permission: "staff.manage" },
+  ].filter((item) => can(item.permission));
 
   return (
     <div>
@@ -553,6 +649,7 @@ function DashboardPage() {
 }
 
 function LeadsPage() {
+  const { can } = useAuth();
   const [leads, setLeads] = useState([]);
   const [mailConfigured, setMailConfigured] = useState(false);
   const [emailSettings, setEmailSettings] = useState({ templates: [] });
@@ -560,7 +657,7 @@ function LeadsPage() {
   const [leadError, setLeadError] = useState("");
   const [viewLead, setViewLead] = useState(null);
   const [selectedLead, setSelectedLead] = useState(null);
-  const [replyForm, setReplyForm] = useState({ subject: "", message: "" });
+  const [replyForm, setReplyForm] = useState({ subject: "", message: "", htmlMessage: "", templateId: "" });
   const [replying, setReplying] = useState(false);
 
   useEffect(() => {
@@ -588,11 +685,16 @@ function LeadsPage() {
   }, []);
 
   const openReply = (lead) => {
+    if (!can("leads.reply")) {
+      return;
+    }
     const firstTemplate = emailSettings.templates?.[0];
+    const htmlMessage = firstTemplate?.htmlBody?.replace(/\{\{name\}\}/g, lead.name) || "";
     setSelectedLead(lead);
     setReplyForm({
       subject: firstTemplate?.subject?.replace(/\{\{name\}\}/g, lead.name) || "Re: uw aanvraag bij FerroWorks",
       message: firstTemplate?.body?.replace(/\{\{name\}\}/g, lead.name) || `Beste ${lead.name},\n\nBedankt voor uw bericht.\n\nMet vriendelijke groet,\nFerroWorks`,
+      htmlMessage,
       templateId: firstTemplate?.id || "",
     });
   };
@@ -605,6 +707,7 @@ function LeadsPage() {
       templateId,
       subject: template.subject.replace(/\{\{name\}\}/g, selectedLead.name),
       message: template.body.replace(/\{\{name\}\}/g, selectedLead.name),
+      htmlMessage: (template.htmlBody || "").replace(/\{\{name\}\}/g, selectedLead.name),
     });
   };
 
@@ -651,7 +754,7 @@ function LeadsPage() {
             <div style={{ display: "flex", justifyContent: "flex-end", gap: "8px", flexWrap: "wrap" }}>
               <button onClick={() => setViewLead(lead)} style={{ padding: "7px 14px", background: "#f0f0f0", color: "#555", border: "none", borderRadius: "4px", cursor: "pointer", fontSize: "11px", fontFamily: "Arial Black, Arial, sans-serif", textTransform: "uppercase" }}>Bekijk</button>
               {lead.attachment?.publicUrl ? <Link to={lead.attachment.publicUrl} target="_blank" style={{ padding: "7px 14px", background: "#f0f0f0", color: "#555", borderRadius: "4px", textDecoration: "none", fontSize: "11px", fontFamily: "Arial Black, Arial, sans-serif", textTransform: "uppercase" }}>Bijlage</Link> : null}
-              <button onClick={() => openReply(lead)} style={{ padding: "7px 14px", background: "#f0f4e0", color: "#6b7a00", border: "none", borderRadius: "4px", cursor: "pointer", fontSize: "11px", fontFamily: "Arial Black, Arial, sans-serif", textTransform: "uppercase" }}>Mail</button>
+              {can("leads.reply") ? <button onClick={() => openReply(lead)} style={{ padding: "7px 14px", background: "#f0f4e0", color: "#6b7a00", border: "none", borderRadius: "4px", cursor: "pointer", fontSize: "11px", fontFamily: "Arial Black, Arial, sans-serif", textTransform: "uppercase" }}>Mail</button> : null}
             </div>
           </div>
         )) : null}
@@ -679,7 +782,7 @@ function LeadsPage() {
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px" }}>
               {viewLead.attachment?.publicUrl ? <Link to={viewLead.attachment.publicUrl} target="_blank" style={{ textDecoration: "none" }}><SecondaryButton type="button">Bijlage openen</SecondaryButton></Link> : null}
-              <PrimaryButton type="button" onClick={() => { setViewLead(null); openReply(viewLead); }}>Mail sturen</PrimaryButton>
+              {can("leads.reply") ? <PrimaryButton type="button" onClick={() => { setViewLead(null); openReply(viewLead); }}>Mail sturen</PrimaryButton> : null}
             </div>
           </div>
         </Modal>
@@ -710,6 +813,7 @@ function LeadsPage() {
             />
             <FormField label="Onderwerp" value={replyForm.subject} onChange={(value) => setReplyForm((prev) => ({ ...prev, subject: value }))} />
             <FormField label="Bericht" value={replyForm.message} onChange={(value) => setReplyForm((prev) => ({ ...prev, message: value }))} multiline rows={10} />
+            <RichTextEditor label="HTML template" value={replyForm.htmlMessage} onChange={(value) => setReplyForm((prev) => ({ ...prev, htmlMessage: value }))} placeholder="Ontwerp hier je HTML e-mailtemplate..." />
             <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px" }}>
               <SecondaryButton type="button" onClick={() => setSelectedLead(null)}>Annuleren</SecondaryButton>
               <PrimaryButton type="button" onClick={sendReply} disabled={replying || !mailConfigured} style={{ opacity: replying || !mailConfigured ? 0.65 : 1 }}>{replying ? "Verzenden..." : "Verzend mail"}</PrimaryButton>
@@ -1398,6 +1502,216 @@ function PagesPage() {
   );
 }
 
+function StaffPage() {
+  const [staff, setStaff] = useState([]);
+  const [roles, setRoles] = useState([]);
+  const [permissions, setPermissions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState("");
+  const [selectedId, setSelectedId] = useState("new");
+  const blankForm = {
+    id: "new",
+    name: "",
+    email: "",
+    password: "",
+    role: "editor",
+    isActive: true,
+    customPermissions: [],
+  };
+  const [form, setForm] = useState(blankForm);
+
+  const loadStaff = async () => {
+    setLoading(true);
+    try {
+      const data = await api.getStaff();
+      setStaff(data.items || []);
+      setRoles(data.roles || []);
+      setPermissions(data.permissions || []);
+      if (selectedId !== "new" && !(data.items || []).some((item) => item.id === selectedId)) {
+        setSelectedId("new");
+        setForm(blankForm);
+      }
+    } catch (error) {
+      window.alert(error.message || "Kon staff niet laden.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadStaff();
+  }, []);
+
+  const selectedRole = useMemo(
+    () => roles.find((item) => item.key === form.role) || roles[0] || { key: "editor", permissions: [] },
+    [roles, form.role],
+  );
+
+  const effectivePermissions = useMemo(() => {
+    if ((selectedRole.permissions || []).includes("*")) {
+      return ["*"];
+    }
+    return Array.from(new Set([...(selectedRole.permissions || []), ...(form.customPermissions || [])]));
+  }, [selectedRole, form.customPermissions]);
+
+  const selectStaff = (item) => {
+    if (!item) {
+      setSelectedId("new");
+      setForm(blankForm);
+      return;
+    }
+
+    const basePermissions = (item.role === "owner" ? [] : (roles.find((role) => role.key === item.role)?.permissions || []).filter((permission) => permission !== "*"));
+    const customPermissions = (item.permissions || []).filter((permission) => permission !== "*" && !basePermissions.includes(permission));
+    setSelectedId(item.id);
+    setForm({
+      id: item.id,
+      name: item.name || "",
+      email: item.email || "",
+      password: "",
+      role: item.role || "editor",
+      isActive: item.isActive !== false,
+      customPermissions,
+    });
+  };
+
+  const togglePermission = (permissionKey) => {
+    setForm((prev) => ({
+      ...prev,
+      customPermissions: prev.customPermissions.includes(permissionKey)
+        ? prev.customPermissions.filter((item) => item !== permissionKey)
+        : [...prev.customPermissions, permissionKey],
+    }));
+  };
+
+  const save = async () => {
+    try {
+      setSaving(true);
+      const payload = {
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        role: form.role,
+        isActive: form.isActive,
+        customPermissions: form.role === "owner" ? [] : form.customPermissions,
+      };
+      if (selectedId === "new") {
+        await api.createStaff(payload);
+      } else {
+        await api.updateStaff(selectedId, payload);
+      }
+      await loadStaff();
+      setSaved(selectedId === "new" ? "Staff account aangemaakt." : "Staff account bijgewerkt.");
+      window.setTimeout(() => setSaved(""), 1600);
+      setForm((prev) => ({ ...prev, password: "" }));
+      if (selectedId === "new") {
+        setSelectedId("new");
+      }
+    } catch (error) {
+      window.alert(error.message || "Opslaan mislukt.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return <div style={{ color: "#666" }}>Staff laden...</div>;
+  }
+
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "320px minmax(0, 1fr)", gap: "24px" }}>
+      <div>
+        <SectionHeader
+          title="Staff"
+          sub="Beheer teamaccounts, rollen en extra rechten"
+          action={<PrimaryButton type="button" onClick={() => selectStaff(null)}>Nieuw account</PrimaryButton>}
+        />
+        <Card>
+          {staff.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => selectStaff(item)}
+              style={{ width: "100%", textAlign: "left", padding: "18px 20px", border: "none", borderBottom: "1px solid #f2f2f2", background: item.id === selectedId ? "#f8fbeb" : "#fff", cursor: "pointer" }}
+            >
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
+                <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "12px", textTransform: "uppercase", color: "#1c1c1c" }}>{item.name}</div>
+                <div style={{ fontSize: "10px", color: item.isActive ? "#10b981" : "#999", textTransform: "uppercase", fontFamily: "Arial Black, Arial, sans-serif" }}>
+                  {item.isActive ? "Actief" : "Inactief"}
+                </div>
+              </div>
+              <div style={{ color: "#888", fontSize: "12px", marginTop: "4px" }}>{item.email}</div>
+              <div style={{ color: "#666", fontSize: "11px", marginTop: "8px", textTransform: "capitalize" }}>{item.role}</div>
+            </button>
+          ))}
+        </Card>
+      </div>
+      <div>
+        <Card style={{ padding: "28px" }}>
+          <div style={{ display: "grid", gap: "18px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+              <FormField label="Naam" value={form.name} onChange={(value) => setForm((prev) => ({ ...prev, name: value }))} />
+              <FormField label="E-mail" value={form.email} onChange={(value) => setForm((prev) => ({ ...prev, email: value }))} type="email" />
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 220px", gap: "16px" }}>
+              <FormField label={selectedId === "new" ? "Wachtwoord" : "Nieuw wachtwoord (optioneel)"} value={form.password} onChange={(value) => setForm((prev) => ({ ...prev, password: value }))} type="password" />
+              <SelectField
+                label="Rol"
+                value={form.role}
+                onChange={(value) => setForm((prev) => ({ ...prev, role: value, customPermissions: [] }))}
+                options={roles.map((role) => ({ value: role.key, label: role.label }))}
+              />
+            </div>
+            <CheckboxField label="Account actief" checked={form.isActive} onChange={(value) => setForm((prev) => ({ ...prev, isActive: value }))} />
+
+            <Card style={{ padding: "18px", background: "#fafafa", boxShadow: "none" }}>
+              <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "12px", textTransform: "uppercase", color: "#1c1c1c", marginBottom: "8px" }}>Rolbeschrijving</div>
+              <div style={{ color: "#666", fontSize: "13px", lineHeight: 1.7 }}>{selectedRole.description || "Geen beschrijving beschikbaar."}</div>
+            </Card>
+
+            <Card style={{ padding: "18px", background: "#fafafa", boxShadow: "none" }}>
+              <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "12px", textTransform: "uppercase", color: "#1c1c1c", marginBottom: "16px" }}>Extra permissies</div>
+              {form.role === "owner" ? (
+                <div style={{ color: "#666", fontSize: "13px" }}>Owner heeft altijd volledige toegang.</div>
+              ) : (
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "12px" }}>
+                  {permissions.map((permission) => {
+                    const inherited = (selectedRole.permissions || []).includes(permission.key);
+                    return (
+                      <label key={permission.key} style={{ border: "1px solid #e8e8e8", borderRadius: "8px", padding: "12px 14px", background: inherited ? "#f2f7df" : "#fff", cursor: inherited ? "default" : "pointer", opacity: inherited ? 0.9 : 1 }}>
+                        <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+                          <input type="checkbox" checked={inherited || form.customPermissions.includes(permission.key)} disabled={inherited} onChange={() => togglePermission(permission.key)} />
+                          <div>
+                            <div style={{ fontSize: "13px", color: "#1c1c1c", fontWeight: 600 }}>{permission.label}</div>
+                            <div style={{ fontSize: "11px", color: "#888", marginTop: "4px" }}>{permission.key}{inherited ? " • via rol" : ""}</div>
+                          </div>
+                        </div>
+                      </label>
+                    );
+                  })}
+                </div>
+              )}
+            </Card>
+
+            <Card style={{ padding: "18px", background: "#fafafa", boxShadow: "none" }}>
+              <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "12px", textTransform: "uppercase", color: "#1c1c1c", marginBottom: "10px" }}>Effectieve toegang</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                {effectivePermissions.includes("*") ? (
+                  <span style={{ padding: "6px 10px", borderRadius: "999px", background: "#1c1c1c", color: "#fff", fontSize: "11px", textTransform: "uppercase", fontFamily: "Arial Black, Arial, sans-serif" }}>Volledige toegang</span>
+                ) : effectivePermissions.map((item) => (
+                  <span key={item} style={{ padding: "6px 10px", borderRadius: "999px", background: "#fff", color: "#555", fontSize: "11px", border: "1px solid #e6e6e6" }}>{item}</span>
+                ))}
+              </div>
+            </Card>
+          </div>
+          <SaveBar saving={saving} message={saved} onSave={save} saveLabel={selectedId === "new" ? "Staff aanmaken" : "Wijzigingen opslaan"} />
+        </Card>
+      </div>
+    </div>
+  );
+}
+
 function SettingsPage() {
   const { cms, updateCms } = useCms();
   const [tab, setTab] = useState("general");
@@ -1589,6 +1903,7 @@ function SettingsPage() {
                       <FormField label="Template naam" value={template.name} onChange={(value) => setEmailSettings((prev) => ({ ...prev, templates: prev.templates.map((item, i) => i === index ? { ...item, name: value } : item) }))} />
                       <FormField label="Onderwerp" value={template.subject} onChange={(value) => setEmailSettings((prev) => ({ ...prev, templates: prev.templates.map((item, i) => i === index ? { ...item, subject: value } : item) }))} />
                       <FormField label="Bericht" value={template.body} onChange={(value) => setEmailSettings((prev) => ({ ...prev, templates: prev.templates.map((item, i) => i === index ? { ...item, body: value } : item) }))} multiline rows={6} />
+                      <RichTextEditor label="HTML design template" value={template.htmlBody || ""} onChange={(value) => setEmailSettings((prev) => ({ ...prev, templates: prev.templates.map((item, i) => i === index ? { ...item, htmlBody: value } : item) }))} placeholder="Ontwerp hier de HTML-versie van deze e-mail..." />
                     </div>
                   </Card>
                 ))}
@@ -1606,23 +1921,24 @@ export default function AdminPage() {
   return (
     <Routes>
       <Route element={<AdminShell />}>
-        <Route index element={<Navigate to="dashboard" replace />} />
-        <Route path="dashboard" element={<DashboardPage />} />
-        <Route path="blog" element={<BlogListPage />} />
-        <Route path="blog/new" element={<BlogFormPage />} />
-        <Route path="blog/:slug/edit" element={<BlogFormPage />} />
-        <Route path="diensten" element={<ServiceListPage />} />
-        <Route path="diensten/new" element={<ServiceFormPage />} />
-        <Route path="diensten/:slug/edit" element={<ServiceFormPage />} />
-        <Route path="sectoren" element={<SectorListPage />} />
-        <Route path="sectoren/new" element={<SectorFormPage />} />
-        <Route path="sectoren/:slug/edit" element={<SectorFormPage />} />
-        <Route path="leads" element={<LeadsPage />} />
-        <Route path="homepage" element={<HomepagePage />} />
-        <Route path="over-ons" element={<AboutPage />} />
-        <Route path="pages" element={<PagesPage />} />
-        <Route path="instellingen" element={<SettingsPage />} />
-        <Route path="*" element={<Navigate to="dashboard" replace />} />
+        <Route index element={<DefaultAdminRedirect />} />
+        <Route path="dashboard" element={<PermissionRoute permission="dashboard.view"><DashboardPage /></PermissionRoute>} />
+        <Route path="blog" element={<PermissionRoute permission="collections.blog"><BlogListPage /></PermissionRoute>} />
+        <Route path="blog/new" element={<PermissionRoute permission="collections.blog"><BlogFormPage /></PermissionRoute>} />
+        <Route path="blog/:slug/edit" element={<PermissionRoute permission="collections.blog"><BlogFormPage /></PermissionRoute>} />
+        <Route path="diensten" element={<PermissionRoute permission="collections.services"><ServiceListPage /></PermissionRoute>} />
+        <Route path="diensten/new" element={<PermissionRoute permission="collections.services"><ServiceFormPage /></PermissionRoute>} />
+        <Route path="diensten/:slug/edit" element={<PermissionRoute permission="collections.services"><ServiceFormPage /></PermissionRoute>} />
+        <Route path="sectoren" element={<PermissionRoute permission="collections.sectors"><SectorListPage /></PermissionRoute>} />
+        <Route path="sectoren/new" element={<PermissionRoute permission="collections.sectors"><SectorFormPage /></PermissionRoute>} />
+        <Route path="sectoren/:slug/edit" element={<PermissionRoute permission="collections.sectors"><SectorFormPage /></PermissionRoute>} />
+        <Route path="leads" element={<PermissionRoute permission="leads.view"><LeadsPage /></PermissionRoute>} />
+        <Route path="homepage" element={<PermissionRoute permission="content.homepage"><HomepagePage /></PermissionRoute>} />
+        <Route path="over-ons" element={<PermissionRoute permission="content.about"><AboutPage /></PermissionRoute>} />
+        <Route path="pages" element={<PermissionRoute permission="content.pages"><PagesPage /></PermissionRoute>} />
+        <Route path="staff" element={<PermissionRoute permission="staff.manage"><StaffPage /></PermissionRoute>} />
+        <Route path="instellingen" element={<PermissionRoute permission="settings.manage"><SettingsPage /></PermissionRoute>} />
+        <Route path="*" element={<DefaultAdminRedirect />} />
       </Route>
     </Routes>
   );
