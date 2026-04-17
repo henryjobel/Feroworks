@@ -1,7 +1,9 @@
 import { useCms } from "../cms/CmsContext";
+import { useLanguage } from "../i18n/LanguageContext";
 
 function Footer() {
   const { cms } = useCms();
+  const { t, localizePath } = useLanguage();
   const site = cms.site || {};
   const phone = site.tel || "+31 (0)165 205 601";
   const email = site.email || "info@ferroworks.nl";
@@ -34,7 +36,7 @@ function Footer() {
               <span className="site-title theme-primary-text" style={{ fontWeight: 900, fontSize: "22px", letterSpacing: "-0.5px" }}>WORKS</span>
             </div>
             <div className="theme-primary-text" style={{ fontStyle: "italic", fontSize: "11px", marginTop: "1px", letterSpacing: "0.5px" }}>
-              {site.tagline || "metaalwerk"}
+              {site.tagline || t("nav.brandTagline", "metalwork")}
             </div>
           </div>
         </div>
@@ -88,7 +90,7 @@ function Footer() {
         }}
       >
         <p style={{ color: "#888", fontSize: "12.5px", margin: 0 }}>
-          © FerroWorks. All Rights Reserved | Marketing door{" "}
+          {t("footer.rights", "© FerroWorks. All Rights Reserved | Marketing by")}{" "}
           <a href="https://leadi.nl" target="_blank" rel="noopener noreferrer" style={{ color: "#888", textDecoration: "underline" }}>
             Leadi
           </a>
@@ -96,10 +98,10 @@ function Footer() {
 
         <nav style={{ display: "flex", gap: "32px", flexWrap: "wrap" }}>
           {[
-            { label: "VACATURES", href: "#" },
-            { label: "MACHINEPARK", href: "#" },
-            { label: "PRIVACY POLICY", href: "/privacy-policy" },
-            { label: "ALGEMENE VOORWAARDEN", href: "/algemene-voorwaarden" },
+            { label: t("footer.vacancies", "VACATURES"), href: "#" },
+            { label: t("footer.machinePark", "MACHINEPARK"), href: "#" },
+            { label: t("footer.privacy", "PRIVACY POLICY"), href: localizePath("/privacy-policy") },
+            { label: t("footer.terms", "ALGEMENE VOORWAARDEN"), href: localizePath("/algemene-voorwaarden") },
           ].map((link) => (
             <a
               key={link.label}

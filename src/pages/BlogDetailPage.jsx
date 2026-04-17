@@ -720,7 +720,7 @@ export default function BlogDetailPage() {
   useEffect(() => {
     if (!post) navigate("/blog", { replace: true });
     else window.scrollTo({ top: 0, behavior: "instant" });
-  }, [id, post, navigate]);
+  }, [post, navigate]);
 
   if (!post) return null;
 

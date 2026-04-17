@@ -8,6 +8,7 @@ import imgAbout1 from "../assets/about/about-us1.jpeg";
 import imgAbout2 from "../assets/about/about-us2.jpeg";
 import imgAbout3 from "../assets/about/about-us3.jpeg";
 import { useCms } from "../cms/CmsContext";
+import { useLanguage } from "../i18n/LanguageContext";
 
 function useInView(threshold = 0.12) {
   const ref = useRef(null);
@@ -33,6 +34,7 @@ function CheckIcon() {
 
 /* 1. HERO */
 function PageHero() {
+  const { t, localizePath } = useLanguage();
   return (
     <section style={{ position: "relative", width: "100%", minHeight: "380px", display: "flex", alignItems: "center", overflow: "hidden", background: "#141616" }}>
       <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${heroBg})`, backgroundSize: "cover", backgroundPosition: "center right" }} />
@@ -40,16 +42,16 @@ function PageHero() {
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8" style={{ paddingTop: "64px", paddingBottom: "64px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "24px" }}>
-          <Link to="/" style={{ color: "var(--fw-website-primary)", fontSize: "13px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Home</Link>
-          <span style={{ color: "#666", fontSize: "13px" }}>â€º</span>
-          <span style={{ color: "#aaa", fontSize: "13px", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Over Ons</span>
+          <Link to={localizePath("/")} style={{ color: "var(--fw-website-primary)", fontSize: "13px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>{t("common.home", "Home")}</Link>
+          <span style={{ color: "#666", fontSize: "13px" }}>{">"}</span>
+          <span style={{ color: "#aaa", fontSize: "13px", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>{t("aboutPage.breadcrumb", "About")}</span>
         </div>
 
         <h1 style={{ margin: "0 0 16px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(28px, 4vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.5px", textTransform: "uppercase" }}>
-          <span style={{ color: "var(--fw-website-primary)" }}>VORMGEVERS </span><span style={{ color: "#fff" }}>IN METAAL</span>
+          <span style={{ color: "var(--fw-website-primary)" }}>{t("aboutPage.heroTitle", "METAL ")}</span><span style={{ color: "#fff" }}>{t("aboutPage.heroAccent", "MAKERS")}</span>
         </h1>
         <p style={{ margin: 0, color: "#bbb", fontSize: "clamp(14px, 1.6vw, 17px)", lineHeight: 1.6, maxWidth: "520px" }}>
-          FerroWorks begeleidt metaalprojecten van ontwerp en engineering tot productie en montage. Specialist in maatwerk Staal, RVS en Aluminium.
+          {t("aboutPage.heroText", "FerroWorks guides metal projects from design and engineering to production and installation. Specialists in custom Steel, Stainless Steel and Aluminium.")}
         </p>
         <div style={{ width: "56px", height: "4px", background: "var(--fw-website-primary)", marginTop: "28px", borderRadius: "2px" }} />
       </div>
@@ -61,6 +63,7 @@ function PageHero() {
 function OnsVerhaal() {
   const [ref, vis] = useInView();
   const { cms } = useCms();
+  const { t } = useLanguage();
   const v = (cms.overOns && cms.overOns.verhaal) || {};
   return (
     <section style={{ background: "#f4f4f4", padding: "80px 0" }}>
@@ -77,7 +80,7 @@ function OnsVerhaal() {
         style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: "72px", alignItems: "start" }}>
 
         <div className="ov-left">
-          <p style={{ margin: "0 0 12px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>ONS VERHAAL</p>
+          <p style={{ margin: "0 0 12px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>{t("aboutPage.storyEyebrow", "OUR STORY")}</p>
           <h2 style={{ margin: "0 0 24px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(20px, 2.4vw, 30px)", lineHeight: 1.1, textTransform: "uppercase", letterSpacing: "-0.3px" }}>
             <span style={{ color: "var(--fw-website-primary)" }}>{v.title1 || "GEBOUWD OP"}</span><br />
             <span style={{ color: "#1c1c1c" }}>{v.title2 || "VAKMANSCHAP"}</span>
@@ -148,6 +151,7 @@ const FALLBACK_SERVICES = [
 function WatWeDoen() {
   const [ref, vis] = useInView();
   const { cms } = useCms();
+  const { t } = useLanguage();
   const wwd = (cms.overOns && cms.overOns.watWeDoen) || {};
   const services = wwd.items
     ? (typeof wwd.items === "string" ? wwd.items.split("\n").filter(Boolean) : wwd.items)
@@ -165,10 +169,10 @@ function WatWeDoen() {
         style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "center" }}>
 
         <div className="wwd-left">
-          <p style={{ margin: "0 0 12px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>ONZE DIENSTEN</p>
+          <p style={{ margin: "0 0 12px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>{t("aboutPage.servicesEyebrow", "OUR SERVICES")}</p>
           <h2 style={{ margin: "0 0 32px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px, 2.6vw, 34px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-            <span style={{ color: "var(--fw-website-primary)" }}>WAT FERROWORKS</span><br />
-            <span style={{ color: "#1c1c1c" }}>VOOR JE DOET</span>
+            <span style={{ color: "var(--fw-website-primary)" }}>{t("aboutPage.servicesTitle", "WHAT FERROWORKS")}</span><br />
+            <span style={{ color: "#1c1c1c" }}>{t("aboutPage.servicesAccent", "DOES FOR YOU")}</span>
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
             {services.map((s, i) => (
@@ -201,6 +205,7 @@ const FALLBACK_DIFFERENTIATORS = [
 function WatOnsAnders() {
   const [ref, vis] = useInView();
   const { cms } = useCms();
+  const { t } = useLanguage();
   const differentiators = (cms.overOns && cms.overOns.andersItems && cms.overOns.andersItems.length)
     ? cms.overOns.andersItems
     : FALLBACK_DIFFERENTIATORS;
@@ -217,9 +222,9 @@ function WatOnsAnders() {
 
       <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 " + (vis ? "woa2-on" : "")}>
         <div className="woa2-head" style={{ marginBottom: "48px" }}>
-          <p style={{ margin: "0 0 10px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>WAAROM FERROWORKS</p>
+          <p style={{ margin: "0 0 10px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>{t("aboutPage.whyEyebrow", "WHY FERROWORKS")}</p>
           <h2 style={{ margin: 0, fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px, 2.6vw, 34px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-            <span style={{ color: "#1c1c1c" }}>WAT ONS </span><span style={{ color: "var(--fw-website-primary)" }}>ANDERS MAAKT</span>
+            <span style={{ color: "#1c1c1c" }}>{t("aboutPage.whyTitle", "WHAT MAKES US ")}</span><span style={{ color: "var(--fw-website-primary)" }}>{t("aboutPage.whyAccent", "DIFFERENT")}</span>
           </h2>
         </div>
 
@@ -243,6 +248,7 @@ function WatOnsAnders() {
 function TeamSection() {
   const [ref, vis] = useInView();
   const { cms } = useCms();
+  const { t } = useLanguage();
   const team = (cms.overOns && cms.overOns.team) || {};
   const teamItems = team.items
     ? (typeof team.items === "string" ? team.items.split("\n").filter(Boolean) : team.items)
@@ -276,7 +282,7 @@ function TeamSection() {
         </div>
 
         <div className="tm2-right">
-          <p style={{ margin: "0 0 12px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>ONS TEAM</p>
+          <p style={{ margin: "0 0 12px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>{t("aboutPage.teamEyebrow", "OUR TEAM")}</p>
           <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px, 2.6vw, 34px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px", margin: "0 0 24px 0" }}>
             <span style={{ color: "#1c1c1c" }}>{team.title1 || "VAKMANNEN MET "}</span><span style={{ color: "var(--fw-website-primary)" }}>{team.title2 || "EÃ‰N DOEL"}</span>
           </h2>
@@ -310,6 +316,13 @@ const sectoren = [
 
 function SectorenOverzicht() {
   const [ref, vis] = useInView();
+  const { t } = useLanguage();
+  const sectoren = [
+    ...(t("aboutPage.sectors.0.naam") ? [{ naam: t("aboutPage.sectors.0.naam"), diensten: [t("aboutPage.sectors.0.diensten.0"), t("aboutPage.sectors.0.diensten.1"), t("aboutPage.sectors.0.diensten.2")] }] : []),
+    ...(t("aboutPage.sectors.1.naam") ? [{ naam: t("aboutPage.sectors.1.naam"), diensten: [t("aboutPage.sectors.1.diensten.0"), t("aboutPage.sectors.1.diensten.1"), t("aboutPage.sectors.1.diensten.2"), t("aboutPage.sectors.1.diensten.3")] }] : []),
+    ...(t("aboutPage.sectors.2.naam") ? [{ naam: t("aboutPage.sectors.2.naam"), diensten: [t("aboutPage.sectors.2.diensten.0"), t("aboutPage.sectors.2.diensten.1")] }] : []),
+    ...(t("aboutPage.sectors.3.naam") ? [{ naam: t("aboutPage.sectors.3.naam"), diensten: [t("aboutPage.sectors.3.diensten.0")] }] : []),
+  ];
   return (
     <section style={{ background: "#1c1c1c", padding: "80px 0" }}>
       <style>{`
@@ -324,9 +337,9 @@ function SectorenOverzicht() {
 
       <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 " + (vis ? "so-on" : "")}>
         <div className="so-head" style={{ marginBottom: "48px" }}>
-          <p style={{ margin: "0 0 10px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>WAT WE BOUWEN</p>
+          <p style={{ margin: "0 0 10px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>{t("aboutPage.sectorsEyebrow", "WHAT WE BUILD")}</p>
           <h2 style={{ margin: 0, fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px, 2.6vw, 34px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px", color: "#fff" }}>
-            ONZE <span style={{ color: "var(--fw-website-primary)" }}>SECTOREN</span>
+            {t("aboutPage.sectorsTitle", "OUR ")}<span style={{ color: "var(--fw-website-primary)" }}>{t("aboutPage.sectorsAccent", "SECTORS")}</span>
           </h2>
         </div>
 
@@ -359,6 +372,12 @@ const certs = [
 
 function Certificeringen() {
   const [ref, vis] = useInView();
+  const { t } = useLanguage();
+  const certs = [
+    { code: t("aboutPage.certs.0.code", "VCA"), label: t("aboutPage.certs.0.label", "Safety, health and environment") },
+    { code: t("aboutPage.certs.1.code", "EN-1090"), label: t("aboutPage.certs.1.label", "Steel and aluminium structures") },
+    { code: t("aboutPage.certs.2.code", "CE"), label: t("aboutPage.certs.2.label", "Conformity and safety standard") },
+  ];
   return (
     <section style={{ background: "#fff", padding: "72px 0" }}>
       <style>{`
@@ -372,9 +391,9 @@ function Certificeringen() {
 
       <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 " + (vis ? "ce2-on" : "")}>
         <div className="ce2-head" style={{ marginBottom: "48px" }}>
-          <p style={{ margin: "0 0 10px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>ONZE CERTIFICERINGEN</p>
+          <p style={{ margin: "0 0 10px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>{t("aboutPage.certEyebrow", "OUR CERTIFICATIONS")}</p>
           <h2 style={{ margin: 0, fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px, 2.6vw, 34px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-            <span style={{ color: "#1c1c1c" }}>GECERTIFICEERD </span><span style={{ color: "var(--fw-website-primary)" }}>VCA, EN-1090 & CE</span>
+            <span style={{ color: "#1c1c1c" }}>{t("aboutPage.certTitle", "CERTIFIED ")}</span><span style={{ color: "var(--fw-website-primary)" }}>{t("aboutPage.certAccent", "VCA, EN-1090 & CE")}</span>
           </h2>
         </div>
 
@@ -395,26 +414,27 @@ function Certificeringen() {
 
 /* 9. CTA */
 function CtaSection() {
+  const { t, localizePath } = useLanguage();
   return (
     <section style={{ background: "#f4f4f4", padding: "80px 0" }}>
       <div className="max-w-7xl mx-auto px-6 md:px-8">
         <div className="fw-cta-box" style={{ background: "#1c1c1c", padding: "56px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "28px" }}>
           <div>
             <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(20px, 2.4vw, 30px)", textTransform: "uppercase", color: "#fff", margin: "0 0 10px 0", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-              KLAAR OM <span style={{ color: "var(--fw-website-primary)" }}>TE STARTEN?</span>
+              {t("common.startProject", "READY TO")} <span style={{ color: "var(--fw-website-primary)" }}>{t("common.startProjectAccent", "GET STARTED?")}</span>
             </h2>
             <p style={{ color: "#999", fontSize: "15px", margin: 0, lineHeight: 1.5 }}>
-              Stuur uw tekening op of neem contact op â€” wij reageren binnen 24 uur.
+              {t("common.startProjectText", "Send your drawing or contact us - we respond within 24 hours.")}
             </p>
           </div>
           <div className="fw-cta-actions" style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
             <Link
-              to="/contact"
+              to={localizePath("/contact")}
               style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "var(--fw-website-primary)", padding: "16px 32px", textDecoration: "none", display: "inline-block" }}
               onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
               onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}
             >
-              NEEM CONTACT OP
+              {t("common.contactUs", "CONTACT US")}
             </Link>
             <a
               href="tel:+31165205617"
@@ -422,7 +442,7 @@ function CtaSection() {
               onMouseEnter={e => e.currentTarget.style.borderColor = "var(--fw-website-primary)"}
               onMouseLeave={e => e.currentTarget.style.borderColor = "#555"}
             >
-              BEL ONS
+              {t("common.callUs", "CALL US")}
             </a>
           </div>
         </div>

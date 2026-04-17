@@ -12,6 +12,471 @@ var __exportAll = (all, no_symbols) => {
 	if (!no_symbols) __defProp(target, Symbol.toStringTag, { value: "Module" });
 	return target;
 };
+var SUPPORTED_LOCALES = [{
+	code: "nl",
+	label: "Nederlands",
+	shortLabel: "NL"
+}, {
+	code: "en",
+	label: "English",
+	shortLabel: "EN"
+}];
+var LOCALE_SET = new Set(SUPPORTED_LOCALES.map((item) => item.code));
+var LOCALIZED_ROUTE_MAP = {
+	"/": {
+		nl: "/",
+		en: "/en"
+	},
+	"/over-ons": {
+		nl: "/over-ons",
+		en: "/en/about"
+	},
+	"/diensten": {
+		nl: "/diensten",
+		en: "/en/services"
+	},
+	"/sectoren": {
+		nl: "/sectoren",
+		en: "/en/sectors"
+	},
+	"/blog": {
+		nl: "/blog",
+		en: "/en/blog"
+	},
+	"/contact": {
+		nl: "/contact",
+		en: "/en/contact"
+	},
+	"/privacy-policy": {
+		nl: "/privacy-policy",
+		en: "/en/privacy-policy"
+	},
+	"/algemene-voorwaarden": {
+		nl: "/algemene-voorwaarden",
+		en: "/en/terms-and-conditions"
+	}
+};
+var CANONICAL_BASES = Object.keys(LOCALIZED_ROUTE_MAP).sort((a, b) => b.length - a.length);
+var LOCALIZED_ENTRIES = CANONICAL_BASES.flatMap((basePath) => Object.entries(LOCALIZED_ROUTE_MAP[basePath]).map(([locale, localizedPath]) => ({
+	canonicalBasePath: basePath,
+	locale,
+	localizedBasePath: localizedPath
+}))).sort((a, b) => b.localizedBasePath.length - a.localizedBasePath.length);
+function ensureLeadingSlash(pathname) {
+	if (!pathname) return "/";
+	return pathname.startsWith("/") ? pathname : `/${pathname}`;
+}
+function trimTrailingSlash(pathname) {
+	if (pathname.length > 1 && pathname.endsWith("/")) return pathname.slice(0, -1);
+	return pathname;
+}
+function normalizePathname(pathname) {
+	return trimTrailingSlash(ensureLeadingSlash(pathname));
+}
+function getLocaleFromPathname(pathname) {
+	const normalized = normalizePathname(pathname);
+	for (const entry of LOCALIZED_ENTRIES) if (normalized === entry.localizedBasePath || normalized.startsWith(`${entry.localizedBasePath}/`)) return entry.locale;
+	return "nl";
+}
+function getCanonicalPathname(pathname) {
+	const normalized = normalizePathname(pathname);
+	for (const entry of LOCALIZED_ENTRIES) {
+		if (normalized === entry.localizedBasePath) return entry.canonicalBasePath;
+		if (normalized.startsWith(`${entry.localizedBasePath}/`)) {
+			const suffix = normalized.slice(entry.localizedBasePath.length);
+			return trimTrailingSlash(`${entry.canonicalBasePath}${suffix}`);
+		}
+	}
+	return normalized;
+}
+function localizePath(pathname, locale = "nl") {
+	const safeLocale = LOCALE_SET.has(locale) ? locale : "nl";
+	const canonicalPath = getCanonicalPathname(pathname);
+	for (const basePath of CANONICAL_BASES) if (canonicalPath === basePath || canonicalPath.startsWith(`${basePath}/`)) return trimTrailingSlash(`${LOCALIZED_ROUTE_MAP[basePath]?.[safeLocale] ?? LOCALIZED_ROUTE_MAP[basePath]?.["nl"] ?? basePath}${canonicalPath.slice(basePath.length)}`) || "/";
+	if (safeLocale === "nl") return canonicalPath;
+	return canonicalPath === "/" ? `/${safeLocale}` : `/${safeLocale}${canonicalPath}`;
+}
+//#endregion
+//#region ../shared/content-localization.js
+function isPlainObject(value) {
+	return value && typeof value === "object" && !Array.isArray(value);
+}
+function getItemIdentifier(item) {
+	if (!item || typeof item !== "object") return null;
+	return item.key ?? item.id ?? item.slug ?? item.path ?? item.title ?? item.name ?? null;
+}
+function mergeLocalizedValue(baseValue, overlayValue) {
+	if (overlayValue === void 0) return baseValue;
+	if (Array.isArray(baseValue) && Array.isArray(overlayValue)) {
+		const keyed = /* @__PURE__ */ new Map();
+		baseValue.forEach((item, index) => {
+			const identifier = getItemIdentifier(item);
+			if (identifier) keyed.set(identifier, {
+				item,
+				index
+			});
+		});
+		return baseValue.map((item, index) => {
+			return mergeLocalizedValue(item, (() => {
+				const identifier = getItemIdentifier(item);
+				if (identifier && keyed.has(identifier)) return overlayValue.find((candidate) => getItemIdentifier(candidate) === identifier);
+				return overlayValue[index];
+			})());
+		});
+	}
+	if (isPlainObject(baseValue) && isPlainObject(overlayValue)) {
+		const result = { ...baseValue };
+		for (const [key, value] of Object.entries(overlayValue)) result[key] = mergeLocalizedValue(baseValue?.[key], value);
+		return result;
+	}
+	return overlayValue;
+}
+var CONTENT_OVERLAYS = { en: {
+	site: {
+		tagline: "Metalwork",
+		metaTitle: "FerroWorks - Custom Metalwork in Steel, Stainless Steel & Aluminium",
+		metaDesc: "FerroWorks delivers custom metal constructions for industry, construction and architecture. Engineering, production, coating and installation under one roof."
+	},
+	hero: {
+		line1: "METAL MAKERS.",
+		line2: "FROM DESIGN TO INSTALLATION.",
+		subtitle: "FerroWorks guides metal projects from design and engineering to production and installation. Specialists in Steel, Stainless Steel and Aluminium.",
+		cta: "SEND YOUR DRAWING",
+		checkItems: [
+			"More than 15 years of experience",
+			"VCA, EN-1090 & CE certified",
+			"Steel, stainless steel & aluminium custom work",
+			"Design, production & installation"
+		]
+	},
+	stats: [
+		{ desc: "years of experience in custom metalwork" },
+		{ desc: "materials: Steel, Stainless Steel & Aluminium" },
+		{ desc: "in-house production, no subcontractors" },
+		{ desc: "from design and engineering to installation" }
+	],
+	watFerna: {
+		title1: "WHAT FERROWORKS",
+		title2: "DOES FOR YOU",
+		bulletItems: [
+			"Clear agreements, no surprises.",
+			"Complete support from design to installation.",
+			"Repair and maintenance on site.",
+			"Advice and support on design and feasibility.",
+			"One partner for the full process.",
+			"Practical, buildable and well considered.",
+			"Transparent in costs and planning."
+		]
+	},
+	anders: { items: [
+		{
+			title: "LARGE ENOUGH TO TAKE THE LEAD",
+			desc: "We have the capacity and expertise to deliver technical metal projects from start to finish."
+		},
+		{
+			title: "SMALL ENOUGH TO SWITCH QUICKLY",
+			desc: "Direct contact, fast communication and flexibility in your planning."
+		},
+		{
+			title: "PERSONAL ENOUGH TO THINK AHEAD",
+			desc: "We advise, optimise and make sure your project works from day one."
+		}
+	] },
+	projecten: [
+		{
+			title: "MEASURING TUBES FOR A LIQUID TANK",
+			desc: "For this client we produced custom measuring tubes for a liquid storage tank."
+		},
+		{
+			title: "STEEL STRUCTURE FOR AN OFFSHORE PLATFORM",
+			desc: "Complex steel structure manufactured for an offshore platform, fully Lloyd's certified."
+		},
+		{
+			title: "PIPEWORK FOR PETROCHEMICALS",
+			desc: "Custom piping and fittings delivered for a refinery in the petrochemical sector."
+		},
+		{
+			title: "TANK CONSTRUCTION FOR AN INDUSTRIAL COMPLEX",
+			desc: "Rolled sections, roof sections and manholes produced for a major industrial tank project."
+		}
+	],
+	faq: [
+		{
+			q: "WE ALREADY HAVE A REGULAR STEEL PARTNER. WHY SHOULD WE TALK TO FERROWORKS?",
+			a: "Because FerroWorks focuses on the complex custom jobs that often fall outside the scope of a standard steel supplier. We work fast, accurately and fully in house."
+		},
+		{
+			q: "ARE YOU LARGE ENOUGH FOR OUR PROJECTS?",
+			a: "With 16 specialised professionals and our own machine park, including a 6 x 3 metre water cutter, we are equipped for demanding industrial work."
+		},
+		{
+			q: "WHICH CERTIFICATIONS DOES FERROWORKS HAVE?",
+			a: "FerroWorks is VCA certified and complies with EN-1090 for steel and aluminium constructions. We deliver the required documentation and quality assurance with every project."
+		},
+		{
+			q: "HOW RELIABLE IS THE 2 TO 4 WEEK LEAD TIME?",
+			a: "That lead time is a commitment, not an estimate. Because everything happens in our own workshop we stay in control of planning and quality."
+		}
+	],
+	overOns: {
+		verhaal: {
+			title1: "BUILT ON",
+			title2: "CRAFTSMANSHIP",
+			tekst1: "FerroWorks is a family business with more than 15 years of experience in custom metalwork. We guide projects from A to Z, from design and engineering to production, coating and installation on site.",
+			tekst2: "Specialists in custom steel, stainless steel and aluminium for industry, construction, architecture, design and maritime applications.",
+			tekst3: "Clear agreements, transparent costs and one point of contact from start to finish. That is how we work."
+		},
+		watWeDoen: { items: [
+			"Clear agreements, no surprises.",
+			"Complete support from design to installation.",
+			"Repair and maintenance on site.",
+			"Advice and support on design and feasibility.",
+			"One partner for the full process.",
+			"Practical, buildable and well considered.",
+			"Transparent in costs and planning."
+		] },
+		andersItems: [
+			{
+				title: "LARGE ENOUGH TO TAKE THE LEAD",
+				desc: "We have the capacity and expertise to deliver technical metal projects from start to finish."
+			},
+			{
+				title: "SMALL ENOUGH TO SWITCH QUICKLY",
+				desc: "Direct contact, fast communication and flexibility in your planning."
+			},
+			{
+				title: "PERSONAL ENOUGH TO THINK AHEAD",
+				desc: "We advise, optimise and make sure your project works from day one."
+			}
+		],
+		team: {
+			title1: "CRAFTSMEN WITH",
+			title2: "ONE GOAL",
+			tekst1: "Our team includes specialised metalworkers, welders, engineers and project leads, each with deep knowledge of steel, stainless steel and aluminium.",
+			tekst2: "We work closely with our clients from the first drawing to the final bolt on site. Always one point of contact, always personal.",
+			items: [
+				"More than 15 years of experience in custom metalwork",
+				"Practical, buildable and well considered",
+				"Repair and maintenance on site"
+			]
+		}
+	},
+	diensten: [
+		{
+			title: "Engineering & Design",
+			subtitle: "From the first sketch to an approved production drawing",
+			excerpt: "Every project starts with a strong design. Our engineers translate your requirements into practical production drawings using modern CAD software.",
+			checklist: "2D and 3D drawings (CAD/CAM)\nStructural calculations\nMaterial selection and cost advice\nFeasibility review\nApproval process with the client",
+			body: "A strong metal project does not start in the workshop. It starts at the drawing table. At FerroWorks our engineering department turns your idea or specification into a fully developed production drawing.\n\nWhether you arrive with a detailed structural drawing, a rough paper sketch or only an idea, we work it out with you. We ask the right questions to understand the application, load, environment and end use.\n\nIf you work with an external structural engineer or architect, we coordinate directly with them. That way what looks good on paper is also practical to manufacture."
+		},
+		{
+			title: "In-house Production",
+			subtitle: "Complete machine park, no outsourcing",
+			excerpt: "Our modern workshop in Roosendaal is equipped for steel, stainless steel and aluminium processing in-house.",
+			checklist: "Sawing and laser cutting\nDrilling, milling and shearing\nCertified welding (MIG/MAG, TIG, WIG)\nBending and rolling\nPrefab production and custom work in every batch size",
+			body: "Our workshop is equipped with a complete machine park. We outsource nothing. Everything is produced in-house, from the first cut to the final weld.\n\nWhether it is one-off custom work or larger series, FerroWorks has the capacity and expertise to manufacture your project efficiently and accurately.\n\nOur certified welders work with steel, stainless steel and aluminium and handle all common welding methods, including MIG/MAG, TIG and WIG."
+		},
+		{
+			title: "Coating & Finishing",
+			subtitle: "Multi-layer coating systems in line with ISO 12944",
+			excerpt: "The right finish protects your construction and defines its appearance. FerroWorks advises on the best coating solution for every project.",
+			checklist: "Blasting to Sa2.5\nZinc-rich or epoxy primer\nWet paint for large structures\nPowder coating for series work\nStainless steel polishing\nGalvanising",
+			body: "A coating is more than a layer of paint. It protects your investment. FerroWorks advises on the right system based on environment, load and expected service life.\n\nWe blast, prime and paint in-house. From zinc-rich primers for offshore applications to powder coating for architectural elements, we cover the full range.\n\nAll systems are applied in accordance with ISO 12944, the international standard for corrosion protection of steel structures."
+		},
+		{
+			title: "On-site Installation",
+			subtitle: "Own certified installation team",
+			excerpt: "Our installation team places your construction on site, from simple guardrails to complex steel structures at height.",
+			checklist: "Own VCA-certified installation team\nInstallation of steel, stainless steel and aluminium\nCrane coordination and safety management\nConnection welding and on-site corrections\nFinal inspection and handover file",
+			body: "Production is only complete once your construction is in the right place. Our own installation team assembles everything on site, from simple barriers to complex elevated steel structures.\n\nWe work VCA certified and follow all safety measures. Our team is trained for working at height, in confined spaces and on industrial sites.\n\nAfter installation we complete a final inspection and hand over the project documentation."
+		},
+		{
+			title: "Repair & Maintenance",
+			subtitle: "Fast, skilled, without long waiting times",
+			excerpt: "Steel structures wear, deform or get damaged. FerroWorks handles repairs and maintenance both in the workshop and on site.",
+			checklist: "Weld repairs in steel, stainless steel and aluminium\nRepair of corrosion damage and coatings\nStructural reinforcement of existing constructions\nEmergency on-site repairs possible\nMaintenance contracts on request",
+			body: "Steel structures wear out, deform or get damaged through use, corrosion or external forces. FerroWorks carries out repairs quickly and professionally, in the workshop or on site.\n\nWe assess the damage, advise on the best solution and solve it. From small weld repairs to structural reinforcement of existing constructions.\n\nHave an emergency? Call us directly. Urgent repairs on site are possible."
+		}
+	],
+	sectoren: [
+		{
+			naam: "Construction & Utilities",
+			tagline: "Steel structures, guardrails and prefab balconies for the construction sector",
+			description: "Steel structures, standard guardrails and prefab balconies for construction and utility projects.",
+			intro: "In construction and utilities FerroWorks delivers steel structures that meet the strictest standards. From support frames to prefab balconies, everything is CE certified in line with EN-1090.",
+			items: "Steel structures and support frames\nStandard guardrails\nPrefab balconies and landings\nStairs, railings and escape stair structures\nFacade elements and steel window frames\nCE certified according to EN-1090"
+		},
+		{
+			naam: "Industry",
+			tagline: "Machine building, process installations and custom steelwork",
+			description: "Machine building, custom steel structures, industrial installations and on-site welding work.",
+			intro: "Industrial clients rely on FerroWorks for custom steel structures and process installations. We deliver quickly and accurately, including on site.",
+			items: "Machine building and machine frames\nCustom steel constructions\nIndustrial installations and process frames\nOn-site welding work\nStainless steel for food and pharmaceutical industries\nSupport structures and mezzanine floors"
+		},
+		{
+			naam: "Architecture & Design",
+			tagline: "Design stairs, ornamental work and exterior custom work for architects",
+			description: "Design stairs and interior and exterior custom work for architecture and design projects.",
+			intro: "Architects and designers choose FerroWorks for custom metalwork that combines aesthetics and craftsmanship. From design stairs to unique facade panels.",
+			items: "Design stairs in steel and stainless steel\nInterior and exterior custom work\nBalustrades and railings\nOrnamental work, gates and entrance structures\nFacade panels and cladding\nCoating and powder coating in every RAL colour"
+		},
+		{
+			naam: "Maritime",
+			tagline: "Yacht building, offshore structures and maritime coating",
+			description: "Custom steel and aluminium constructions for yacht building and maritime applications.",
+			intro: "Maritime conditions demand the best material and coating systems. FerroWorks delivers for yacht building, offshore and harbour infrastructure.",
+			items: "Yacht building and ship interiors\nOffshore steel and stainless steel structures\nDeck equipment and handrails\nAluminium gangways and platforms\nMaritime coating (C5-M, ISO 12944)\nRepairs in harbour and on board"
+		}
+	],
+	blog: [
+		{
+			title: "Why weld quality control makes all the difference",
+			category: "Craftsmanship",
+			date: "8 April 2026",
+			readTime: "4 min",
+			excerpt: "In metalworking, welding is one of the most critical processes. A small welding defect can have major consequences for safety and service life. Discover how FerroWorks treats quality control as standard practice, not an exception.",
+			body: "Weld quality control does not start at final inspection. It starts with every step in the process, from filler material selection to preparation of the base material.\n\nAt FerroWorks we work exclusively with certified welders who meet EN-1090 requirements. Every weld is visually inspected and, where required, tested with non-destructive methods.\n\nA small deviation in a weld can create major consequences under load. That is why we use strict procedures and documentation for every project."
+		},
+		{
+			title: "Offshore steel structures: requirements and challenges",
+			category: "Offshore",
+			date: "1 April 2026",
+			readTime: "5 min",
+			excerpt: "Offshore steelwork faces extreme conditions: salt water, high loads and constant mechanical stress. We explain which materials and coatings we use for durable offshore constructions.",
+			body: "Offshore steel structures operate in one of the most aggressive environments imaginable: salt seawater, high wind loads and constant mechanical stress.\n\nFerroWorks delivers offshore structures in line with NORSOK and ISO 12944 class C5-M. We use certified materials and coating systems designed for the toughest maritime environments.\n\nFrom the engineering phase onward we account for corrosion protection, maintenance intervals and site accessibility."
+		},
+		{
+			title: "Wet paint vs powder coating: what suits your project?",
+			category: "Finishing",
+			date: "24 March 2026",
+			readTime: "3 min",
+			excerpt: "The choice between wet paint and powder coating affects both appearance and protection level. We compare the strengths and trade-offs of both methods.",
+			body: "Wet paint and powder coating are both strong finishing methods for steel, but each has its own application range.\n\nWet paint is ideal for large structures that do not fit into an oven, for multi-layer coating systems and for aggressive environments. Powder coating is more durable, more environmentally friendly and gives a uniform finish.\n\nAt FerroWorks we always advise the most suitable method for your specific situation."
+		},
+		{
+			title: "Is a welding certificate mandatory? What to know about EN-1090",
+			category: "Certification",
+			date: "17 March 2026",
+			readTime: "6 min",
+			excerpt: "Since EN-1090 came into force, certification is mandatory for many steel structures. But what does that mean in practice, and when does it apply? FerroWorks explains it clearly.",
+			body: "EN-1090 is the European standard for manufacturing steel and aluminium structures. Constructions that fall under CE marking requirements must be produced by a certified manufacturer.\n\nFerroWorks is certified in line with EN-1090-2 for execution class EXC2. This means our constructions meet strict European requirements for load-bearing steel structures.\n\nNot sure whether your project requires EN-1090 certification? Get in touch and we will advise you."
+		},
+		{
+			title: "From drawing to product: how our production process works",
+			category: "Production",
+			date: "10 March 2026",
+			readTime: "4 min",
+			excerpt: "How does a metal project move from CAD drawing to finished product? We walk through the FerroWorks process step by step, from intake and engineering to production, finishing and installation.",
+			body: "Every FerroWorks project follows the same phases: intake, engineering, production, coating and installation. Because we manage everything in-house, we stay in control of quality and planning in every phase.\n\nAfter intake and drawing approval the product moves into the workshop. Our CNC machines handle precise cutting and machining, followed by welding, blasting and coating.\n\nThe final product is checked, stored and installed on site by our assembly team."
+		},
+		{
+			title: "Custom industrial steel: 5 common mistakes avoided",
+			category: "Industry",
+			date: "3 March 2026",
+			readTime: "5 min",
+			excerpt: "Industrial custom steelwork often goes wrong not because of bad intent, but because of missing knowledge or weak communication. We cover five common mistakes and how to avoid them.",
+			body: "Mistake 1: involving the manufacturer too late. Do not wait until the drawing is finished. Bring FerroWorks in early for manufacturability advice.\n\nMistake 2: specifying unrealistic tolerances. Steel has tolerances. Make sure your drawing reflects what is achievable for the chosen production method.\n\nMistake 3: forgetting coating during design. Think about coating early, because accessibility, thickness and method affect the construction.\n\nMistake 4: ignoring installation. A structure that works in the workshop but is hard to place on site costs time and money.\n\nMistake 5: poor documentation. Clear drawings and specifications are the basis of a successful project."
+		}
+	],
+	contact: {
+		hero: {
+			title1: "GET IN",
+			title2: "TOUCH",
+			subtitle: "Send your drawing or ask your question. We respond within 24 hours."
+		},
+		openingstijden: "Monday - Friday: 07:30 - 17:00\nSaturday: By appointment\nSunday: Closed"
+	},
+	pages: [
+		{
+			key: "home",
+			name: "Homepage",
+			metaTitle: "FerroWorks - Custom Metalwork in Steel, Stainless Steel & Aluminium",
+			metaDescription: "FerroWorks delivers custom metal constructions for industry, construction and architecture. Engineering, production, coating and installation under one roof."
+		},
+		{
+			key: "about",
+			name: "About",
+			path: "/en/about",
+			metaTitle: "About | FerroWorks",
+			metaDescription: "Learn more about FerroWorks, our way of working and our craftsmanship in steel, stainless steel and aluminium."
+		},
+		{
+			key: "services",
+			name: "Services",
+			path: "/en/services",
+			metaTitle: "Services | FerroWorks",
+			metaDescription: "Engineering, production, coating, installation and maintenance for custom metal projects."
+		},
+		{
+			key: "sectors",
+			name: "Sectors",
+			path: "/en/sectors",
+			metaTitle: "Sectors | FerroWorks",
+			metaDescription: "Custom metalwork for construction, industry, architecture and maritime applications."
+		},
+		{
+			key: "blog",
+			name: "Blog",
+			path: "/en/blog",
+			metaTitle: "Blog | FerroWorks",
+			metaDescription: "Knowledge articles, project stories and technical insights from FerroWorks."
+		},
+		{
+			key: "contactPage",
+			name: "Contact",
+			path: "/en/contact",
+			metaTitle: "Contact | FerroWorks",
+			metaDescription: "Contact FerroWorks for advice, quotations or technical coordination.",
+			heroTitle: "GET IN TOUCH",
+			heroSubtitle: "Send your drawing or ask your question. We respond within 24 hours."
+		},
+		{
+			key: "privacy",
+			name: "Privacy Policy",
+			path: "/en/privacy-policy",
+			metaTitle: "Privacy Policy | FerroWorks",
+			metaDescription: "Read how FerroWorks processes and protects personal data.",
+			heroTitle: "PRIVACY POLICY",
+			heroSubtitle: "Clear information about what data we process and why.",
+			body: "<h2>1. Who we are</h2><p>FerroWorks processes personal data in the context of quotation requests, client communication and service delivery.</p><h2>2. What data we collect</h2><p>We process contact details, company details and information that you actively share with us through forms, email or phone contact.</p><h2>3. Why we use this data</h2><p>We use this data to answer requests, prepare quotations, carry out assignments and improve our services.</p><h2>4. Retention periods</h2><p>We do not store personal data longer than necessary for the purpose for which it was collected, unless a legal retention period applies.</p><h2>5. Your rights</h2><p>You can request access, correction or deletion of your personal data by contacting us using the details on this website.</p>"
+		},
+		{
+			key: "terms",
+			name: "Terms & Conditions",
+			path: "/en/terms-and-conditions",
+			metaTitle: "Terms & Conditions | FerroWorks",
+			metaDescription: "The general terms and conditions of FerroWorks.",
+			heroTitle: "TERMS & CONDITIONS",
+			heroSubtitle: "The terms that apply to quotations, deliveries and assignments.",
+			body: "<h2>1. Applicability</h2><p>These terms apply to all quotations, agreements and deliveries of FerroWorks.</p><h2>2. Quotations and assignments</h2><p>Quotations are non-binding unless explicitly stated otherwise. An assignment takes effect after written confirmation.</p><h2>3. Delivery and execution</h2><p>Delivery times are indicative. FerroWorks makes every effort to fulfil agreements carefully and professionally.</p><h2>4. Payment</h2><p>Invoices must be paid within the agreed payment term. Additional costs may be charged in case of delay.</p><h2>5. Liability</h2><p>Our liability is limited to direct damage and to the amount covered by our insurance or otherwise contractually agreed for the relevant case.</p>"
+		}
+	]
+} };
+function getLocalizationConfig(websiteSettings = {}) {
+	const config = websiteSettings?.localization || {};
+	const locales = Array.isArray(config.locales) && config.locales.length > 0 ? config.locales : ["nl", "en"];
+	return {
+		enabled: Boolean(config.enabled),
+		defaultLocale: config.defaultLocale || "nl",
+		locales,
+		localizedContent: config.localizedContent || {}
+	};
+}
+function isLocalizationEnabled(websiteSettings = {}) {
+	return getLocalizationConfig(websiteSettings).enabled;
+}
+function getActiveLocales(websiteSettings = {}) {
+	const config = getLocalizationConfig(websiteSettings);
+	return config.enabled ? config.locales : [config.defaultLocale || "nl"];
+}
+function localizeCmsContent(cms, locale = "nl") {
+	if (!cms) return cms;
+	const localization = getLocalizationConfig(cms.websiteSettings || {});
+	if (!localization.enabled || locale === localization.defaultLocale || locale === "nl") return cms;
+	const systemOverlay = CONTENT_OVERLAYS[locale] || {};
+	const userOverlay = localization.localizedContent?.[locale] || {};
+	return mergeLocalizedValue(mergeLocalizedValue(cms, systemOverlay), userOverlay);
+}
 //#endregion
 //#region src/api/client.js
 var API_BASE = "http://localhost:4000";
@@ -84,6 +549,452 @@ var api = {
 		body: JSON.stringify({ email })
 	})
 };
+//#endregion
+//#region src/i18n/translations.js
+var SUPPORTED_LANGUAGES = SUPPORTED_LOCALES;
+var translations = {
+	nl: {
+		nav: {
+			overOns: "Over ons",
+			diensten: "Diensten",
+			sectoren: "Sectoren",
+			blog: "Blog",
+			contact: "Contact",
+			cta: "NEEM CONTACT OP",
+			brandTagline: "metaalwerk",
+			menuToggle: "Menu openen",
+			languageLabel: "Taal"
+		},
+		common: {
+			home: "Home",
+			readMore: "LEES MEER",
+			readArticle: "LEES ARTIKEL",
+			getQuote: "OFFERTE AANVRAGEN",
+			contactUs: "NEEM CONTACT OP",
+			callUs: "BEL ONS",
+			startProject: "KLAAR OM",
+			startProjectAccent: "TE STARTEN?",
+			startProjectText: "Stuur uw tekening op of neem contact op - wij reageren binnen 24 uur.",
+			loading: "Laden..."
+		},
+		footer: {
+			rights: "© FerroWorks. All Rights Reserved | Marketing door",
+			vacancies: "VACATURES",
+			machinePark: "MACHINEPARK",
+			privacy: "PRIVACY POLICY",
+			terms: "ALGEMENE VOORWAARDEN"
+		},
+		contactPage: {
+			breadcrumb: "Contact",
+			sendMessage: "STUUR EEN BERICHT",
+			replyWithin: "WIJ REAGEREN ",
+			replyWithinAccent: "BINNEN 24 UUR",
+			successTitle: "Bericht ontvangen!",
+			successText: "Bedankt voor uw bericht. Wij nemen zo snel mogelijk contact met u op.",
+			fieldName: "Naam *",
+			fieldCompany: "Bedrijf",
+			fieldEmail: "E-mailadres *",
+			fieldPhone: "Telefoon",
+			fieldMessage: "Bericht *",
+			fieldAttachment: "Tekening / bijlage",
+			placeholderName: "Uw naam",
+			placeholderCompany: "Uw bedrijfsnaam",
+			placeholderEmail: "uw@email.nl",
+			placeholderPhone: "+31 ...",
+			placeholderMessage: "Beschrijf uw project of vraag...",
+			uploadPrompt: "Sleep een bestand of ",
+			uploadAction: "klik om te uploaden",
+			uploadTypes: "PDF, DWG, DXF, JPG, PNG",
+			send: "VERSTUUR BERICHT",
+			sending: "VERZENDEN...",
+			details: "CONTACTGEGEVENS",
+			reachable: "DIRECT ",
+			reachableAccent: "BEREIKBAAR",
+			phone: "Telefoon",
+			email: "E-mail",
+			address: "Adres",
+			hours: "OPENINGSTIJDEN",
+			call: "BELLEN",
+			mail: "MAILEN",
+			visit: "BEZOEKEN",
+			mapTitle: "FerroWorks locatie",
+			error: "Versturen mislukt."
+		},
+		blogPage: {
+			heroTitle: "KENNIS & ",
+			heroAccent: "INZICHTEN",
+			heroText: "Vakartikelen, projectverhalen en technische inzichten vanuit de dagelijkse praktijk van FerroWorks.",
+			featured: "Uitgelicht",
+			readTime: "leestijd",
+			allArticles: "ALLE ARTIKELEN",
+			recentTitle: "RECENTE ",
+			recentAccent: "PUBLICATIES",
+			noResults: "Geen artikelen gevonden in deze categorie.",
+			newsletterEyebrow: "BLIJF OP DE HOOGTE",
+			newsletterTitle: "ONTVANG ONZE ",
+			newsletterAccent: "NIEUWSBRIEF",
+			newsletterText: "Nieuwe artikelen, projectupdates en technische tips - direct in uw inbox.",
+			newsletterSuccess: "Inschrijving gelukt! ✓",
+			newsletterCta: "INSCHRIJVEN",
+			newsletterError: "Inschrijven mislukt.",
+			ctaTitle: "EEN PROJECT IN ",
+			ctaAccent: "GEDACHTEN?",
+			ctaText: "Neem contact op - wij denken graag met u mee.",
+			categories: {
+				all: "Alle",
+				craftsmanship: "Vakmanschap",
+				offshore: "Offshore",
+				finishing: "Afwerking",
+				certification: "Certificering",
+				production: "Productie",
+				industry: "Industrie"
+			}
+		},
+		servicesPage: {
+			breadcrumb: "Diensten",
+			heroTitle: "ONZE ",
+			heroAccent: "DIENSTEN",
+			heroText: "Van ontwerp en engineering tot productie, coating en montage - FerroWorks ontzorgt u volledig in metaalmaatwerk van A tot Z.",
+			stats: [
+				{
+					label: "Jaar ervaring",
+					sub: "in metaalmaatwerk"
+				},
+				{
+					label: "Eigen productie",
+					sub: "zonder onderaannemers"
+				},
+				{
+					label: "Volledig ontzorgd",
+					sub: "van ontwerp tot montage"
+				}
+			],
+			moreInfo: "MEER INFORMATIE"
+		},
+		sectorsPage: {
+			breadcrumb: "Sectoren",
+			heroTitle: "STAAL, RVS & ALU ",
+			heroAccent: "IN ELKE SECTOR",
+			heroText: "FerroWorks levert maatwerk metaaloplossingen voor bouw, industrie, architectuur en maritieme toepassingen. Altijd vakkundig, altijd op maat.",
+			sectorLabel: "SECTOR",
+			relatedEyebrow: "OOK INTERESSANT",
+			relatedTitle: "ONZE ",
+			relatedAccent: "DIENSTEN",
+			moreInfo: "→ Meer info"
+		},
+		aboutPage: {
+			breadcrumb: "Over Ons",
+			heroTitle: "VORMGEVERS ",
+			heroAccent: "IN METAAL",
+			heroText: "FerroWorks begeleidt metaalprojecten van ontwerp en engineering tot productie en montage. Specialist in maatwerk Staal, RVS en Aluminium.",
+			storyEyebrow: "ONS VERHAAL",
+			servicesEyebrow: "ONZE DIENSTEN",
+			servicesTitle: "WAT FERROWORKS",
+			servicesAccent: "VOOR JE DOET",
+			whyEyebrow: "WAAROM FERROWORKS",
+			whyTitle: "WAT ONS ",
+			whyAccent: "ANDERS MAAKT",
+			teamEyebrow: "ONS TEAM",
+			sectorsEyebrow: "WAT WE BOUWEN",
+			sectorsTitle: "ONZE ",
+			sectorsAccent: "SECTOREN",
+			certEyebrow: "ONZE CERTIFICERINGEN",
+			certTitle: "GECERTIFICEERD ",
+			certAccent: "VCA, EN-1090 & CE",
+			certs: [
+				{
+					code: "VCA",
+					label: "Veiligheid, gezondheid & milieu"
+				},
+				{
+					code: "EN-1090",
+					label: "Staal- en aluminiumconstructies"
+				},
+				{
+					code: "CE",
+					label: "Conformiteit & veiligheidsstandaard"
+				}
+			],
+			sectors: [
+				{
+					naam: "Bouw & Utiliteit",
+					diensten: [
+						"Staalconstructies",
+						"Standaard hekwerken",
+						"Prefab balkons"
+					]
+				},
+				{
+					naam: "Industrie",
+					diensten: [
+						"Machinebouw",
+						"Maatwerk staalconstructies",
+						"Industriële installaties",
+						"Laswerkzaamheden op locatie"
+					]
+				},
+				{
+					naam: "Architectuur & Design",
+					diensten: ["Design trappen", "Interieur- en exterieur maatwerk"]
+				},
+				{
+					naam: "Maritiem",
+					diensten: ["Jachtbouw"]
+				}
+			]
+		},
+		managedPage: { noContent: "Geen inhoud ingesteld." }
+	},
+	en: {
+		nav: {
+			overOns: "About",
+			diensten: "Services",
+			sectoren: "Sectors",
+			blog: "Blog",
+			contact: "Contact",
+			cta: "CONTACT US",
+			brandTagline: "metalwork",
+			menuToggle: "Open menu",
+			languageLabel: "Language"
+		},
+		common: {
+			home: "Home",
+			readMore: "READ MORE",
+			readArticle: "READ ARTICLE",
+			getQuote: "REQUEST A QUOTE",
+			contactUs: "CONTACT US",
+			callUs: "CALL US",
+			startProject: "READY TO",
+			startProjectAccent: "GET STARTED?",
+			startProjectText: "Send your drawing or contact us - we respond within 24 hours.",
+			loading: "Loading..."
+		},
+		footer: {
+			rights: "© FerroWorks. All Rights Reserved | Marketing by",
+			vacancies: "CAREERS",
+			machinePark: "MACHINE PARK",
+			privacy: "PRIVACY POLICY",
+			terms: "TERMS & CONDITIONS"
+		},
+		contactPage: {
+			breadcrumb: "Contact",
+			sendMessage: "SEND A MESSAGE",
+			replyWithin: "WE RESPOND ",
+			replyWithinAccent: "WITHIN 24 HOURS",
+			successTitle: "Message received!",
+			successText: "Thank you for your message. We will get back to you as soon as possible.",
+			fieldName: "Name *",
+			fieldCompany: "Company",
+			fieldEmail: "Email address *",
+			fieldPhone: "Phone",
+			fieldMessage: "Message *",
+			fieldAttachment: "Drawing / attachment",
+			placeholderName: "Your name",
+			placeholderCompany: "Your company name",
+			placeholderEmail: "your@email.com",
+			placeholderPhone: "+31 ...",
+			placeholderMessage: "Describe your project or question...",
+			uploadPrompt: "Drop a file or ",
+			uploadAction: "click to upload",
+			uploadTypes: "PDF, DWG, DXF, JPG, PNG",
+			send: "SEND MESSAGE",
+			sending: "SENDING...",
+			details: "CONTACT DETAILS",
+			reachable: "DIRECTLY ",
+			reachableAccent: "AVAILABLE",
+			phone: "Phone",
+			email: "Email",
+			address: "Address",
+			hours: "OPENING HOURS",
+			call: "CALL",
+			mail: "EMAIL",
+			visit: "VISIT",
+			mapTitle: "FerroWorks location",
+			error: "Sending failed."
+		},
+		blogPage: {
+			heroTitle: "KNOWLEDGE & ",
+			heroAccent: "INSIGHTS",
+			heroText: "Industry articles, project stories and technical insights from FerroWorks' day-to-day practice.",
+			featured: "Featured",
+			readTime: "read time",
+			allArticles: "ALL ARTICLES",
+			recentTitle: "RECENT ",
+			recentAccent: "PUBLICATIONS",
+			noResults: "No articles found in this category.",
+			newsletterEyebrow: "STAY INFORMED",
+			newsletterTitle: "RECEIVE OUR ",
+			newsletterAccent: "NEWSLETTER",
+			newsletterText: "New articles, project updates and technical tips - straight to your inbox.",
+			newsletterSuccess: "Subscription successful! ✓",
+			newsletterCta: "SUBSCRIBE",
+			newsletterError: "Subscription failed.",
+			ctaTitle: "HAVE A PROJECT ",
+			ctaAccent: "IN MIND?",
+			ctaText: "Get in touch - we would love to think along with you.",
+			categories: {
+				all: "All",
+				craftsmanship: "Craftsmanship",
+				offshore: "Offshore",
+				finishing: "Finishing",
+				certification: "Certification",
+				production: "Production",
+				industry: "Industry"
+			}
+		},
+		servicesPage: {
+			breadcrumb: "Services",
+			heroTitle: "OUR ",
+			heroAccent: "SERVICES",
+			heroText: "From design and engineering to production, coating and installation - FerroWorks supports your custom metal project from A to Z.",
+			stats: [
+				{
+					label: "Years of experience",
+					sub: "in custom metalwork"
+				},
+				{
+					label: "In-house production",
+					sub: "without subcontractors"
+				},
+				{
+					label: "Complete support",
+					sub: "from design to installation"
+				}
+			],
+			moreInfo: "MORE INFORMATION"
+		},
+		sectorsPage: {
+			breadcrumb: "Sectors",
+			heroTitle: "STEEL, STAINLESS & ALU ",
+			heroAccent: "FOR EVERY SECTOR",
+			heroText: "FerroWorks delivers custom metal solutions for construction, industry, architecture and maritime applications. Always skilled, always tailored.",
+			sectorLabel: "SECTOR",
+			relatedEyebrow: "ALSO INTERESTING",
+			relatedTitle: "OUR ",
+			relatedAccent: "SERVICES",
+			moreInfo: "→ More info"
+		},
+		aboutPage: {
+			breadcrumb: "About",
+			heroTitle: "METAL ",
+			heroAccent: "MAKERS",
+			heroText: "FerroWorks guides metal projects from design and engineering to production and installation. Specialists in custom Steel, Stainless Steel and Aluminium.",
+			storyEyebrow: "OUR STORY",
+			servicesEyebrow: "OUR SERVICES",
+			servicesTitle: "WHAT FERROWORKS",
+			servicesAccent: "DOES FOR YOU",
+			whyEyebrow: "WHY FERROWORKS",
+			whyTitle: "WHAT MAKES US ",
+			whyAccent: "DIFFERENT",
+			teamEyebrow: "OUR TEAM",
+			sectorsEyebrow: "WHAT WE BUILD",
+			sectorsTitle: "OUR ",
+			sectorsAccent: "SECTORS",
+			certEyebrow: "OUR CERTIFICATIONS",
+			certTitle: "CERTIFIED ",
+			certAccent: "VCA, EN-1090 & CE",
+			certs: [
+				{
+					code: "VCA",
+					label: "Safety, health and environment"
+				},
+				{
+					code: "EN-1090",
+					label: "Steel and aluminium structures"
+				},
+				{
+					code: "CE",
+					label: "Conformity and safety standard"
+				}
+			],
+			sectors: [
+				{
+					naam: "Construction & Utilities",
+					diensten: [
+						"Steel structures",
+						"Standard guardrails",
+						"Prefab balconies"
+					]
+				},
+				{
+					naam: "Industry",
+					diensten: [
+						"Machine building",
+						"Custom steel structures",
+						"Industrial installations",
+						"On-site welding"
+					]
+				},
+				{
+					naam: "Architecture & Design",
+					diensten: ["Design stairs", "Interior and exterior custom work"]
+				},
+				{
+					naam: "Maritime",
+					diensten: ["Yacht building"]
+				}
+			]
+		},
+		managedPage: { noContent: "No content configured yet." }
+	}
+};
+//#endregion
+//#region src/i18n/LanguageContext.jsx
+var LanguageContext = createContext(null);
+function getValueByPath(obj, path) {
+	return path.split(".").reduce((acc, key) => {
+		if (acc && Object.prototype.hasOwnProperty.call(acc, key)) return acc[key];
+	}, obj);
+}
+function LanguageProvider({ children }) {
+	const location = useLocation();
+	const navigate = useNavigate();
+	const localeFromPath = getLocaleFromPathname(location.pathname);
+	const [language, setLanguageState] = useState(localeFromPath);
+	useEffect(() => {
+		setLanguageState(localeFromPath);
+	}, [localeFromPath]);
+	useEffect(() => {
+		if (typeof document !== "undefined") {
+			document.documentElement.lang = language;
+			window.localStorage.setItem("ferroworks_locale", language);
+		}
+	}, [language]);
+	const value = useMemo(() => {
+		const t = (key, fallback = "") => {
+			const found = getValueByPath(translations[language] || {}, key);
+			if (typeof found === "string") return found;
+			return fallback || key;
+		};
+		const setLanguage = (nextLanguage) => {
+			const targetLanguage = nextLanguage || "nl";
+			setLanguageState(targetLanguage);
+			if (location.pathname.startsWith("/admin")) return;
+			navigate(localizePath(getCanonicalPathname(location.pathname), targetLanguage), { replace: false });
+		};
+		return {
+			language,
+			setLanguage,
+			supportedLanguages: SUPPORTED_LANGUAGES,
+			canonicalPath: getCanonicalPathname(location.pathname),
+			localizePath: (pathname, locale = language) => localizePath(pathname, locale),
+			t
+		};
+	}, [
+		language,
+		location.pathname,
+		navigate
+	]);
+	return /* @__PURE__ */ jsx(LanguageContext.Provider, {
+		value,
+		children
+	});
+}
+function useLanguage() {
+	const ctx = useContext(LanguageContext);
+	if (!ctx) throw new Error("useLanguage must be used inside <LanguageProvider>");
+	return ctx;
+}
 //#endregion
 //#region src/cms/defaultContent.js
 var DEFAULT_CMS = {
@@ -561,16 +1472,18 @@ function deepMerge(defaults, saved) {
 	return result;
 }
 function CmsProvider({ children, initialCms = null }) {
-	const [cms, setCms] = useState(() => deepMerge(DEFAULT_CMS, initialCms || {}));
+	const { language } = useLanguage();
+	const isAdminRoute = useLocation().pathname.startsWith("/admin");
+	const [rawCms, setRawCms] = useState(() => deepMerge(DEFAULT_CMS, initialCms || {}));
 	const [loading, setLoading] = useState(!initialCms);
 	const [error, setError] = useState("");
 	const refreshCms = async () => {
 		setLoading(true);
 		try {
-			setCms(deepMerge(DEFAULT_CMS, await api.getCms()));
+			setRawCms(deepMerge(DEFAULT_CMS, await api.getCms()));
 			setError("");
 		} catch (err) {
-			setCms(DEFAULT_CMS);
+			setRawCms(DEFAULT_CMS);
 			setError(err.message || "Kon CMS data niet laden.");
 		} finally {
 			setLoading(false);
@@ -582,7 +1495,7 @@ function CmsProvider({ children, initialCms = null }) {
 	const updateCms = async (key, value) => {
 		try {
 			await api.updateSection(key, value);
-			setCms((prev) => ({
+			setRawCms((prev) => ({
 				...prev,
 				[key]: value
 			}));
@@ -596,8 +1509,18 @@ function CmsProvider({ children, initialCms = null }) {
 	const resetCms = async () => {
 		await refreshCms();
 	};
+	const cms = useMemo(() => {
+		if (isAdminRoute) return rawCms;
+		if (!isLocalizationEnabled(rawCms.websiteSettings || {})) return rawCms;
+		return localizeCmsContent(rawCms, language);
+	}, [
+		isAdminRoute,
+		language,
+		rawCms
+	]);
 	const value = useMemo(() => ({
 		cms,
+		rawCms,
 		updateCms,
 		resetCms,
 		refreshCms,
@@ -605,6 +1528,7 @@ function CmsProvider({ children, initialCms = null }) {
 		error
 	}), [
 		cms,
+		rawCms,
 		loading,
 		error
 	]);
@@ -617,6 +1541,1712 @@ function useCms() {
 	const ctx = useContext(CmsContext);
 	if (!ctx) throw new Error("useCms must be used inside <CmsProvider>");
 	return ctx;
+}
+//#endregion
+//#region src/assets/hero-background.jpeg
+var hero_background_default = "/assets/hero-background-a4nmQpHQ.jpeg";
+//#endregion
+//#region src/components/HeroBanner.jsx
+function HeroBanner() {
+	const { cms } = useCms();
+	const hero = cms.hero || {};
+	return /* @__PURE__ */ jsxs("section", {
+		className: "home-hero",
+		style: {
+			position: "relative",
+			width: "100%",
+			minHeight: "calc(100vh - 72px)",
+			display: "flex",
+			alignItems: "center",
+			overflow: "hidden",
+			backgroundColor: "#141616"
+		},
+		children: [
+			/* @__PURE__ */ jsx("div", {
+				className: "hero-bg",
+				style: {
+					position: "absolute",
+					inset: 0,
+					backgroundImage: `url(${hero.image || "/assets/hero-background-a4nmQpHQ.jpeg"})`,
+					backgroundSize: "cover",
+					backgroundPosition: "center right",
+					backgroundRepeat: "no-repeat"
+				}
+			}),
+			/* @__PURE__ */ jsx("div", {
+				className: "absolute inset-0 md:hidden",
+				style: { background: "rgba(20,22,22,0.82)" }
+			}),
+			/* @__PURE__ */ jsx("div", {
+				className: "absolute inset-0 hidden md:block",
+				style: { background: "linear-gradient(90deg, rgba(20,22,22,0.88) 0%, rgba(20,22,22,0.80) 30%, rgba(20,22,22,0.55) 55%, rgba(20,22,22,0.15) 80%, rgba(20,22,22,0.0) 100%)" }
+			}),
+			/* @__PURE__ */ jsxs("div", {
+				className: "relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8",
+				style: {
+					paddingTop: "60px",
+					paddingBottom: "60px"
+				},
+				children: [
+					/* @__PURE__ */ jsx("div", {
+						className: "hidden md:block",
+						style: {
+							position: "absolute",
+							top: "0px",
+							right: "32px"
+						},
+						children: /* @__PURE__ */ jsxs("svg", {
+							width: "96",
+							height: "108",
+							viewBox: "0 0 102 115",
+							fill: "none",
+							xmlns: "http://www.w3.org/2000/svg",
+							children: [
+								/* @__PURE__ */ jsx("path", {
+									d: "M13 13H56V28H28V87H13V13Z",
+									stroke: "var(--fw-website-primary)",
+									strokeWidth: "7"
+								}),
+								/* @__PURE__ */ jsx("path", {
+									d: "M89 102H46V87H74V28H89V102Z",
+									stroke: "var(--fw-website-primary)",
+									strokeWidth: "7"
+								}),
+								/* @__PURE__ */ jsx("path", {
+									d: "M28 28H46V68H56V28H74",
+									stroke: "var(--fw-website-primary)",
+									strokeWidth: "7",
+									fill: "none"
+								})
+							]
+						})
+					}),
+					/* @__PURE__ */ jsx("h1", {
+						style: {
+							margin: 0,
+							padding: 0,
+							color: "var(--fw-website-primary)",
+							fontFamily: "var(--fw-website-heading-font)",
+							fontSize: "clamp(30px, 3.2vw, 52px)",
+							lineHeight: 1.05,
+							letterSpacing: "-0.5px",
+							textTransform: "uppercase",
+							fontWeight: 900
+						},
+						children: hero.line1
+					}),
+					/* @__PURE__ */ jsx("h2", {
+						style: {
+							margin: 0,
+							padding: 0,
+							color: "#F3F3F3",
+							fontFamily: "var(--fw-website-heading-font)",
+							fontSize: "clamp(30px, 3.2vw, 52px)",
+							lineHeight: 1.05,
+							letterSpacing: "-0.5px",
+							textTransform: "uppercase",
+							fontWeight: 900
+						},
+						children: hero.line2
+					}),
+					/* @__PURE__ */ jsx("p", {
+						style: {
+							marginTop: "32px",
+							marginBottom: "32px",
+							color: "#E0E0E0",
+							fontSize: "15px",
+							lineHeight: 1.65,
+							fontWeight: 400,
+							maxWidth: "480px"
+						},
+						children: hero.subtitle.split("\n").map((line, i) => /* @__PURE__ */ jsxs("span", { children: [line, i < hero.subtitle.split("\n").length - 1 && /* @__PURE__ */ jsx("br", {})] }, i))
+					}),
+					/* @__PURE__ */ jsx("div", { style: {
+						width: "100%",
+						height: "1px",
+						backgroundColor: "rgba(255,255,255,0.18)",
+						marginBottom: "22px"
+					} }),
+					/* @__PURE__ */ jsx("div", {
+						className: "grid grid-cols-2 md:grid-cols-4 hero-checks",
+						style: {
+							gap: "12px",
+							marginBottom: "42px"
+						},
+						children: (hero.checkItems || []).map((text, i) => /* @__PURE__ */ jsxs("div", {
+							style: {
+								display: "flex",
+								alignItems: "flex-start",
+								gap: "10px"
+							},
+							children: [/* @__PURE__ */ jsx("svg", {
+								width: "13",
+								height: "13",
+								viewBox: "0 0 16 16",
+								fill: "none",
+								style: {
+									flexShrink: 0,
+									marginTop: "2px"
+								},
+								children: /* @__PURE__ */ jsx("path", {
+									d: "M2 8.5L6 12.5L14 4.5",
+									stroke: "var(--fw-website-primary)",
+									strokeWidth: "2.6",
+									strokeLinecap: "round",
+									strokeLinejoin: "round"
+								})
+							}), /* @__PURE__ */ jsx("span", {
+								style: {
+									color: "#D8D8D8",
+									fontSize: "13px",
+									lineHeight: 1.45,
+									fontWeight: 400
+								},
+								children: text
+							})]
+						}, i))
+					}),
+					/* @__PURE__ */ jsx(Link, {
+						to: "/contact",
+						style: {
+							display: "inline-block",
+							textDecoration: "none",
+							backgroundColor: "var(--fw-website-primary)",
+							color: "var(--fw-website-secondary)",
+							borderRadius: "999px",
+							padding: "15px 32px",
+							fontSize: "13px",
+							fontWeight: 900,
+							textTransform: "uppercase",
+							fontFamily: "var(--fw-website-heading-font)",
+							letterSpacing: "1px",
+							transition: "background-color 0.2s"
+						},
+						onMouseEnter: (e) => e.currentTarget.style.filter = "brightness(0.94)",
+						onMouseLeave: (e) => e.currentTarget.style.filter = "none",
+						children: hero.cta
+					})
+				]
+			})
+		]
+	});
+}
+//#endregion
+//#region src/assets/over-ons2.png
+var over_ons2_default = "/assets/over-ons2-Cfi8JRv3.png";
+//#endregion
+//#region src/assets/over-ons3.png
+var over_ons3_default = "/assets/over-ons3-B7TQ4OxP.png";
+//#endregion
+//#region src/components/WatFernaSection.jsx
+var bulletItems = [
+	"Heldere afspraken, zonder verrassingen.",
+	"Totaal ontzorgen van ontwerp tot montage.",
+	"Reparatie en onderhoud op locatie.",
+	"Advies en ondersteuning bij ontwerp en uitvoerbaarheid.",
+	"Eén partner voor het volledige traject.",
+	"Maakbaar, praktisch en doordacht.",
+	"Transparant in kosten en planning."
+];
+function WatFernaSection() {
+	const { cms } = useCms();
+	const wf = cms.watFerna || {};
+	const ref = useRef(null);
+	const [vis, setVis] = useState(false);
+	useEffect(() => {
+		const obs = new IntersectionObserver(([e]) => {
+			if (e.isIntersecting) setVis(true);
+		}, { threshold: .1 });
+		if (ref.current) obs.observe(ref.current);
+		return () => obs.disconnect();
+	}, []);
+	return /* @__PURE__ */ jsxs("section", {
+		ref,
+		style: {
+			background: "#f4f4f4",
+			padding: "72px 0"
+		},
+		children: [
+			/* @__PURE__ */ jsx("style", { children: `
+        .wf-left  { opacity:0; transform:translateX(-36px); transition: opacity .65s ease, transform .65s ease; }
+        .wf-img1  { opacity:0; transform:translateY(-24px); transition: opacity .65s .2s ease, transform .65s .2s ease; }
+        .wf-img2  { opacity:0; transform:translateY(24px);  transition: opacity .65s .4s ease, transform .65s .4s ease; }
+        .wf-sq    { opacity:0; transform:scale(0.4);        transition: opacity .5s .55s ease, transform .5s .55s ease; }
+        .wf-on .wf-left,
+        .wf-on .wf-img1,
+        .wf-on .wf-img2,
+        .wf-on .wf-sq { opacity:1; transform:none; }
+      ` }),
+			/* @__PURE__ */ jsxs("div", {
+				className: "max-w-7xl mx-auto px-6 md:px-8 wf-grid " + (vis ? "wf-on" : ""),
+				style: {
+					display: "grid",
+					gridTemplateColumns: "1fr 1.4fr",
+					gap: "72px",
+					alignItems: "start"
+				},
+				children: [/* @__PURE__ */ jsxs("div", {
+					className: "wf-left",
+					children: [/* @__PURE__ */ jsxs("h2", {
+						style: {
+							margin: "0 0 24px 0",
+							fontFamily: "Arial Black, Arial, sans-serif",
+							fontWeight: 900,
+							fontSize: "clamp(20px,2.2vw,28px)",
+							lineHeight: 1.1,
+							textTransform: "uppercase",
+							letterSpacing: "-0.2px"
+						},
+						children: [
+							/* @__PURE__ */ jsx("span", {
+								style: { color: "var(--fw-website-primary)" },
+								children: wf.title1
+							}),
+							/* @__PURE__ */ jsx("br", {}),
+							/* @__PURE__ */ jsx("span", {
+								style: { color: "#1c1c1c" },
+								children: wf.title2
+							})
+						]
+					}), /* @__PURE__ */ jsx("ul", {
+						style: {
+							listStyle: "none",
+							margin: 0,
+							padding: 0,
+							display: "flex",
+							flexDirection: "column",
+							gap: "13px"
+						},
+						children: (wf.bulletItems || bulletItems).map((item, i) => /* @__PURE__ */ jsxs("li", {
+							style: {
+								display: "flex",
+								alignItems: "flex-start",
+								gap: "9px"
+							},
+							children: [/* @__PURE__ */ jsx("span", { style: {
+								width: "5px",
+								height: "5px",
+								borderRadius: "50%",
+								background: "#555",
+								marginTop: "7px",
+								flexShrink: 0
+							} }), /* @__PURE__ */ jsx("span", {
+								style: {
+									color: "#555",
+									fontSize: "15px",
+									lineHeight: 1.6
+								},
+								children: item
+							})]
+						}, i))
+					})]
+				}), /* @__PURE__ */ jsxs("div", {
+					className: "wf-visual",
+					style: {
+						position: "relative",
+						height: "360px"
+					},
+					children: [
+						/* @__PURE__ */ jsx("div", {
+							className: "wf-sq",
+							style: {
+								position: "absolute",
+								bottom: 0,
+								right: 0,
+								width: "90px",
+								height: "90px",
+								background: "var(--fw-website-primary)",
+								zIndex: 1
+							}
+						}),
+						/* @__PURE__ */ jsx("div", {
+							className: "wf-img1",
+							style: {
+								position: "absolute",
+								top: 0,
+								left: 0,
+								width: "67%",
+								height: "72%",
+								overflow: "hidden",
+								zIndex: 2,
+								boxShadow: "0 2px 16px rgba(0,0,0,0.13)"
+							},
+							children: /* @__PURE__ */ jsx("img", {
+								src: wf.image1 || "/assets/over-ons2-Cfi8JRv3.png",
+								alt: "Ferna werkplaats",
+								style: {
+									width: "100%",
+									height: "100%",
+									objectFit: "cover",
+									display: "block"
+								}
+							})
+						}),
+						/* @__PURE__ */ jsx("div", {
+							className: "wf-img2",
+							style: {
+								position: "absolute",
+								bottom: 0,
+								right: "36px",
+								width: "42%",
+								height: "68%",
+								overflow: "hidden",
+								zIndex: 3,
+								boxShadow: "0 2px 16px rgba(0,0,0,0.16)"
+							},
+							children: /* @__PURE__ */ jsx("img", {
+								src: wf.image2 || "/assets/over-ons3-B7TQ4OxP.png",
+								alt: "Ferna medewerker",
+								style: {
+									width: "100%",
+									height: "100%",
+									objectFit: "cover",
+									objectPosition: "top",
+									display: "block"
+								}
+							})
+						})
+					]
+				})]
+			}),
+			/* @__PURE__ */ jsx("style", { children: `
+        @media (max-width: 768px) {
+          .wf-grid { grid-template-columns: 1fr !important; gap: 42px !important; }
+        }
+      ` })
+		]
+	});
+}
+//#endregion
+//#region src/components/ClientLogosSection.jsx
+var logos = [
+	{
+		src: "/assets/volkerwessels-logo-DyhTrYGo.svg",
+		alt: "VolkerWessels"
+	},
+	{
+		src: "/assets/polytec-logo-gNLn9cuF.png",
+		alt: "Polytec"
+	},
+	{
+		src: "/assets/logo_verwater_jubileum-CF5Foz1h.svg",
+		alt: "Verwater"
+	},
+	{
+		src: "/assets/logo-de-kok-staalbouw-BTTth3jB.svg",
+		alt: "De Kok Staalbouw"
+	},
+	{
+		src: "/assets/ivens-logo-B1kdlLqy.png",
+		alt: "Ivens"
+	},
+	{
+		src: "/assets/actemium-vector-logo-qqk0EJat.svg",
+		alt: "Actemium"
+	}
+];
+function ClientLogosSection() {
+	return /* @__PURE__ */ jsxs("section", {
+		style: {
+			background: "#fff",
+			borderTop: "1px solid #e8e8e8",
+			borderBottom: "1px solid #e8e8e8",
+			padding: "36px 0"
+		},
+		children: [/* @__PURE__ */ jsx("style", { children: `
+        @keyframes logo-scroll {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .logo-track {
+          display: flex;
+          width: max-content;
+          animation: logo-scroll 22s linear infinite;
+        }
+        .logo-track:hover {
+          animation-play-state: paused;
+        }
+        .logo-item {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0 52px;
+          flex-shrink: 0;
+        }
+        .logo-item img {
+          height: 52px;
+          width: auto;
+          max-width: 160px;
+          object-fit: contain;
+          filter: grayscale(100%) opacity(0.55);
+          transition: filter 0.3s ease;
+          display: block;
+        }
+        .logo-item:hover img {
+          filter: grayscale(0%) opacity(1);
+        }
+      ` }), /* @__PURE__ */ jsx("div", {
+			className: "max-w-7xl mx-auto px-6 md:px-8",
+			style: { overflow: "hidden" },
+			children: /* @__PURE__ */ jsxs("div", {
+				className: "logo-track",
+				children: [logos.map((logo, i) => /* @__PURE__ */ jsx("div", {
+					className: "logo-item",
+					children: /* @__PURE__ */ jsx("img", {
+						src: logo.src,
+						alt: logo.alt
+					})
+				}, `a-${i}`)), logos.map((logo, i) => /* @__PURE__ */ jsx("div", {
+					className: "logo-item",
+					children: /* @__PURE__ */ jsx("img", {
+						src: logo.src,
+						alt: logo.alt
+					})
+				}, `b-${i}`))]
+			})
+		})]
+	});
+}
+//#endregion
+//#region src/assets/over-ons1.png
+var over_ons1_default = "/assets/over-ons1-DD0I2h8C.png";
+//#endregion
+//#region src/components/WatOnsAndersMaakt.jsx
+var defaultItems = [
+	{
+		title: "GROOT GENOEG OM REGIE TE VOEREN",
+		desc: "Wij hebben de slagkracht en expertise om technische metaalprojecten volledig te realiseren."
+	},
+	{
+		title: "KLEIN GENOEG OM DIRECT TE SCHAKELEN",
+		desc: "Direct contact, snel schakelen en meebewegen met jouw planning."
+	},
+	{
+		title: "PERSOONLIJK GENOEG OM VOORUIT TE DENKEN",
+		desc: "We adviseren, optimaliseren en zorgen dat jouw project van begin tot eind klopt."
+	}
+];
+function CheckIcon() {
+	return /* @__PURE__ */ jsx("svg", {
+		width: "22",
+		height: "22",
+		viewBox: "0 0 22 22",
+		fill: "none",
+		style: {
+			flexShrink: 0,
+			marginTop: "3px"
+		},
+		children: /* @__PURE__ */ jsx("polyline", {
+			points: "3,11 9,17 20,5",
+			stroke: "var(--fw-website-primary)",
+			strokeWidth: "2.8",
+			strokeLinecap: "round",
+			strokeLinejoin: "round"
+		})
+	});
+}
+function WatOnsAndersMaakt() {
+	const { cms } = useCms();
+	const items = cms.anders && cms.anders.items || defaultItems;
+	const andersImage = cms.anders && cms.anders.image || null;
+	const ref = useRef(null);
+	const [vis, setVis] = useState(false);
+	useEffect(() => {
+		const obs = new IntersectionObserver(([e]) => {
+			if (e.isIntersecting) setVis(true);
+		}, { threshold: .1 });
+		if (ref.current) obs.observe(ref.current);
+		return () => obs.disconnect();
+	}, []);
+	return /* @__PURE__ */ jsxs("section", {
+		style: {
+			background: "#fff",
+			padding: "80px 0"
+		},
+		children: [
+			/* @__PURE__ */ jsx("style", { children: `
+        .woa-left  { opacity:0; transform:translateX(-32px); transition: opacity .6s ease, transform .6s ease; }
+        .woa-right { opacity:0; transform:translateX(32px);  transition: opacity .6s .2s ease, transform .6s .2s ease; }
+        .woa-sq    { opacity:0; transform:scale(0.4);        transition: opacity .5s .45s ease, transform .5s .45s ease; }
+        .woa-on .woa-left,
+        .woa-on .woa-right,
+        .woa-on .woa-sq { opacity:1; transform:none; }
+      ` }),
+			/* @__PURE__ */ jsxs("div", {
+				ref,
+				className: "max-w-7xl mx-auto px-6 md:px-8 woa-grid " + (vis ? "woa-on" : ""),
+				style: {
+					display: "grid",
+					gridTemplateColumns: "1fr 1fr",
+					gap: "80px",
+					alignItems: "center"
+				},
+				children: [/* @__PURE__ */ jsxs("div", {
+					className: "woa-left",
+					children: [/* @__PURE__ */ jsx("h2", {
+						style: {
+							fontFamily: "Arial Black, Arial, sans-serif",
+							fontWeight: 900,
+							fontSize: "clamp(22px, 2.4vw, 32px)",
+							textTransform: "uppercase",
+							color: "#1c1c1c",
+							margin: "0 0 40px 0",
+							lineHeight: 1.1,
+							letterSpacing: "-0.3px"
+						},
+						children: "WAT ONS ANDERS MAAKT"
+					}), /* @__PURE__ */ jsx("div", {
+						style: {
+							display: "flex",
+							flexDirection: "column",
+							gap: "36px"
+						},
+						children: items.map((item, i) => /* @__PURE__ */ jsxs("div", {
+							style: {
+								display: "flex",
+								gap: "14px",
+								alignItems: "flex-start"
+							},
+							children: [/* @__PURE__ */ jsx(CheckIcon, {}), /* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx("p", {
+								style: {
+									fontFamily: "Arial Black, Arial, sans-serif",
+									fontWeight: 900,
+									fontSize: "13.5px",
+									textTransform: "uppercase",
+									color: "#1c1c1c",
+									margin: "0 0 10px 0",
+									lineHeight: 1.3,
+									letterSpacing: "0.2px"
+								},
+								children: item.title
+							}), /* @__PURE__ */ jsx("p", {
+								style: {
+									fontSize: "14.5px",
+									color: "#555",
+									margin: 0,
+									lineHeight: 1.65
+								},
+								children: item.desc
+							})] })]
+						}, i))
+					})]
+				}), /* @__PURE__ */ jsxs("div", {
+					className: "woa-right",
+					style: { position: "relative" },
+					children: [/* @__PURE__ */ jsx("div", {
+						style: {
+							position: "relative",
+							zIndex: 2,
+							lineHeight: 0
+						},
+						children: /* @__PURE__ */ jsx("img", {
+							src: andersImage || "/assets/over-ons1-DD0I2h8C.png",
+							alt: "Ferna machinepark",
+							style: {
+								width: "100%",
+								height: "440px",
+								objectFit: "cover",
+								objectPosition: "center",
+								display: "block"
+							},
+							className: "woa-image"
+						})
+					}), /* @__PURE__ */ jsx("div", {
+						className: "woa-sq",
+						style: {
+							position: "absolute",
+							bottom: "-24px",
+							right: "-24px",
+							width: "80px",
+							height: "80px",
+							background: "var(--fw-website-primary)",
+							zIndex: 1
+						}
+					})]
+				})]
+			}),
+			/* @__PURE__ */ jsx("style", { children: `
+        @media (max-width: 768px) {
+          .woa-grid { grid-template-columns: 1fr !important; gap: 42px !important; }
+        }
+      ` })
+		]
+	});
+}
+//#endregion
+//#region src/components/StatsSection.jsx
+function StatItem({ number, desc, delay }) {
+	return /* @__PURE__ */ jsxs("div", {
+		style: {
+			display: "flex",
+			flexDirection: "column",
+			alignItems: "flex-start",
+			gap: "10px",
+			flex: 1
+		},
+		children: [/* @__PURE__ */ jsxs("div", {
+			style: {
+				position: "relative",
+				padding: "8px 12px"
+			},
+			children: [
+				/* @__PURE__ */ jsx("span", { style: {
+					position: "absolute",
+					top: 0,
+					left: 0,
+					width: "12px",
+					height: "12px",
+					borderTop: "2.5px solid var(--fw-website-primary)",
+					borderLeft: "2.5px solid var(--fw-website-primary)"
+				} }),
+				/* @__PURE__ */ jsx("span", { style: {
+					position: "absolute",
+					bottom: 0,
+					right: 0,
+					width: "12px",
+					height: "12px",
+					borderBottom: "2.5px solid var(--fw-website-primary)",
+					borderRight: "2.5px solid var(--fw-website-primary)"
+				} }),
+				/* @__PURE__ */ jsx("span", {
+					style: {
+						fontFamily: "Arial Black, Arial, sans-serif",
+						fontWeight: 900,
+						fontSize: "clamp(26px, 3vw, 38px)",
+						color: "#1c1c1c",
+						lineHeight: 1,
+						letterSpacing: "-0.5px"
+					},
+					children: number
+				})
+			]
+		}), /* @__PURE__ */ jsx("p", {
+			style: {
+				fontSize: "13px",
+				color: "#555",
+				margin: 0,
+				lineHeight: 1.5,
+				maxWidth: "140px"
+			},
+			children: desc
+		})]
+	});
+}
+function StatsSection() {
+	const { cms } = useCms();
+	const stats = cms.stats || [];
+	const ref = useRef(null);
+	const [vis, setVis] = useState(false);
+	useEffect(() => {
+		const obs = new IntersectionObserver(([e]) => {
+			if (e.isIntersecting) setVis(true);
+		}, { threshold: .15 });
+		if (ref.current) obs.observe(ref.current);
+		return () => obs.disconnect();
+	}, []);
+	return /* @__PURE__ */ jsxs("section", {
+		style: {
+			background: "#f4f4f4",
+			padding: "52px 0"
+		},
+		children: [/* @__PURE__ */ jsx("style", { children: `
+        .ss-item {
+          opacity: 0;
+          transform: translateY(20px);
+          transition: opacity .5s ease, transform .5s ease;
+        }
+        .ss-item:nth-child(1) { transition-delay: 0s; }
+        .ss-item:nth-child(2) { transition-delay: 0.12s; }
+        .ss-item:nth-child(3) { transition-delay: 0.24s; }
+        .ss-item:nth-child(4) { transition-delay: 0.36s; }
+        .ss-on .ss-item { opacity: 1; transform: none; }
+
+        @media (max-width: 640px) {
+          .ss-grid { grid-template-columns: 1fr 1fr !important; gap: 36px !important; }
+        }
+      ` }), /* @__PURE__ */ jsx("div", {
+			ref,
+			className: "max-w-7xl mx-auto px-6 md:px-8 ss-grid " + (vis ? "ss-on" : ""),
+			style: {
+				display: "grid",
+				gridTemplateColumns: "repeat(4, 1fr)",
+				gap: "48px",
+				alignItems: "start"
+			},
+			children: stats.map((s, i) => /* @__PURE__ */ jsx("div", {
+				className: "ss-item",
+				children: /* @__PURE__ */ jsx(StatItem, {
+					number: s.number,
+					desc: s.desc
+				})
+			}, i))
+		})]
+	});
+}
+//#endregion
+//#region src/components/OnzeSectorenSection.jsx
+var sectorItems = [
+	{
+		title: "BOUW &\nUTILITEIT",
+		description: "Staalconstructies, standaard hekwerken en prefab balkons voor bouw- en utiliteitsprojecten.",
+		icon: /* @__PURE__ */ jsxs("svg", {
+			width: "54",
+			height: "54",
+			viewBox: "0 0 54 54",
+			fill: "none",
+			xmlns: "http://www.w3.org/2000/svg",
+			className: "text-[#2f2f2f]",
+			children: [
+				/* @__PURE__ */ jsx("rect", {
+					x: "10",
+					y: "24",
+					width: "14",
+					height: "20",
+					stroke: "currentColor",
+					strokeWidth: "2.2"
+				}),
+				/* @__PURE__ */ jsx("rect", {
+					x: "30",
+					y: "16",
+					width: "14",
+					height: "28",
+					stroke: "currentColor",
+					strokeWidth: "2.2"
+				}),
+				/* @__PURE__ */ jsx("path", {
+					d: "M8 44H46",
+					stroke: "currentColor",
+					strokeWidth: "2.2",
+					strokeLinecap: "round"
+				}),
+				/* @__PURE__ */ jsx("path", {
+					d: "M14 37H20M14 32H20",
+					stroke: "currentColor",
+					strokeWidth: "1.8",
+					strokeLinecap: "round"
+				}),
+				/* @__PURE__ */ jsx("path", {
+					d: "M34 37H40M34 32H40M34 27H40M34 22H40",
+					stroke: "currentColor",
+					strokeWidth: "1.8",
+					strokeLinecap: "round"
+				})
+			]
+		})
+	},
+	{
+		title: "INDUSTRIE",
+		description: "Machinebouw, maatwerk staalconstructies, industriÃ«le installaties en laswerkzaamheden op locatie.",
+		icon: /* @__PURE__ */ jsxs("svg", {
+			width: "54",
+			height: "54",
+			viewBox: "0 0 54 54",
+			fill: "none",
+			xmlns: "http://www.w3.org/2000/svg",
+			className: "text-[#2f2f2f]",
+			children: [
+				/* @__PURE__ */ jsx("circle", {
+					cx: "27",
+					cy: "27",
+					r: "7",
+					stroke: "currentColor",
+					strokeWidth: "2.2"
+				}),
+				/* @__PURE__ */ jsx("path", {
+					d: "M27 11V16M27 38V43M11 27H16M38 27H43",
+					stroke: "currentColor",
+					strokeWidth: "2.5",
+					strokeLinecap: "round"
+				}),
+				/* @__PURE__ */ jsx("path", {
+					d: "M15.9 15.9L19.4 19.4M34.6 34.6L38.1 38.1M38.1 15.9L34.6 19.4M19.4 34.6L15.9 38.1",
+					stroke: "currentColor",
+					strokeWidth: "2.5",
+					strokeLinecap: "round"
+				})
+			]
+		})
+	},
+	{
+		title: "ARCHITECTUUR\n& DESIGN",
+		description: "Design trappen en interieur- en exterieur maatwerk voor architectuur- en designprojecten.",
+		icon: /* @__PURE__ */ jsxs("svg", {
+			width: "54",
+			height: "54",
+			viewBox: "0 0 54 54",
+			fill: "none",
+			xmlns: "http://www.w3.org/2000/svg",
+			className: "text-[#2f2f2f]",
+			children: [/* @__PURE__ */ jsx("path", {
+				d: "M10 44H44",
+				stroke: "currentColor",
+				strokeWidth: "2.2",
+				strokeLinecap: "round"
+			}), /* @__PURE__ */ jsx("path", {
+				d: "M10 44V38H20V32H30V26H40V14",
+				stroke: "currentColor",
+				strokeWidth: "2.2",
+				strokeLinejoin: "miter",
+				strokeLinecap: "round"
+			})]
+		})
+	},
+	{
+		title: "MARITIEM",
+		description: "Maatwerk staal- en aluminium constructies voor jachtbouw en maritieme toepassingen.",
+		icon: /* @__PURE__ */ jsxs("svg", {
+			width: "54",
+			height: "54",
+			viewBox: "0 0 54 54",
+			fill: "none",
+			xmlns: "http://www.w3.org/2000/svg",
+			className: "text-[#2f2f2f]",
+			children: [
+				/* @__PURE__ */ jsx("circle", {
+					cx: "27",
+					cy: "14",
+					r: "3.5",
+					stroke: "currentColor",
+					strokeWidth: "2.2"
+				}),
+				/* @__PURE__ */ jsx("path", {
+					d: "M27 17.5V43",
+					stroke: "currentColor",
+					strokeWidth: "2.2"
+				}),
+				/* @__PURE__ */ jsx("path", {
+					d: "M20 25H34",
+					stroke: "currentColor",
+					strokeWidth: "2.2",
+					strokeLinecap: "round"
+				}),
+				/* @__PURE__ */ jsx("path", {
+					d: "M16 43C16 37 21 32.5 27 32.5C33 32.5 38 37 38 43",
+					stroke: "currentColor",
+					strokeWidth: "2.2",
+					strokeLinecap: "round"
+				})
+			]
+		})
+	}
+];
+function SectorCard({ item }) {
+	return /* @__PURE__ */ jsxs("div", {
+		className: "home-sector-card bg-[#f6f6f6] shadow-[0_18px_34px_rgba(0,0,0,0.06)] flex flex-col",
+		children: [
+			/* @__PURE__ */ jsx("div", {
+				className: "home-sector-icon",
+				children: item.icon
+			}),
+			/* @__PURE__ */ jsx("h3", {
+				className: "home-sector-title text-[#333333] font-black uppercase whitespace-pre-line leading-[1.08] tracking-[-0.6px]",
+				style: { fontFamily: "Arial Black, Arial, sans-serif" },
+				children: item.title
+			}),
+			/* @__PURE__ */ jsx("p", {
+				className: "home-sector-desc text-[#7b7b7b] font-medium",
+				children: item.description
+			}),
+			/* @__PURE__ */ jsx(Link, {
+				to: "/contact",
+				className: "home-sector-link mt-auto inline-block font-black uppercase tracking-[-0.2px]",
+				style: {
+					fontFamily: "var(--fw-website-heading-font)",
+					color: "var(--fw-website-primary-strong)"
+				},
+				children: "LEES MEER"
+			})
+		]
+	});
+}
+function OnzeSectoren() {
+	const { cms } = useCms();
+	const mergedItems = sectorItems.map((item, i) => ({
+		...item,
+		title: cms.sectoren && cms.sectoren[i] ? cms.sectoren[i].naam.replace(" & ", " &\n") : item.title,
+		description: cms.sectoren && cms.sectoren[i] ? cms.sectoren[i].description : item.description
+	}));
+	return /* @__PURE__ */ jsxs("section", {
+		className: "w-full bg-[#f3f3f3] pt-[48px] pb-[100px]",
+		children: [/* @__PURE__ */ jsx("style", { children: `
+        .home-sector-grid {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 26px;
+          margin-bottom: 42px;
+        }
+
+        .home-sector-card {
+          min-height: 382px;
+          padding: 42px 30px 34px;
+          position: relative;
+          overflow: hidden;
+          border-top: 4px solid transparent;
+          transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+        }
+
+        .home-sector-card::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 46px;
+          height: 46px;
+          background: var(--fw-website-primary);
+          opacity: .14;
+          transform: translate(16px, -16px);
+        }
+
+        .home-sector-card:hover {
+          transform: translateY(-4px);
+          border-color: var(--fw-website-primary);
+          box-shadow: 0 18px 38px rgba(0,0,0,.1);
+        }
+
+        .home-sector-icon {
+          margin-bottom: 34px;
+          color: #2f2f2f;
+        }
+
+        .home-sector-title {
+          font-size: 27px;
+          margin-bottom: 18px;
+        }
+
+        .home-sector-desc {
+          font-size: 17px;
+          line-height: 1.42;
+          margin-bottom: 26px;
+        }
+
+          .home-sector-link {
+            font-size: 15px;
+          }
+
+          .home-sector-link:hover {
+            color: var(--fw-website-primary);
+          }
+
+        @media (max-width: 1024px) {
+          .home-sector-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .home-sector-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 32px;
+          }
+
+          .home-sector-card {
+            min-height: 258px;
+            padding: 18px 14px 16px;
+            border-top-color: var(--fw-website-primary);
+          }
+
+          .home-sector-card::after {
+            width: 34px;
+            height: 34px;
+            transform: translate(12px, -12px);
+          }
+
+          .home-sector-icon {
+            margin-bottom: 16px;
+          }
+
+          .home-sector-icon svg {
+            width: 38px;
+            height: 38px;
+          }
+
+          .home-sector-title {
+            font-size: 15px;
+            line-height: 1.16;
+            letter-spacing: 0;
+            margin-bottom: 10px;
+          }
+
+          .home-sector-desc {
+            font-size: 12px;
+            line-height: 1.45;
+            margin-bottom: 16px;
+          }
+
+          .home-sector-link {
+            font-size: 11px;
+            color: var(--fw-website-primary-strong);
+          }
+        }
+
+        @media (max-width: 360px) {
+          .home-sector-grid {
+            gap: 10px;
+          }
+
+          .home-sector-card {
+            min-height: 244px;
+            padding: 16px 12px 14px;
+          }
+
+          .home-sector-title {
+            font-size: 13.5px;
+          }
+
+          .home-sector-desc {
+            font-size: 11.5px;
+          }
+        }
+      ` }), /* @__PURE__ */ jsxs("div", {
+			className: "max-w-[1200px] mx-auto px-6",
+			children: [
+				/* @__PURE__ */ jsxs("div", {
+					className: "text-center mb-[44px]",
+					children: [/* @__PURE__ */ jsx("h2", {
+						className: "site-heading text-[#333333] uppercase font-black text-[34px] leading-none tracking-[-0.8px] mb-[16px]",
+						style: { fontFamily: "var(--fw-website-heading-font)" },
+						children: "ONZE SECTOREN"
+					}), /* @__PURE__ */ jsx("p", {
+						className: "site-heading text-[#6f6f6f] uppercase font-black text-[16px] tracking-[-0.2px]",
+						style: { fontFamily: "var(--fw-website-heading-font)" },
+						children: "MAATWERK VOOR ELKE SECTOR"
+					})]
+				}),
+				/* @__PURE__ */ jsx("div", {
+					className: "home-sector-grid",
+					children: mergedItems.map((item, index) => /* @__PURE__ */ jsx(SectorCard, { item }, index))
+				}),
+				/* @__PURE__ */ jsx("div", {
+					className: "flex justify-center",
+					children: /* @__PURE__ */ jsx(Link, {
+						to: "/contact",
+						className: "site-heading inline-flex items-center justify-center min-w-[188px] h-[52px] rounded-full uppercase font-black text-[14px] px-8 hover:opacity-95 transition",
+						style: {
+							fontFamily: "var(--fw-website-heading-font)",
+							background: "var(--fw-website-primary-strong)",
+							color: "var(--fw-website-secondary)"
+						},
+						children: "NEEM CONTACT OP"
+					})
+				})
+			]
+		})]
+	});
+}
+//#endregion
+//#region src/assets/about/about-us1.jpeg
+var about_us1_default = "/assets/about-us1-Fdlmxb8O.jpeg";
+//#endregion
+//#region src/assets/about/about-us2.jpeg
+var about_us2_default = "/assets/about-us2-Dd2z2xke.jpeg";
+//#endregion
+//#region src/assets/about/about-us3.jpeg
+var about_us3_default = "/assets/about-us3-De6QPg3_.jpeg";
+//#endregion
+//#region src/components/UwProjectSection.jsx
+function UwProjectSection() {
+	const ref = useRef(null);
+	const [vis, setVis] = useState(false);
+	useEffect(() => {
+		const obs = new IntersectionObserver(([e]) => {
+			if (e.isIntersecting) setVis(true);
+		}, { threshold: .1 });
+		if (ref.current) obs.observe(ref.current);
+		return () => obs.disconnect();
+	}, []);
+	return /* @__PURE__ */ jsxs("section", {
+		style: {
+			background: "#f7f7f7",
+			padding: "80px 0"
+		},
+		children: [/* @__PURE__ */ jsx("style", { children: `
+        .up-img1 { opacity:0; transform:translateX(-28px); transition: opacity .6s ease, transform .6s ease; }
+        .up-img2 { opacity:0; transform:translateY(-20px); transition: opacity .6s .15s ease, transform .6s .15s ease; }
+        .up-img3 { opacity:0; transform:translateY(28px);  transition: opacity .6s .3s ease, transform .6s .3s ease; }
+        .up-sq   { opacity:0; transform:scale(0.4);        transition: opacity .5s .45s ease, transform .5s .45s ease; }
+        .up-right { opacity:0; transform:translateX(32px); transition: opacity .65s .1s ease, transform .65s .1s ease; }
+        .up-on .up-img1,
+        .up-on .up-img2,
+        .up-on .up-img3,
+        .up-on .up-sq,
+        .up-on .up-right { opacity:1; transform:none; }
+
+        @media (max-width: 768px) {
+          .up-grid { grid-template-columns: 1fr !important; }
+          .up-photos { height: 380px !important; }
+        }
+      ` }), /* @__PURE__ */ jsxs("div", {
+			ref,
+			className: "max-w-7xl mx-auto px-6 md:px-8 up-grid " + (vis ? "up-on" : ""),
+			style: {
+				display: "grid",
+				gridTemplateColumns: "1fr 1fr",
+				gap: "80px",
+				alignItems: "center"
+			},
+			children: [/* @__PURE__ */ jsxs("div", {
+				className: "up-photos",
+				style: {
+					position: "relative",
+					height: "500px"
+				},
+				children: [
+					/* @__PURE__ */ jsx("div", {
+						className: "up-sq",
+						style: {
+							position: "absolute",
+							bottom: "0",
+							left: "8%",
+							width: "88px",
+							height: "88px",
+							background: "var(--fw-website-primary)",
+							zIndex: 1
+						}
+					}),
+					/* @__PURE__ */ jsx("div", {
+						className: "up-img1",
+						style: {
+							position: "absolute",
+							top: "60px",
+							left: "0",
+							width: "44%",
+							height: "68%",
+							overflow: "hidden",
+							zIndex: 2,
+							boxShadow: "0 4px 18px rgba(0,0,0,0.13)"
+						},
+						children: /* @__PURE__ */ jsx("img", {
+							src: about_us2_default,
+							alt: "Ferna medewerker",
+							style: {
+								width: "100%",
+								height: "100%",
+								objectFit: "cover",
+								objectPosition: "top",
+								display: "block"
+							}
+						})
+					}),
+					/* @__PURE__ */ jsx("div", {
+						className: "up-img2",
+						style: {
+							position: "absolute",
+							top: "0",
+							left: "36%",
+							width: "30%",
+							height: "30%",
+							overflow: "hidden",
+							zIndex: 3,
+							boxShadow: "0 4px 18px rgba(0,0,0,0.13)"
+						},
+						children: /* @__PURE__ */ jsx("img", {
+							src: about_us1_default,
+							alt: "Ferna werkplaats",
+							style: {
+								width: "100%",
+								height: "100%",
+								objectFit: "cover",
+								objectPosition: "center",
+								display: "block"
+							}
+						})
+					}),
+					/* @__PURE__ */ jsx("div", {
+						className: "up-img3",
+						style: {
+							position: "absolute",
+							bottom: "0",
+							right: "0",
+							width: "56%",
+							height: "62%",
+							overflow: "hidden",
+							zIndex: 4,
+							boxShadow: "0 4px 20px rgba(0,0,0,0.15)"
+						},
+						children: /* @__PURE__ */ jsx("img", {
+							src: about_us3_default,
+							alt: "Ferna directie",
+							style: {
+								width: "100%",
+								height: "100%",
+								objectFit: "cover",
+								objectPosition: "top",
+								display: "block"
+							}
+						})
+					})
+				]
+			}), /* @__PURE__ */ jsxs("div", {
+				className: "up-right",
+				children: [
+					/* @__PURE__ */ jsxs("h2", {
+						style: {
+							fontFamily: "Arial Black, Arial, sans-serif",
+							fontWeight: 900,
+							fontSize: "clamp(24px, 2.8vw, 38px)",
+							lineHeight: 1.1,
+							margin: "0 0 28px 0",
+							letterSpacing: "-0.3px"
+						},
+						children: [/* @__PURE__ */ jsx("span", {
+							style: { color: "var(--fw-website-primary)" },
+							children: "UW PROJECT IN "
+						}), /* @__PURE__ */ jsx("span", {
+							style: { color: "#1c1c1c" },
+							children: "GOEDE HANDEN"
+						})]
+					}),
+					/* @__PURE__ */ jsx("p", {
+						style: {
+							fontSize: "15px",
+							color: "#555",
+							lineHeight: 1.7,
+							margin: "0 0 20px 0"
+						},
+						children: "FerroWorks is opgericht als familiebedrijf en werkt nog steeds zo. Korte lijnen, persoonlijke betrokkenheid, Ã©Ã©n partner voor het volledige traject."
+					}),
+					/* @__PURE__ */ jsx("p", {
+						style: {
+							fontSize: "15px",
+							color: "#555",
+							lineHeight: 1.7,
+							margin: "0 0 36px 0"
+						},
+						children: "Van ontwerp en engineering tot productie, coating en montage op locatie. Specialist in maatwerk staal, RVS en aluminium projecten voor industrie, bouw, architectuur en maritiem."
+					}),
+					/* @__PURE__ */ jsx("a", {
+						href: "/contact",
+						style: {
+							display: "inline-block",
+							background: "var(--fw-website-primary-strong)",
+							color: "#fff",
+							fontFamily: "Arial Black, Arial, sans-serif",
+							fontWeight: 900,
+							fontSize: "13px",
+							textTransform: "uppercase",
+							letterSpacing: "0.8px",
+							padding: "16px 36px",
+							borderRadius: "50px",
+							textDecoration: "none",
+							transition: "background 0.2s"
+						},
+						onMouseEnter: (e) => e.currentTarget.style.background = "#7aa318",
+						onMouseLeave: (e) => e.currentTarget.style.background = "var(--fw-website-primary-strong)",
+						children: "NEEM CONTACT OP"
+					})
+				]
+			})]
+		})]
+	});
+}
+//#endregion
+//#region src/assets/past work/Afwerking-staalconstructie-met-natlak-300x225.webp
+var Afwerking_staalconstructie_met_natlak_300x225_default = "/assets/Afwerking-staalconstructie-met-natlak-300x225-6cndE0Eo.webp";
+//#endregion
+//#region src/assets/past work/kwaliteitscontrole-lassen-featured-300x225.webp
+var kwaliteitscontrole_lassen_featured_300x225_default = "/assets/kwaliteitscontrole-lassen-featured-300x225-Cwe_r9KD.webp";
+//#endregion
+//#region src/assets/past work/lascertificaat-verplicht-featured-300x158.webp
+var lascertificaat_verplicht_featured_300x158_default = "/assets/lascertificaat-verplicht-featured-300x158-CWiBZQqV.webp";
+//#endregion
+//#region src/assets/past work/Offshore-constructie-300x190.webp
+var Offshore_constructie_300x190_default = "/assets/Offshore-constructie-300x190-DmuHP4xB.webp";
+//#endregion
+//#region src/components/ProjectenSlider.jsx
+var FALLBACK_IMAGES = [
+	Afwerking_staalconstructie_met_natlak_300x225_default,
+	kwaliteitscontrole_lassen_featured_300x225_default,
+	lascertificaat_verplicht_featured_300x158_default,
+	Offshore_constructie_300x190_default
+];
+var defaultSlides = [
+	{
+		title: "MEETBUIZEN T.B.V. VLOEISTOFTANK",
+		desc: "Voor deze klant hebben we maatwerk meetbuizen ten behoeve van een vloeistoftank geproduceerd.",
+		image: null
+	},
+	{
+		title: "STAALCONSTRUCTIE OFFSHORE PLATFORM",
+		desc: "Complexe staalconstructie vervaardigd voor een offshore platform, volledig Lloyd's-gecertificeerd.",
+		image: null
+	},
+	{
+		title: "PIJPLEIDINGWERK PETROCHEMIE",
+		desc: "Maatwerkpiping en koppelstukken geleverd voor een raffinaderij in de petrochemische sector.",
+		image: null
+	},
+	{
+		title: "TANKBOUW INDUSTRIEEL COMPLEX",
+		desc: "Walsdelen, daksecties en mangaten geproduceerd voor een groot industrieel tankbouwproject.",
+		image: null
+	}
+];
+function ProjectenSlider() {
+	const { cms } = useCms();
+	const slides = cms.projecten && cms.projecten.length ? cms.projecten : defaultSlides;
+	const [current, setCurrent] = useState(0);
+	const [animating, setAnimating] = useState(false);
+	const ref = useRef(null);
+	const [vis, setVis] = useState(false);
+	useEffect(() => {
+		const obs = new IntersectionObserver(([e]) => {
+			if (e.isIntersecting) setVis(true);
+		}, { threshold: .1 });
+		if (ref.current) obs.observe(ref.current);
+		return () => obs.disconnect();
+	}, []);
+	const goTo = (idx) => {
+		if (animating || idx === current) return;
+		setAnimating(true);
+		setTimeout(() => {
+			setCurrent(idx);
+			setAnimating(false);
+		}, 250);
+	};
+	const prev = () => goTo((current - 1 + slides.length) % slides.length);
+	const next = () => goTo((current + 1) % slides.length);
+	const slide = slides[Math.min(current, slides.length - 1)] || defaultSlides[0];
+	const slideImg = slide.image || FALLBACK_IMAGES[Math.min(current, FALLBACK_IMAGES.length - 1)] || FALLBACK_IMAGES[0];
+	return /* @__PURE__ */ jsxs("section", {
+		style: {
+			background: "#efefef",
+			padding: "72px 0 64px"
+		},
+		children: [
+			/* @__PURE__ */ jsx("style", { children: `
+        .ps-wrap { opacity:0; transform:translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+        .ps-vis  { opacity:1; transform:none; }
+        .ps-slide { opacity:1; transition: opacity .25s ease; }
+        .ps-slide.fade { opacity:0; }
+        .ps-arrow {
+          width:40px; height:40px; border-radius:50%; border:none;
+          background:rgba(255,255,255,0.7); cursor:pointer;
+          display:flex; align-items:center; justify-content:center;
+          flex-shrink:0; transition: background 0.2s;
+        }
+        .ps-arrow:hover { background:#fff; }
+        .ps-dot {
+          width:10px; height:10px; border-radius:50%;
+          border:none; cursor:pointer; transition: background 0.2s;
+          padding:0;
+        }
+      ` }),
+			/* @__PURE__ */ jsxs("div", {
+				ref,
+				className: "max-w-7xl mx-auto px-6 md:px-8 ps-wrap " + (vis ? "ps-vis" : ""),
+				children: [
+					/* @__PURE__ */ jsxs("h2", {
+						style: {
+							fontFamily: "Arial Black, Arial, sans-serif",
+							fontWeight: 900,
+							fontSize: "clamp(20px, 2.4vw, 30px)",
+							textTransform: "uppercase",
+							margin: "0 0 40px 0",
+							letterSpacing: "-0.3px",
+							textAlign: "center"
+						},
+						children: [/* @__PURE__ */ jsx("span", {
+							style: { color: "var(--fw-website-primary)" },
+							children: "PROJECTEN "
+						}), /* @__PURE__ */ jsx("span", {
+							style: { color: "#1c1c1c" },
+							children: "UIT HET VERLEDEN"
+						})]
+					}),
+					/* @__PURE__ */ jsxs("div", {
+						className: "ps-row",
+						style: {
+							display: "flex",
+							alignItems: "center",
+							gap: "16px"
+						},
+						children: [
+							/* @__PURE__ */ jsx("button", {
+								className: "ps-arrow",
+								onClick: prev,
+								"aria-label": "Vorige",
+								children: /* @__PURE__ */ jsx("svg", {
+									width: "16",
+									height: "16",
+									viewBox: "0 0 16 16",
+									fill: "none",
+									children: /* @__PURE__ */ jsx("polyline", {
+										points: "10,2 4,8 10,14",
+										stroke: "#555",
+										strokeWidth: "2",
+										strokeLinecap: "round",
+										strokeLinejoin: "round"
+									})
+								})
+							}),
+							/* @__PURE__ */ jsxs("div", {
+								className: "ps-slide" + (animating ? " fade" : ""),
+								style: {
+									flex: 1,
+									background: "#fff",
+									display: "grid",
+									gridTemplateColumns: "1.1fr 1fr",
+									minHeight: "260px",
+									overflow: "hidden"
+								},
+								children: [/* @__PURE__ */ jsx("div", {
+									style: {
+										overflow: "hidden",
+										lineHeight: 0
+									},
+									children: /* @__PURE__ */ jsx("img", {
+										src: slideImg,
+										alt: slide.title,
+										style: {
+											width: "100%",
+											height: "100%",
+											objectFit: "cover",
+											display: "block",
+											minHeight: "240px"
+										}
+									})
+								}), /* @__PURE__ */ jsxs("div", {
+									className: "ps-copy",
+									style: {
+										padding: "36px 36px",
+										display: "flex",
+										flexDirection: "column",
+										justifyContent: "center"
+									},
+									children: [/* @__PURE__ */ jsx("h3", {
+										style: {
+											fontFamily: "Arial Black, Arial, sans-serif",
+											fontWeight: 900,
+											fontSize: "clamp(15px, 1.5vw, 18px)",
+											textTransform: "uppercase",
+											color: "#1c1c1c",
+											margin: "0 0 16px 0",
+											lineHeight: 1.2,
+											letterSpacing: "0.1px"
+										},
+										children: slide.title
+									}), /* @__PURE__ */ jsx("p", {
+										style: {
+											fontSize: "14px",
+											color: "#666",
+											lineHeight: 1.7,
+											margin: 0
+										},
+										children: slide.desc
+									})]
+								})]
+							}),
+							/* @__PURE__ */ jsx("button", {
+								className: "ps-arrow",
+								onClick: next,
+								"aria-label": "Volgende",
+								children: /* @__PURE__ */ jsx("svg", {
+									width: "16",
+									height: "16",
+									viewBox: "0 0 16 16",
+									fill: "none",
+									children: /* @__PURE__ */ jsx("polyline", {
+										points: "6,2 12,8 6,14",
+										stroke: "#555",
+										strokeWidth: "2",
+										strokeLinecap: "round",
+										strokeLinejoin: "round"
+									})
+								})
+							})
+						]
+					}),
+					/* @__PURE__ */ jsx("div", {
+						style: {
+							display: "flex",
+							justifyContent: "center",
+							gap: "8px",
+							marginTop: "24px"
+						},
+						children: slides.map((_, i) => /* @__PURE__ */ jsx("button", {
+							className: "ps-dot",
+							onClick: () => goTo(i),
+							"aria-label": `Slide ${i + 1}`,
+							style: { background: i === current ? "var(--fw-website-primary)" : "#bbb" }
+						}, i))
+					}),
+					/* @__PURE__ */ jsx("div", {
+						style: {
+							textAlign: "center",
+							marginTop: "36px"
+						},
+						children: /* @__PURE__ */ jsx("a", {
+							href: "/contact",
+							style: {
+								display: "inline-block",
+								background: "var(--fw-website-primary-strong)",
+								color: "#fff",
+								fontFamily: "Arial Black, Arial, sans-serif",
+								fontWeight: 900,
+								fontSize: "13px",
+								textTransform: "uppercase",
+								letterSpacing: "0.8px",
+								padding: "16px 36px",
+								borderRadius: "50px",
+								textDecoration: "none",
+								transition: "background 0.2s"
+							},
+							onMouseEnter: (e) => e.currentTarget.style.background = "#7aa318",
+							onMouseLeave: (e) => e.currentTarget.style.background = "var(--fw-website-primary-strong)",
+							children: "NEEM CONTACT OP"
+						})
+					})
+				]
+			}),
+			/* @__PURE__ */ jsx("style", { children: `
+        @media (max-width: 640px) {
+          .ps-slide { grid-template-columns: 1fr !important; }
+        }
+      ` })
+		]
+	});
+}
+//#endregion
+//#region src/components/FaqSection.jsx
+function FaqItem({ q, a }) {
+	const [open, setOpen] = useState(false);
+	return /* @__PURE__ */ jsxs("div", {
+		style: {
+			background: "#fff",
+			marginBottom: "12px",
+			borderRadius: "2px",
+			overflow: "hidden",
+			boxShadow: "0 1px 4px rgba(0,0,0,0.06)"
+		},
+		children: [/* @__PURE__ */ jsxs("button", {
+			onClick: () => setOpen((v) => !v),
+			style: {
+				width: "100%",
+				display: "flex",
+				justifyContent: "space-between",
+				alignItems: "center",
+				padding: "22px 28px",
+				background: open ? "var(--fw-website-primary)" : "none",
+				border: "none",
+				cursor: "pointer",
+				textAlign: "left",
+				gap: "24px",
+				transition: "background 0.25s ease"
+			},
+			children: [/* @__PURE__ */ jsx("span", {
+				style: {
+					fontFamily: "Arial Black, Arial, sans-serif",
+					fontWeight: 900,
+					fontSize: "13.5px",
+					textTransform: "uppercase",
+					color: "#1c1c1c",
+					letterSpacing: "0.1px",
+					lineHeight: 1.3
+				},
+				children: q
+			}), /* @__PURE__ */ jsx("span", {
+				style: {
+					flexShrink: 0,
+					width: "22px",
+					height: "22px",
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+					transition: "transform 0.3s ease",
+					transform: open ? "rotate(45deg)" : "rotate(0deg)"
+				},
+				children: /* @__PURE__ */ jsxs("svg", {
+					width: "18",
+					height: "18",
+					viewBox: "0 0 18 18",
+					fill: "none",
+					children: [/* @__PURE__ */ jsx("line", {
+						x1: "9",
+						y1: "2",
+						x2: "9",
+						y2: "16",
+						stroke: open ? "#1c1c1c" : "#aaa",
+						strokeWidth: "1.8",
+						strokeLinecap: "round"
+					}), /* @__PURE__ */ jsx("line", {
+						x1: "2",
+						y1: "9",
+						x2: "16",
+						y2: "9",
+						stroke: open ? "#1c1c1c" : "#aaa",
+						strokeWidth: "1.8",
+						strokeLinecap: "round"
+					})]
+				})
+			})]
+		}), /* @__PURE__ */ jsx("div", {
+			style: {
+				maxHeight: open ? "300px" : "0",
+				overflow: "hidden",
+				transition: "max-height 0.35s ease"
+			},
+			children: /* @__PURE__ */ jsx("p", {
+				style: {
+					margin: "0",
+					padding: "0 28px 22px",
+					fontSize: "14.5px",
+					color: "#666",
+					lineHeight: 1.7
+				},
+				children: a
+			})
+		})]
+	});
+}
+function FaqSection() {
+	const { cms } = useCms();
+	const faqs = cms.faq || [];
+	const ref = useRef(null);
+	const [vis, setVis] = useState(false);
+	useEffect(() => {
+		const obs = new IntersectionObserver(([e]) => {
+			if (e.isIntersecting) setVis(true);
+		}, { threshold: .1 });
+		if (ref.current) obs.observe(ref.current);
+		return () => obs.disconnect();
+	}, []);
+	return /* @__PURE__ */ jsxs("section", {
+		style: {
+			background: "#ebebeb",
+			padding: "80px 0"
+		},
+		children: [/* @__PURE__ */ jsx("style", { children: `
+        .faq-wrap { opacity:0; transform:translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+        .faq-vis  { opacity:1; transform:none; }
+      ` }), /* @__PURE__ */ jsxs("div", {
+			ref,
+			className: "max-w-7xl mx-auto px-6 md:px-8 faq-wrap " + (vis ? "faq-vis" : ""),
+			children: [/* @__PURE__ */ jsx("h2", {
+				style: {
+					fontFamily: "Arial Black, Arial, sans-serif",
+					fontWeight: 900,
+					fontSize: "clamp(22px, 2.6vw, 32px)",
+					textTransform: "uppercase",
+					color: "#1c1c1c",
+					textAlign: "center",
+					margin: "0 0 48px 0",
+					letterSpacing: "-0.3px"
+				},
+				children: "VRAGEN DIE INKOPERS ONS STELLEN"
+			}), /* @__PURE__ */ jsx("div", {
+				style: {
+					maxWidth: "720px",
+					margin: "0 auto"
+				},
+				children: faqs.map((item, i) => /* @__PURE__ */ jsx(FaqItem, {
+					q: item.q,
+					a: item.a
+				}, item.q + i))
+			})]
+		})]
+	});
 }
 //#endregion
 //#region src/components/RichTextContent.jsx
@@ -878,6 +3508,96 @@ function RichTextEditor({ label, value, onChange, placeholder = "Voeg tekst toe.
 //#endregion
 //#region src/pages/AdminPage.jsx
 var AdminPage_exports = /* @__PURE__ */ __exportAll({ default: () => AdminPage });
+var DEFAULT_LOCALIZATION_SETTINGS = {
+	enabled: false,
+	defaultLocale: "nl",
+	locales: ["nl", "en"],
+	localizedContent: { en: {} }
+};
+function getLocalizationSettings(websiteSettings = {}) {
+	return {
+		...DEFAULT_LOCALIZATION_SETTINGS,
+		...websiteSettings.localization || {},
+		localizedContent: {
+			...DEFAULT_LOCALIZATION_SETTINGS.localizedContent,
+			...websiteSettings.localization?.localizedContent || {}
+		}
+	};
+}
+function mergeWebsiteSettings(websiteSettings = {}) {
+	return {
+		...websiteSettings,
+		theme: {
+			...DEFAULT_THEME_SETTINGS,
+			...websiteSettings.theme || {}
+		},
+		localization: getLocalizationSettings(websiteSettings)
+	};
+}
+function getLocalizedSectionValue(cms, locale, sectionKey) {
+	if (locale === "nl") return structuredClone(cms[sectionKey]);
+	const localizedCms = localizeCmsContent({
+		...cms,
+		websiteSettings: mergeWebsiteSettings(cms.websiteSettings || {})
+	}, locale);
+	return structuredClone(localizedCms?.[sectionKey]);
+}
+function buildLocalizedWebsiteSettings(baseSettings, locale, sectionKey, value) {
+	const nextWebsiteSettings = mergeWebsiteSettings(baseSettings || {});
+	nextWebsiteSettings.localization = getLocalizationSettings(nextWebsiteSettings);
+	nextWebsiteSettings.localization.localizedContent = {
+		...nextWebsiteSettings.localization.localizedContent || {},
+		[locale]: {
+			...nextWebsiteSettings.localization.localizedContent?.[locale] || {},
+			[sectionKey]: value
+		}
+	};
+	return nextWebsiteSettings;
+}
+function PreviewCmsProvider({ cms, children }) {
+	const previewValue = useMemo(() => ({
+		cms,
+		rawCms: cms,
+		updateCms: async () => false,
+		resetCms: async () => {},
+		refreshCms: async () => {},
+		loading: false,
+		error: ""
+	}), [cms]);
+	return /* @__PURE__ */ jsx(CmsContext.Provider, {
+		value: previewValue,
+		children
+	});
+}
+function LocaleToggle({ enabled, locale, onChange }) {
+	return /* @__PURE__ */ jsx("div", {
+		style: {
+			display: "inline-flex",
+			gap: "8px",
+			alignItems: "center",
+			flexWrap: "wrap"
+		},
+		children: ["nl", "en"].map((item) => /* @__PURE__ */ jsx("button", {
+			type: "button",
+			onClick: () => enabled && onChange(item),
+			disabled: !enabled,
+			style: {
+				padding: "9px 14px",
+				borderRadius: "999px",
+				border: "none",
+				background: locale === item ? "#1c1c1c" : "#f2f2f2",
+				color: locale === item ? "#fff" : "#666",
+				fontFamily: "var(--fw-dashboard-heading-font)",
+				fontWeight: 900,
+				fontSize: "11px",
+				textTransform: "uppercase",
+				cursor: enabled ? "pointer" : "not-allowed",
+				opacity: enabled ? 1 : .55
+			},
+			children: item.toUpperCase()
+		}, item))
+	});
+}
 function SvgIcon({ d, size = 18, stroke = "currentColor", strokeWidth = 2 }) {
 	return /* @__PURE__ */ jsx("svg", {
 		width: size,
@@ -2731,20 +5451,42 @@ function CollectionRowActions({ editTo, publicTo, onDelete }) {
 }
 function BlogListPage() {
 	const { cms, updateCms } = useCms();
+	const localizationSettings = getLocalizationSettings(cms.websiteSettings || {});
+	const enabledLocales = localizationSettings.enabled ? localizationSettings.locales || ["nl", "en"] : ["nl"];
+	const [locale, setLocale] = useState("nl");
+	const blogItems = useMemo(() => getLocalizedSectionValue(cms, locale, "blog") || [], [cms, locale]);
+	useEffect(() => {
+		if (!enabledLocales.includes(locale)) setLocale("nl");
+	}, [enabledLocales, locale]);
 	const handleDelete = async (slug) => {
+		if (locale !== "nl") {
+			window.alert("Items aanmaken of verwijderen doe je in de Nederlandse basiscontent. Gebruik EN alleen voor vertalingen.");
+			return;
+		}
 		if (!window.confirm("Weet je zeker dat je deze blogpost wilt verwijderen?")) return;
 		await updateCms("blog", (cms.blog || []).filter((item) => (item.slug || item.id) !== slug));
 	};
 	return /* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx(SectionHeader, {
 		title: "Blog",
-		sub: "Elke post heeft een eigen create- en editpagina",
-		action: /* @__PURE__ */ jsx(Link, {
-			to: "/admin/blog/new",
-			style: { textDecoration: "none" },
-			children: /* @__PURE__ */ jsx(PrimaryButton, {
-				type: "button",
-				children: "Nieuwe blogpost"
-			})
+		sub: locale === "nl" ? "Elke post heeft een eigen create- en editpagina" : "Je bewerkt nu alleen de Engelse vertalingen van bestaande blogposts",
+		action: /* @__PURE__ */ jsxs("div", {
+			style: {
+				display: "flex",
+				gap: "12px",
+				alignItems: "center"
+			},
+			children: [/* @__PURE__ */ jsx(LocaleToggle, {
+				enabled: localizationSettings.enabled,
+				locale,
+				onChange: setLocale
+			}), locale === "nl" ? /* @__PURE__ */ jsx(Link, {
+				to: "/admin/blog/new",
+				style: { textDecoration: "none" },
+				children: /* @__PURE__ */ jsx(PrimaryButton, {
+					type: "button",
+					children: "Nieuwe blogpost"
+				})
+			}) : null]
 		})
 	}), /* @__PURE__ */ jsxs(Card, { children: [
 		/* @__PURE__ */ jsxs("div", {
@@ -2769,7 +5511,7 @@ function BlogListPage() {
 				})
 			]
 		}),
-		(cms.blog || []).map((post) => /* @__PURE__ */ jsxs("div", {
+		blogItems.map((post) => /* @__PURE__ */ jsxs("div", {
 			style: {
 				padding: "18px 22px",
 				borderBottom: "1px solid #f5f5f5",
@@ -2817,7 +5559,7 @@ function BlogListPage() {
 				})
 			]
 		}, post.slug || post.id)),
-		!(cms.blog || []).length ? /* @__PURE__ */ jsx("div", {
+		!blogItems.length ? /* @__PURE__ */ jsx("div", {
 			style: {
 				padding: "24px",
 				color: "#999"
@@ -2828,22 +5570,44 @@ function BlogListPage() {
 }
 function ServiceListPage() {
 	const { cms, updateCms } = useCms();
+	const localizationSettings = getLocalizationSettings(cms.websiteSettings || {});
+	const enabledLocales = localizationSettings.enabled ? localizationSettings.locales || ["nl", "en"] : ["nl"];
+	const [locale, setLocale] = useState("nl");
+	const serviceItems = useMemo(() => getLocalizedSectionValue(cms, locale, "diensten") || [], [cms, locale]);
+	useEffect(() => {
+		if (!enabledLocales.includes(locale)) setLocale("nl");
+	}, [enabledLocales, locale]);
 	const handleDelete = async (slug) => {
+		if (locale !== "nl") {
+			window.alert("Items aanmaken of verwijderen doe je in de Nederlandse basiscontent. Gebruik EN alleen voor vertalingen.");
+			return;
+		}
 		if (!window.confirm("Weet je zeker dat je deze dienst wilt verwijderen?")) return;
 		await updateCms("diensten", (cms.diensten || []).filter((item) => item.id !== slug));
 	};
 	return /* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx(SectionHeader, {
 		title: "Diensten",
-		sub: "Elke dienst heeft een eigen create- en editpagina",
-		action: /* @__PURE__ */ jsx(Link, {
-			to: "/admin/diensten/new",
-			style: { textDecoration: "none" },
-			children: /* @__PURE__ */ jsx(PrimaryButton, {
-				type: "button",
-				children: "Nieuwe dienst"
-			})
+		sub: locale === "nl" ? "Elke dienst heeft een eigen create- en editpagina" : "Je bewerkt nu alleen de Engelse vertalingen van bestaande diensten",
+		action: /* @__PURE__ */ jsxs("div", {
+			style: {
+				display: "flex",
+				gap: "12px",
+				alignItems: "center"
+			},
+			children: [/* @__PURE__ */ jsx(LocaleToggle, {
+				enabled: localizationSettings.enabled,
+				locale,
+				onChange: setLocale
+			}), locale === "nl" ? /* @__PURE__ */ jsx(Link, {
+				to: "/admin/diensten/new",
+				style: { textDecoration: "none" },
+				children: /* @__PURE__ */ jsx(PrimaryButton, {
+					type: "button",
+					children: "Nieuwe dienst"
+				})
+			}) : null]
 		})
-	}), /* @__PURE__ */ jsxs(Card, { children: [(cms.diensten || []).map((item) => /* @__PURE__ */ jsxs("div", {
+	}), /* @__PURE__ */ jsxs(Card, { children: [serviceItems.map((item) => /* @__PURE__ */ jsxs("div", {
 		style: {
 			padding: "18px 22px",
 			borderBottom: "1px solid #f5f5f5",
@@ -2888,7 +5652,7 @@ function ServiceListPage() {
 				onDelete: () => handleDelete(item.id)
 			})
 		]
-	}, item.id)), !(cms.diensten || []).length ? /* @__PURE__ */ jsx("div", {
+	}, item.id)), !serviceItems.length ? /* @__PURE__ */ jsx("div", {
 		style: {
 			padding: "24px",
 			color: "#999"
@@ -2898,22 +5662,44 @@ function ServiceListPage() {
 }
 function SectorListPage() {
 	const { cms, updateCms } = useCms();
+	const localizationSettings = getLocalizationSettings(cms.websiteSettings || {});
+	const enabledLocales = localizationSettings.enabled ? localizationSettings.locales || ["nl", "en"] : ["nl"];
+	const [locale, setLocale] = useState("nl");
+	const sectorItems = useMemo(() => getLocalizedSectionValue(cms, locale, "sectoren") || [], [cms, locale]);
+	useEffect(() => {
+		if (!enabledLocales.includes(locale)) setLocale("nl");
+	}, [enabledLocales, locale]);
 	const handleDelete = async (slug) => {
+		if (locale !== "nl") {
+			window.alert("Items aanmaken of verwijderen doe je in de Nederlandse basiscontent. Gebruik EN alleen voor vertalingen.");
+			return;
+		}
 		if (!window.confirm("Weet je zeker dat je deze sector wilt verwijderen?")) return;
 		await updateCms("sectoren", (cms.sectoren || []).filter((item) => item.id !== slug));
 	};
 	return /* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx(SectionHeader, {
 		title: "Sectoren",
-		sub: "Elke sector heeft een eigen create- en editpagina",
-		action: /* @__PURE__ */ jsx(Link, {
-			to: "/admin/sectoren/new",
-			style: { textDecoration: "none" },
-			children: /* @__PURE__ */ jsx(PrimaryButton, {
-				type: "button",
-				children: "Nieuwe sector"
-			})
+		sub: locale === "nl" ? "Elke sector heeft een eigen create- en editpagina" : "Je bewerkt nu alleen de Engelse vertalingen van bestaande sectoren",
+		action: /* @__PURE__ */ jsxs("div", {
+			style: {
+				display: "flex",
+				gap: "12px",
+				alignItems: "center"
+			},
+			children: [/* @__PURE__ */ jsx(LocaleToggle, {
+				enabled: localizationSettings.enabled,
+				locale,
+				onChange: setLocale
+			}), locale === "nl" ? /* @__PURE__ */ jsx(Link, {
+				to: "/admin/sectoren/new",
+				style: { textDecoration: "none" },
+				children: /* @__PURE__ */ jsx(PrimaryButton, {
+					type: "button",
+					children: "Nieuwe sector"
+				})
+			}) : null]
 		})
-	}), /* @__PURE__ */ jsxs(Card, { children: [(cms.sectoren || []).map((item) => /* @__PURE__ */ jsxs("div", {
+	}), /* @__PURE__ */ jsxs(Card, { children: [sectorItems.map((item) => /* @__PURE__ */ jsxs("div", {
 		style: {
 			padding: "18px 22px",
 			borderBottom: "1px solid #f5f5f5",
@@ -2950,7 +5736,7 @@ function SectorListPage() {
 				onDelete: () => handleDelete(item.id)
 			})
 		]
-	}, item.id)), !(cms.sectoren || []).length ? /* @__PURE__ */ jsx("div", {
+	}, item.id)), !sectorItems.length ? /* @__PURE__ */ jsx("div", {
 		style: {
 			padding: "24px",
 			color: "#999"
@@ -2963,7 +5749,11 @@ function BlogFormPage() {
 	const { cms, updateCms } = useCms();
 	const navigate = useNavigate();
 	const editing = Boolean(slug);
-	const source = useMemo(() => (cms.blog || []).find((item) => (item.slug || item.id) === slug), [cms.blog, slug]);
+	const localizationSettings = getLocalizationSettings(cms.websiteSettings || {});
+	const enabledLocales = localizationSettings.enabled ? localizationSettings.locales || ["nl", "en"] : ["nl"];
+	const [locale, setLocale] = useState("nl");
+	const blogItems = useMemo(() => getLocalizedSectionValue(cms, locale, "blog") || [], [cms, locale]);
+	const source = useMemo(() => blogItems.find((item) => (item.slug || item.id) === slug), [blogItems, slug]);
 	const [form, setForm] = useState({
 		title: "",
 		slug: "",
@@ -2980,6 +5770,9 @@ function BlogFormPage() {
 	});
 	const [saving, setSaving] = useState(false);
 	const [message, setMessage] = useState("");
+	useEffect(() => {
+		if (!enabledLocales.includes(locale)) setLocale("nl");
+	}, [enabledLocales, locale]);
 	useEffect(() => {
 		if (source) setForm({
 			title: source.title || "",
@@ -3005,20 +5798,25 @@ function BlogFormPage() {
 		[key]: value
 	}));
 	const save = async () => {
+		if (!editing && locale !== "nl") {
+			window.alert("Nieuwe items maak je eerst in NL aan. Daarna kun je hier de EN-vertaling invullen.");
+			return;
+		}
 		setSaving(true);
-		const finalSlug = makeSlug(form.slug || form.title, "blog-post");
+		const finalSlug = locale === "nl" ? makeSlug(form.slug || form.title, "blog-post") : source?.slug || source?.id || slug;
 		const payload = {
 			...form,
 			slug: finalSlug
 		};
-		const ok = await updateCms("blog", editing ? (cms.blog || []).map((item) => (item.slug || item.id) === slug ? {
+		const items = editing ? blogItems.map((item) => (item.slug || item.id) === slug ? {
 			...item,
 			...payload,
 			id: finalSlug
-		} : item) : [...cms.blog || [], {
+		} : item) : [...blogItems, {
 			...payload,
 			id: finalSlug
-		}]);
+		}];
+		const ok = locale === "nl" ? await updateCms("blog", items) : await updateCms("websiteSettings", buildLocalizedWebsiteSettings(cms.websiteSettings, locale, "blog", items));
 		setSaving(false);
 		if (ok) {
 			setMessage("Blogpost opgeslagen.");
@@ -3027,7 +5825,12 @@ function BlogFormPage() {
 	};
 	return /* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx(SectionHeader, {
 		title: editing ? "Blogpost Bewerken" : "Nieuwe Blogpost",
-		sub: "Titel, inhoud, rich text en SEO op een eigen pagina"
+		sub: locale === "nl" ? "Titel, inhoud, rich text en SEO op een eigen pagina" : "Je bewerkt nu de Engelse vertaling van deze blogpost",
+		action: /* @__PURE__ */ jsx(LocaleToggle, {
+			enabled: localizationSettings.enabled,
+			locale,
+			onChange: setLocale
+		})
 	}), /* @__PURE__ */ jsxs(Card, {
 		style: {
 			padding: "28px",
@@ -3164,7 +5967,11 @@ function ServiceFormPage() {
 	const { cms, updateCms } = useCms();
 	const navigate = useNavigate();
 	const editing = Boolean(slug);
-	const source = useMemo(() => (cms.diensten || []).find((item) => item.id === slug), [cms.diensten, slug]);
+	const localizationSettings = getLocalizationSettings(cms.websiteSettings || {});
+	const enabledLocales = localizationSettings.enabled ? localizationSettings.locales || ["nl", "en"] : ["nl"];
+	const [locale, setLocale] = useState("nl");
+	const serviceItems = useMemo(() => getLocalizedSectionValue(cms, locale, "diensten") || [], [cms, locale]);
+	const source = useMemo(() => serviceItems.find((item) => item.id === slug), [serviceItems, slug]);
 	const [form, setForm] = useState({
 		nr: "",
 		title: "",
@@ -3179,6 +5986,9 @@ function ServiceFormPage() {
 	});
 	const [saving, setSaving] = useState(false);
 	const [message, setMessage] = useState("");
+	useEffect(() => {
+		if (!enabledLocales.includes(locale)) setLocale("nl");
+	}, [enabledLocales, locale]);
 	useEffect(() => {
 		if (source) setForm({
 			nr: source.nr || "",
@@ -3202,13 +6012,18 @@ function ServiceFormPage() {
 		[key]: value
 	}));
 	const save = async () => {
+		if (!editing && locale !== "nl") {
+			window.alert("Nieuwe items maak je eerst in NL aan. Daarna kun je hier de EN-vertaling invullen.");
+			return;
+		}
 		setSaving(true);
-		const finalSlug = makeSlug(form.slug || form.title, "dienst");
+		const finalSlug = locale === "nl" ? makeSlug(form.slug || form.title, "dienst") : source?.id || slug;
 		const payload = {
 			...form,
 			id: finalSlug
 		};
-		const ok = await updateCms("diensten", editing ? (cms.diensten || []).map((item) => item.id === slug ? payload : item) : [...cms.diensten || [], payload]);
+		const items = editing ? serviceItems.map((item) => item.id === slug ? payload : item) : [...serviceItems, payload];
+		const ok = locale === "nl" ? await updateCms("diensten", items) : await updateCms("websiteSettings", buildLocalizedWebsiteSettings(cms.websiteSettings, locale, "diensten", items));
 		setSaving(false);
 		if (ok) {
 			setMessage("Dienst opgeslagen.");
@@ -3217,7 +6032,12 @@ function ServiceFormPage() {
 	};
 	return /* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx(SectionHeader, {
 		title: editing ? "Dienst Bewerken" : "Nieuwe Dienst",
-		sub: "Eigen pagina voor inhoud, checklist en SEO"
+		sub: locale === "nl" ? "Eigen pagina voor inhoud, checklist en SEO" : "Je bewerkt nu de Engelse vertaling van deze dienst",
+		action: /* @__PURE__ */ jsx(LocaleToggle, {
+			enabled: localizationSettings.enabled,
+			locale,
+			onChange: setLocale
+		})
 	}), /* @__PURE__ */ jsxs(Card, {
 		style: {
 			padding: "28px",
@@ -3330,7 +6150,11 @@ function SectorFormPage() {
 	const { cms, updateCms } = useCms();
 	const navigate = useNavigate();
 	const editing = Boolean(slug);
-	const source = useMemo(() => (cms.sectoren || []).find((item) => item.id === slug), [cms.sectoren, slug]);
+	const localizationSettings = getLocalizationSettings(cms.websiteSettings || {});
+	const enabledLocales = localizationSettings.enabled ? localizationSettings.locales || ["nl", "en"] : ["nl"];
+	const [locale, setLocale] = useState("nl");
+	const sectorItems = useMemo(() => getLocalizedSectionValue(cms, locale, "sectoren") || [], [cms, locale]);
+	const source = useMemo(() => sectorItems.find((item) => item.id === slug), [sectorItems, slug]);
 	const [form, setForm] = useState({
 		nr: "",
 		naam: "",
@@ -3345,6 +6169,9 @@ function SectorFormPage() {
 	});
 	const [saving, setSaving] = useState(false);
 	const [message, setMessage] = useState("");
+	useEffect(() => {
+		if (!enabledLocales.includes(locale)) setLocale("nl");
+	}, [enabledLocales, locale]);
 	useEffect(() => {
 		if (source) setForm({
 			nr: source.nr || "",
@@ -3368,13 +6195,18 @@ function SectorFormPage() {
 		[key]: value
 	}));
 	const save = async () => {
+		if (!editing && locale !== "nl") {
+			window.alert("Nieuwe items maak je eerst in NL aan. Daarna kun je hier de EN-vertaling invullen.");
+			return;
+		}
 		setSaving(true);
-		const finalSlug = makeSlug(form.slug || form.naam, "sector");
+		const finalSlug = locale === "nl" ? makeSlug(form.slug || form.naam, "sector") : source?.id || slug;
 		const payload = {
 			...form,
 			id: finalSlug
 		};
-		const ok = await updateCms("sectoren", editing ? (cms.sectoren || []).map((item) => item.id === slug ? payload : item) : [...cms.sectoren || [], payload]);
+		const items = editing ? sectorItems.map((item) => item.id === slug ? payload : item) : [...sectorItems, payload];
+		const ok = locale === "nl" ? await updateCms("sectoren", items) : await updateCms("websiteSettings", buildLocalizedWebsiteSettings(cms.websiteSettings, locale, "sectoren", items));
 		setSaving(false);
 		if (ok) {
 			setMessage("Sector opgeslagen.");
@@ -3383,7 +6215,12 @@ function SectorFormPage() {
 	};
 	return /* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx(SectionHeader, {
 		title: editing ? "Sector Bewerken" : "Nieuwe Sector",
-		sub: "Eigen pagina voor sectorinformatie en SEO"
+		sub: locale === "nl" ? "Eigen pagina voor sectorinformatie en SEO" : "Je bewerkt nu de Engelse vertaling van deze sector",
+		action: /* @__PURE__ */ jsx(LocaleToggle, {
+			enabled: localizationSettings.enabled,
+			locale,
+			onChange: setLocale
+		})
 	}), /* @__PURE__ */ jsxs(Card, {
 		style: {
 			padding: "28px",
@@ -3489,8 +6326,11 @@ function SectorFormPage() {
 		})]
 	})] });
 }
-function HomepagePage() {
+function HomepageEditorPage() {
 	const { cms, updateCms } = useCms();
+	const localizationSettings = getLocalizationSettings(cms.websiteSettings || {});
+	const enabledLocales = localizationSettings.enabled ? localizationSettings.locales || ["nl", "en"] : ["nl"];
+	const [locale, setLocale] = useState("nl");
 	const [hero, setHero] = useState(cms.hero || {});
 	const [watFerna, setWatFerna] = useState(cms.watFerna || {});
 	const [anders, setAnders] = useState(cms.anders || { items: [] });
@@ -3498,122 +6338,134 @@ function HomepagePage() {
 	const [faq, setFaq] = useState(cms.faq || []);
 	const [statsText, setStatsText] = useState(() => (cms.stats || []).map((item) => `${item.number} | ${item.desc}`).join("\n"));
 	const [saved, setSaved] = useState("");
+	const [openSection, setOpenSection] = useState("hero");
 	useEffect(() => {
-		setHero(cms.hero || {});
-		setWatFerna(cms.watFerna || {});
-		setAnders(cms.anders || { items: [] });
-		setProjecten(cms.projecten || []);
-		setFaq(cms.faq || []);
-		setStatsText((cms.stats || []).map((item) => `${item.number} | ${item.desc}`).join("\n"));
-	}, [cms]);
+		if (!enabledLocales.includes(locale)) setLocale("nl");
+	}, [enabledLocales, locale]);
+	useEffect(() => {
+		setHero(getLocalizedSectionValue(cms, locale, "hero") || {});
+		setWatFerna(getLocalizedSectionValue(cms, locale, "watFerna") || {});
+		setAnders(getLocalizedSectionValue(cms, locale, "anders") || { items: [] });
+		setProjecten(getLocalizedSectionValue(cms, locale, "projecten") || []);
+		setFaq(getLocalizedSectionValue(cms, locale, "faq") || []);
+		setStatsText((getLocalizedSectionValue(cms, locale, "stats") || []).map((item) => `${item.number} | ${item.desc}`).join("\n"));
+	}, [cms, locale]);
+	const parsedStats = useMemo(() => parseLines(statsText).map((line) => {
+		const [number, ...descParts] = line.split("|");
+		return {
+			number: (number || "").trim(),
+			desc: descParts.join("|").trim()
+		};
+	}), [statsText]);
+	const previewCms = useMemo(() => ({
+		...cms,
+		hero,
+		watFerna,
+		anders,
+		projecten,
+		faq,
+		stats: parsedStats
+	}), [
+		anders,
+		cms,
+		faq,
+		hero,
+		parsedStats,
+		projecten,
+		watFerna
+	]);
 	const saveSection = async (key, value) => {
-		if (await updateCms(key, value)) {
+		let ok = false;
+		if (locale === "nl") ok = await updateCms(key, value);
+		else ok = await updateCms("websiteSettings", buildLocalizedWebsiteSettings(cms.websiteSettings, locale, key, value));
+		if (ok) {
 			setSaved(key);
 			window.setTimeout(() => setSaved(""), 1600);
 		}
 	};
-	return /* @__PURE__ */ jsxs("div", {
-		style: {
-			display: "grid",
-			gap: "24px",
-			maxWidth: "1040px"
-		},
-		children: [
-			/* @__PURE__ */ jsx(SectionHeader, {
-				title: "Homepage",
-				sub: "Elke homepage-sectie heeft hier zijn eigen blok"
-			}),
-			/* @__PURE__ */ jsxs(Card, {
-				style: { padding: "24px" },
+	const sections = [
+		{
+			key: "hero",
+			title: "Hero",
+			preview: /* @__PURE__ */ jsx(HeroBanner, {}),
+			note: "Bewerk headline, subtitel, CTA en hero-afbeelding. De preview hieronder gebruikt exact dezelfde hero-component als de live homepage.",
+			fields: /* @__PURE__ */ jsxs("div", {
+				style: {
+					display: "grid",
+					gap: "16px"
+				},
 				children: [
-					/* @__PURE__ */ jsx("div", {
+					/* @__PURE__ */ jsxs("div", {
 						style: {
-							fontFamily: "Arial Black, Arial, sans-serif",
-							fontSize: "12px",
-							textTransform: "uppercase",
-							marginBottom: "16px"
+							display: "grid",
+							gridTemplateColumns: "1fr 1fr",
+							gap: "16px"
 						},
-						children: "Hero"
+						children: [/* @__PURE__ */ jsx(FormField, {
+							label: "Titel regel 1",
+							value: hero.line1,
+							onChange: (value) => setHero((prev) => ({
+								...prev,
+								line1: value
+							}))
+						}), /* @__PURE__ */ jsx(FormField, {
+							label: "Titel regel 2",
+							value: hero.line2,
+							onChange: (value) => setHero((prev) => ({
+								...prev,
+								line2: value
+							}))
+						})]
+					}),
+					/* @__PURE__ */ jsx(FormField, {
+						label: "Subtitel",
+						value: hero.subtitle,
+						onChange: (value) => setHero((prev) => ({
+							...prev,
+							subtitle: value
+						})),
+						multiline: true,
+						rows: 4
 					}),
 					/* @__PURE__ */ jsxs("div", {
 						style: {
 							display: "grid",
+							gridTemplateColumns: "1fr 1fr",
 							gap: "16px"
 						},
-						children: [
-							/* @__PURE__ */ jsxs("div", {
-								style: {
-									display: "grid",
-									gridTemplateColumns: "1fr 1fr",
-									gap: "16px"
-								},
-								children: [/* @__PURE__ */ jsx(FormField, {
-									label: "Titel regel 1",
-									value: hero.line1,
-									onChange: (value) => setHero((prev) => ({
-										...prev,
-										line1: value
-									}))
-								}), /* @__PURE__ */ jsx(FormField, {
-									label: "Titel regel 2",
-									value: hero.line2,
-									onChange: (value) => setHero((prev) => ({
-										...prev,
-										line2: value
-									}))
-								})]
-							}),
-							/* @__PURE__ */ jsx(FormField, {
-								label: "Subtitel",
-								value: hero.subtitle,
-								onChange: (value) => setHero((prev) => ({
-									...prev,
-									subtitle: value
-								})),
-								multiline: true,
-								rows: 4
-							}),
-							/* @__PURE__ */ jsxs("div", {
-								style: {
-									display: "grid",
-									gridTemplateColumns: "1fr 1fr",
-									gap: "16px"
-								},
-								children: [/* @__PURE__ */ jsx(FormField, {
-									label: "CTA tekst",
-									value: hero.cta,
-									onChange: (value) => setHero((prev) => ({
-										...prev,
-										cta: value
-									}))
-								}), /* @__PURE__ */ jsx(FormField, {
-									label: "CTA link",
-									value: hero.ctaLink,
-									onChange: (value) => setHero((prev) => ({
-										...prev,
-										ctaLink: value
-									}))
-								})]
-							}),
-							/* @__PURE__ */ jsx(FormField, {
-								label: "USP's (één per regel)",
-								value: toMultiline(hero.checkItems),
-								onChange: (value) => setHero((prev) => ({
-									...prev,
-									checkItems: parseLines(value)
-								})),
-								multiline: true,
-								rows: 5
-							}),
-							/* @__PURE__ */ jsx(ImageUpload, {
-								label: "Hero afbeelding",
-								value: hero.image || "",
-								onChange: (value) => setHero((prev) => ({
-									...prev,
-									image: value
-								}))
-							})
-						]
+						children: [/* @__PURE__ */ jsx(FormField, {
+							label: "CTA tekst",
+							value: hero.cta,
+							onChange: (value) => setHero((prev) => ({
+								...prev,
+								cta: value
+							}))
+						}), /* @__PURE__ */ jsx(FormField, {
+							label: "CTA link",
+							value: hero.ctaLink,
+							onChange: (value) => setHero((prev) => ({
+								...prev,
+								ctaLink: value
+							}))
+						})]
+					}),
+					/* @__PURE__ */ jsx(FormField, {
+						label: "USP's (één per regel)",
+						value: toMultiline(hero.checkItems),
+						onChange: (value) => setHero((prev) => ({
+							...prev,
+							checkItems: parseLines(value)
+						})),
+						multiline: true,
+						rows: 5
+					}),
+					/* @__PURE__ */ jsx(ImageUpload, {
+						label: "Hero afbeelding",
+						value: hero.image || "",
+						onChange: (value) => setHero((prev) => ({
+							...prev,
+							image: value
+						}))
 					}),
 					/* @__PURE__ */ jsx(SaveBar, {
 						saving: false,
@@ -3621,112 +6473,77 @@ function HomepagePage() {
 						onSave: () => saveSection("hero", hero)
 					})
 				]
-			}),
-			/* @__PURE__ */ jsxs(Card, {
-				style: { padding: "24px" },
+			})
+		},
+		{
+			key: "logos",
+			title: "Client Logos",
+			preview: /* @__PURE__ */ jsx(ClientLogosSection, {}),
+			note: "Deze sectie gebruikt vaste logo-assets en heeft daarom alleen preview in deze editor."
+		},
+		{
+			key: "watFerna",
+			title: "Wat FerroWorks Voor Je Doet",
+			preview: /* @__PURE__ */ jsx(WatFernaSection, {}),
+			fields: /* @__PURE__ */ jsxs("div", {
+				style: {
+					display: "grid",
+					gap: "16px"
+				},
 				children: [
-					/* @__PURE__ */ jsx("div", {
+					/* @__PURE__ */ jsxs("div", {
 						style: {
-							fontFamily: "Arial Black, Arial, sans-serif",
-							fontSize: "12px",
-							textTransform: "uppercase",
-							marginBottom: "16px"
+							display: "grid",
+							gridTemplateColumns: "1fr 1fr",
+							gap: "16px"
 						},
-						children: "Stats"
+						children: [/* @__PURE__ */ jsx(FormField, {
+							label: "Titel regel 1",
+							value: watFerna.title1,
+							onChange: (value) => setWatFerna((prev) => ({
+								...prev,
+								title1: value
+							}))
+						}), /* @__PURE__ */ jsx(FormField, {
+							label: "Titel regel 2",
+							value: watFerna.title2,
+							onChange: (value) => setWatFerna((prev) => ({
+								...prev,
+								title2: value
+							}))
+						})]
 					}),
 					/* @__PURE__ */ jsx(FormField, {
-						label: "Één item per regel in formaat: getal | omschrijving",
-						value: statsText,
-						onChange: setStatsText,
+						label: "Bullet items (één per regel)",
+						value: toMultiline(watFerna.bulletItems),
+						onChange: (value) => setWatFerna((prev) => ({
+							...prev,
+							bulletItems: parseLines(value)
+						})),
 						multiline: true,
-						rows: 6
-					}),
-					/* @__PURE__ */ jsx(SaveBar, {
-						saving: false,
-						message: saved === "stats" ? "Stats opgeslagen." : "",
-						onSave: () => saveSection("stats", parseLines(statsText).map((line) => {
-							const [number, ...descParts] = line.split("|");
-							return {
-								number: (number || "").trim(),
-								desc: descParts.join("|").trim()
-							};
-						}))
-					})
-				]
-			}),
-			/* @__PURE__ */ jsxs(Card, {
-				style: { padding: "24px" },
-				children: [
-					/* @__PURE__ */ jsx("div", {
-						style: {
-							fontFamily: "Arial Black, Arial, sans-serif",
-							fontSize: "12px",
-							textTransform: "uppercase",
-							marginBottom: "16px"
-						},
-						children: "Wat FerroWorks Voor Je Doet"
+						rows: 8
 					}),
 					/* @__PURE__ */ jsxs("div", {
 						style: {
 							display: "grid",
+							gridTemplateColumns: "1fr 1fr",
 							gap: "16px"
 						},
-						children: [
-							/* @__PURE__ */ jsxs("div", {
-								style: {
-									display: "grid",
-									gridTemplateColumns: "1fr 1fr",
-									gap: "16px"
-								},
-								children: [/* @__PURE__ */ jsx(FormField, {
-									label: "Titel regel 1",
-									value: watFerna.title1,
-									onChange: (value) => setWatFerna((prev) => ({
-										...prev,
-										title1: value
-									}))
-								}), /* @__PURE__ */ jsx(FormField, {
-									label: "Titel regel 2",
-									value: watFerna.title2,
-									onChange: (value) => setWatFerna((prev) => ({
-										...prev,
-										title2: value
-									}))
-								})]
-							}),
-							/* @__PURE__ */ jsx(FormField, {
-								label: "Bullet items (één per regel)",
-								value: toMultiline(watFerna.bulletItems),
-								onChange: (value) => setWatFerna((prev) => ({
-									...prev,
-									bulletItems: parseLines(value)
-								})),
-								multiline: true,
-								rows: 8
-							}),
-							/* @__PURE__ */ jsxs("div", {
-								style: {
-									display: "grid",
-									gridTemplateColumns: "1fr 1fr",
-									gap: "16px"
-								},
-								children: [/* @__PURE__ */ jsx(ImageUpload, {
-									label: "Afbeelding 1",
-									value: watFerna.image1 || "",
-									onChange: (value) => setWatFerna((prev) => ({
-										...prev,
-										image1: value
-									}))
-								}), /* @__PURE__ */ jsx(ImageUpload, {
-									label: "Afbeelding 2",
-									value: watFerna.image2 || "",
-									onChange: (value) => setWatFerna((prev) => ({
-										...prev,
-										image2: value
-									}))
-								})]
-							})
-						]
+						children: [/* @__PURE__ */ jsx(ImageUpload, {
+							label: "Afbeelding 1",
+							value: watFerna.image1 || "",
+							onChange: (value) => setWatFerna((prev) => ({
+								...prev,
+								image1: value
+							}))
+						}), /* @__PURE__ */ jsx(ImageUpload, {
+							label: "Afbeelding 2",
+							value: watFerna.image2 || "",
+							onChange: (value) => setWatFerna((prev) => ({
+								...prev,
+								image2: value
+							}))
+						})]
 					}),
 					/* @__PURE__ */ jsx(SaveBar, {
 						saving: false,
@@ -3734,67 +6551,61 @@ function HomepagePage() {
 						onSave: () => saveSection("watFerna", watFerna)
 					})
 				]
-			}),
-			/* @__PURE__ */ jsxs(Card, {
-				style: { padding: "24px" },
+			})
+		},
+		{
+			key: "anders",
+			title: "Wat Ons Anders Maakt",
+			preview: /* @__PURE__ */ jsx(WatOnsAndersMaakt, {}),
+			fields: /* @__PURE__ */ jsxs("div", {
+				style: {
+					display: "grid",
+					gap: "16px"
+				},
 				children: [
-					/* @__PURE__ */ jsx("div", {
+					(anders.items || []).map((item, index) => /* @__PURE__ */ jsx(Card, {
 						style: {
-							fontFamily: "Arial Black, Arial, sans-serif",
-							fontSize: "12px",
-							textTransform: "uppercase",
-							marginBottom: "16px"
+							padding: "18px",
+							background: "#fafafa",
+							boxShadow: "none"
 						},
-						children: "Wat Ons Anders Maakt"
-					}),
-					/* @__PURE__ */ jsxs("div", {
-						style: {
-							display: "grid",
-							gap: "16px"
-						},
-						children: [(anders.items || []).map((item, index) => /* @__PURE__ */ jsx(Card, {
+						children: /* @__PURE__ */ jsxs("div", {
 							style: {
-								padding: "18px",
-								background: "#fafafa",
-								boxShadow: "none"
+								display: "grid",
+								gap: "14px"
 							},
-							children: /* @__PURE__ */ jsxs("div", {
-								style: {
-									display: "grid",
-									gap: "14px"
-								},
-								children: [/* @__PURE__ */ jsx(FormField, {
-									label: `Titel ${index + 1}`,
-									value: item.title,
-									onChange: (value) => setAnders((prev) => ({
-										...prev,
-										items: prev.items.map((row, rowIndex) => rowIndex === index ? {
-											...row,
-											title: value
-										} : row)
-									}))
-								}), /* @__PURE__ */ jsx(FormField, {
-									label: "Omschrijving",
-									value: item.desc,
-									onChange: (value) => setAnders((prev) => ({
-										...prev,
-										items: prev.items.map((row, rowIndex) => rowIndex === index ? {
-											...row,
-											desc: value
-										} : row)
-									})),
-									multiline: true,
-									rows: 3
-								})]
-							})
-						}, index)), /* @__PURE__ */ jsx(ImageUpload, {
-							label: "Sectie afbeelding",
-							value: anders.image || "",
-							onChange: (value) => setAnders((prev) => ({
-								...prev,
-								image: value
-							}))
-						})]
+							children: [/* @__PURE__ */ jsx(FormField, {
+								label: `Titel ${index + 1}`,
+								value: item.title,
+								onChange: (value) => setAnders((prev) => ({
+									...prev,
+									items: prev.items.map((row, rowIndex) => rowIndex === index ? {
+										...row,
+										title: value
+									} : row)
+								}))
+							}), /* @__PURE__ */ jsx(FormField, {
+								label: "Omschrijving",
+								value: item.desc,
+								onChange: (value) => setAnders((prev) => ({
+									...prev,
+									items: prev.items.map((row, rowIndex) => rowIndex === index ? {
+										...row,
+										desc: value
+									} : row)
+								})),
+								multiline: true,
+								rows: 3
+							})]
+						})
+					}, index)),
+					/* @__PURE__ */ jsx(ImageUpload, {
+						label: "Sectie afbeelding",
+						value: anders.image || "",
+						onChange: (value) => setAnders((prev) => ({
+							...prev,
+							image: value
+						}))
 					}),
 					/* @__PURE__ */ jsx(SaveBar, {
 						saving: false,
@@ -3802,138 +6613,250 @@ function HomepagePage() {
 						onSave: () => saveSection("anders", anders)
 					})
 				]
-			}),
-			/* @__PURE__ */ jsxs(Card, {
-				style: { padding: "24px" },
-				children: [
-					/* @__PURE__ */ jsx("div", {
-						style: {
-							fontFamily: "Arial Black, Arial, sans-serif",
-							fontSize: "12px",
-							textTransform: "uppercase",
-							marginBottom: "16px"
-						},
-						children: "Projecten"
-					}),
-					/* @__PURE__ */ jsx("div", {
-						style: {
-							display: "grid",
-							gap: "16px"
-						},
-						children: projecten.map((project, index) => /* @__PURE__ */ jsx(Card, {
-							style: {
-								padding: "18px",
-								background: "#fafafa",
-								boxShadow: "none"
-							},
-							children: /* @__PURE__ */ jsxs("div", {
-								style: {
-									display: "grid",
-									gap: "14px"
-								},
-								children: [
-									/* @__PURE__ */ jsx(FormField, {
-										label: "Titel",
-										value: project.title,
-										onChange: (value) => setProjecten((prev) => prev.map((row, rowIndex) => rowIndex === index ? {
-											...row,
-											title: value
-										} : row))
-									}),
-									/* @__PURE__ */ jsx(FormField, {
-										label: "Beschrijving",
-										value: project.desc,
-										onChange: (value) => setProjecten((prev) => prev.map((row, rowIndex) => rowIndex === index ? {
-											...row,
-											desc: value
-										} : row)),
-										multiline: true,
-										rows: 3
-									}),
-									/* @__PURE__ */ jsx(ImageUpload, {
-										label: "Afbeelding",
-										value: project.image || "",
-										onChange: (value) => setProjecten((prev) => prev.map((row, rowIndex) => rowIndex === index ? {
-											...row,
-											image: value
-										} : row))
-									})
-								]
-							})
-						}, index))
-					}),
-					/* @__PURE__ */ jsx(SaveBar, {
-						saving: false,
-						message: saved === "projecten" ? "Projecten opgeslagen." : "",
-						onSave: () => saveSection("projecten", projecten)
-					})
-				]
-			}),
-			/* @__PURE__ */ jsxs(Card, {
-				style: { padding: "24px" },
-				children: [
-					/* @__PURE__ */ jsx("div", {
-						style: {
-							fontFamily: "Arial Black, Arial, sans-serif",
-							fontSize: "12px",
-							textTransform: "uppercase",
-							marginBottom: "16px"
-						},
-						children: "FAQ"
-					}),
-					/* @__PURE__ */ jsx("div", {
-						style: {
-							display: "grid",
-							gap: "16px"
-						},
-						children: faq.map((item, index) => /* @__PURE__ */ jsx(Card, {
-							style: {
-								padding: "18px",
-								background: "#fafafa",
-								boxShadow: "none"
-							},
-							children: /* @__PURE__ */ jsxs("div", {
-								style: {
-									display: "grid",
-									gap: "14px"
-								},
-								children: [/* @__PURE__ */ jsx(FormField, {
-									label: "Vraag",
-									value: item.q,
-									onChange: (value) => setFaq((prev) => prev.map((row, rowIndex) => rowIndex === index ? {
-										...row,
-										q: value
-									} : row))
-								}), /* @__PURE__ */ jsx(FormField, {
-									label: "Antwoord",
-									value: item.a,
-									onChange: (value) => setFaq((prev) => prev.map((row, rowIndex) => rowIndex === index ? {
-										...row,
-										a: value
-									} : row)),
-									multiline: true,
-									rows: 4
-								})]
-							})
-						}, index))
-					}),
-					/* @__PURE__ */ jsx(SaveBar, {
-						saving: false,
-						message: saved === "faq" ? "FAQ opgeslagen." : "",
-						onSave: () => saveSection("faq", faq)
-					})
-				]
 			})
+		},
+		{
+			key: "stats",
+			title: "Stats",
+			preview: /* @__PURE__ */ jsx(StatsSection, {}),
+			fields: /* @__PURE__ */ jsxs("div", {
+				style: {
+					display: "grid",
+					gap: "16px"
+				},
+				children: [/* @__PURE__ */ jsx(FormField, {
+					label: "Één item per regel in formaat: getal | omschrijving",
+					value: statsText,
+					onChange: setStatsText,
+					multiline: true,
+					rows: 6
+				}), /* @__PURE__ */ jsx(SaveBar, {
+					saving: false,
+					message: saved === "stats" ? "Stats opgeslagen." : "",
+					onSave: () => saveSection("stats", parsedStats)
+				})]
+			})
+		},
+		{
+			key: "sectoren",
+			title: "Sectoren Highlight",
+			preview: /* @__PURE__ */ jsx(OnzeSectoren, {}),
+			note: "De inhoud van deze cards komt uit de sectorencollectie. Pas de teksten aan via Collections → Sectoren."
+		},
+		{
+			key: "projecten",
+			title: "Projecten Slider",
+			preview: /* @__PURE__ */ jsx(ProjectenSlider, {}),
+			fields: /* @__PURE__ */ jsxs("div", {
+				style: {
+					display: "grid",
+					gap: "16px"
+				},
+				children: [projecten.map((project, index) => /* @__PURE__ */ jsx(Card, {
+					style: {
+						padding: "18px",
+						background: "#fafafa",
+						boxShadow: "none"
+					},
+					children: /* @__PURE__ */ jsxs("div", {
+						style: {
+							display: "grid",
+							gap: "14px"
+						},
+						children: [
+							/* @__PURE__ */ jsx(FormField, {
+								label: "Titel",
+								value: project.title,
+								onChange: (value) => setProjecten((prev) => prev.map((row, rowIndex) => rowIndex === index ? {
+									...row,
+									title: value
+								} : row))
+							}),
+							/* @__PURE__ */ jsx(FormField, {
+								label: "Beschrijving",
+								value: project.desc,
+								onChange: (value) => setProjecten((prev) => prev.map((row, rowIndex) => rowIndex === index ? {
+									...row,
+									desc: value
+								} : row)),
+								multiline: true,
+								rows: 3
+							}),
+							/* @__PURE__ */ jsx(ImageUpload, {
+								label: "Afbeelding",
+								value: project.image || "",
+								onChange: (value) => setProjecten((prev) => prev.map((row, rowIndex) => rowIndex === index ? {
+									...row,
+									image: value
+								} : row))
+							})
+						]
+					})
+				}, index)), /* @__PURE__ */ jsx(SaveBar, {
+					saving: false,
+					message: saved === "projecten" ? "Projecten opgeslagen." : "",
+					onSave: () => saveSection("projecten", projecten)
+				})]
+			})
+		},
+		{
+			key: "cta",
+			title: "Uw Project In Goede Handen",
+			preview: /* @__PURE__ */ jsx(UwProjectSection, {}),
+			note: "Deze CTA-sectie is nog statisch opgebouwd. Ik kan die in een volgende stap ook CMS-beheerbaar maken als je wilt."
+		},
+		{
+			key: "faq",
+			title: "FAQ",
+			preview: /* @__PURE__ */ jsx(FaqSection, {}),
+			fields: /* @__PURE__ */ jsxs("div", {
+				style: {
+					display: "grid",
+					gap: "16px"
+				},
+				children: [faq.map((item, index) => /* @__PURE__ */ jsx(Card, {
+					style: {
+						padding: "18px",
+						background: "#fafafa",
+						boxShadow: "none"
+					},
+					children: /* @__PURE__ */ jsxs("div", {
+						style: {
+							display: "grid",
+							gap: "14px"
+						},
+						children: [/* @__PURE__ */ jsx(FormField, {
+							label: "Vraag",
+							value: item.q,
+							onChange: (value) => setFaq((prev) => prev.map((row, rowIndex) => rowIndex === index ? {
+								...row,
+								q: value
+							} : row))
+						}), /* @__PURE__ */ jsx(FormField, {
+							label: "Antwoord",
+							value: item.a,
+							onChange: (value) => setFaq((prev) => prev.map((row, rowIndex) => rowIndex === index ? {
+								...row,
+								a: value
+							} : row)),
+							multiline: true,
+							rows: 4
+						})]
+					})
+				}, index)), /* @__PURE__ */ jsx(SaveBar, {
+					saving: false,
+					message: saved === "faq" ? "FAQ opgeslagen." : "",
+					onSave: () => saveSection("faq", faq)
+				})]
+			})
+		}
+	];
+	return /* @__PURE__ */ jsxs("div", {
+		style: {
+			display: "grid",
+			gap: "24px"
+		},
+		children: [
+			/* @__PURE__ */ jsx(SectionHeader, {
+				title: "Homepage",
+				sub: "Bekijk eerst de echte sectie-preview. Klik daarna op edit om alleen dat blok te wijzigen.",
+				action: /* @__PURE__ */ jsx(LocaleToggle, {
+					enabled: localizationSettings.enabled,
+					locale,
+					onChange: setLocale
+				})
+			}),
+			!localizationSettings.enabled ? /* @__PURE__ */ jsx(Card, {
+				style: {
+					padding: "18px",
+					background: "#fffbe6",
+					boxShadow: "none",
+					border: "1px solid #f4e5a7"
+				},
+				children: /* @__PURE__ */ jsx("div", {
+					style: {
+						color: "#7c6200",
+						fontSize: "13px",
+						lineHeight: 1.6
+					},
+					children: "Meertaligheid staat uit. Je bewerkt nu alleen de Nederlandse basiscontent. Zet dit aan in Settings om ook aparte EN-content te beheren."
+				})
+			}) : null,
+			sections.map((section) => /* @__PURE__ */ jsxs(Card, {
+				style: { overflow: "hidden" },
+				children: [
+					/* @__PURE__ */ jsxs("div", {
+						style: {
+							padding: "18px 22px",
+							borderBottom: "1px solid #f0f0f0",
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "space-between",
+							gap: "16px",
+							flexWrap: "wrap"
+						},
+						children: [/* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx("div", {
+							style: {
+								fontFamily: "var(--fw-dashboard-heading-font)",
+								fontWeight: 900,
+								fontSize: "12px",
+								textTransform: "uppercase",
+								color: "#1c1c1c"
+							},
+							children: section.title
+						}), section.note ? /* @__PURE__ */ jsx("div", {
+							style: {
+								color: "#888",
+								fontSize: "12px",
+								marginTop: "4px"
+							},
+							children: section.note
+						}) : null] }), section.fields ? /* @__PURE__ */ jsx(SecondaryButton, {
+							type: "button",
+							onClick: () => setOpenSection((prev) => prev === section.key ? "" : section.key),
+							children: openSection === section.key ? "Sluit editor" : "Edit section"
+						}) : null]
+					}),
+					/* @__PURE__ */ jsx("div", {
+						style: {
+							background: "#f5f6f7",
+							padding: "18px"
+						},
+						children: /* @__PURE__ */ jsx("div", {
+							style: {
+								background: "#fff",
+								borderRadius: "10px",
+								overflow: "hidden",
+								border: "1px solid #ececec"
+							},
+							children: /* @__PURE__ */ jsx(PreviewCmsProvider, {
+								cms: previewCms,
+								children: section.preview
+							})
+						})
+					}),
+					section.fields && openSection === section.key ? /* @__PURE__ */ jsx("div", {
+						style: { padding: "0 22px 22px" },
+						children: section.fields
+					}) : null
+				]
+			}, section.key))
 		]
 	});
 }
 function AboutPage() {
 	const { cms, updateCms } = useCms();
+	const localizationSettings = getLocalizationSettings(cms.websiteSettings || {});
+	const enabledLocales = localizationSettings.enabled ? localizationSettings.locales || ["nl", "en"] : ["nl"];
+	const [locale, setLocale] = useState("nl");
 	const [overOns, setOverOns] = useState(cms.overOns || {});
 	const [saved, setSaved] = useState("");
 	useEffect(() => {
-		setOverOns(cms.overOns || {});
-	}, [cms]);
+		if (!enabledLocales.includes(locale)) setLocale("nl");
+	}, [enabledLocales, locale]);
+	useEffect(() => {
+		setOverOns(getLocalizedSectionValue(cms, locale, "overOns") || {});
+	}, [cms, locale]);
 	const updateNested = (section, field, value) => {
 		setOverOns((prev) => ({
 			...prev,
@@ -3944,7 +6867,7 @@ function AboutPage() {
 		}));
 	};
 	const save = async () => {
-		if (await updateCms("overOns", overOns)) {
+		if (locale === "nl" ? await updateCms("overOns", overOns) : await updateCms("websiteSettings", buildLocalizedWebsiteSettings(cms.websiteSettings, locale, "overOns", overOns))) {
 			setSaved("Over Ons opgeslagen.");
 			window.setTimeout(() => setSaved(""), 1600);
 		}
@@ -4203,13 +7126,24 @@ function AboutPage() {
 }
 function PagesPage() {
 	const { cms, updateCms } = useCms();
+	const localizationSettings = getLocalizationSettings(cms.websiteSettings || {});
+	const enabledLocales = localizationSettings.enabled ? localizationSettings.locales || ["nl", "en"] : ["nl"];
+	const [locale, setLocale] = useState("nl");
 	const [pages, setPages] = useState(cms.pages || []);
 	const [activeKey, setActiveKey] = useState((cms.pages || [])[0]?.key || "");
 	const [saved, setSaved] = useState("");
 	useEffect(() => {
-		setPages(cms.pages || []);
-		if (!activeKey && cms.pages?.length) setActiveKey(cms.pages[0].key);
-	}, [cms.pages, activeKey]);
+		if (!enabledLocales.includes(locale)) setLocale("nl");
+	}, [enabledLocales, locale]);
+	useEffect(() => {
+		const localizedPages = getLocalizedSectionValue(cms, locale, "pages") || [];
+		setPages(localizedPages);
+		if (!localizedPages.some((item) => item.key === activeKey)) setActiveKey(localizedPages[0]?.key || "");
+	}, [
+		activeKey,
+		cms,
+		locale
+	]);
 	const activePage = pages.find((item) => item.key === activeKey) || pages[0];
 	const updatePage = (field, value) => {
 		setPages((prev) => prev.map((item) => item.key === activePage.key ? {
@@ -4218,7 +7152,7 @@ function PagesPage() {
 		} : item));
 	};
 	const save = async () => {
-		if (await updateCms("pages", pages)) {
+		if (locale === "nl" ? await updateCms("pages", pages) : await updateCms("websiteSettings", buildLocalizedWebsiteSettings(cms.websiteSettings, locale, "pages", pages))) {
 			setSaved("Pagina-instellingen opgeslagen.");
 			window.setTimeout(() => setSaved(""), 1600);
 		}
@@ -4230,38 +7164,62 @@ function PagesPage() {
 			gridTemplateColumns: "320px minmax(0, 1fr)",
 			gap: "24px"
 		},
-		children: [/* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx(SectionHeader, {
-			title: "Pages",
-			sub: "SEO, indexatie en statische pagina-inhoud"
-		}), /* @__PURE__ */ jsx(Card, { children: pages.map((page) => /* @__PURE__ */ jsxs("button", {
-			type: "button",
-			onClick: () => setActiveKey(page.key),
-			style: {
-				width: "100%",
-				textAlign: "left",
-				padding: "18px 20px",
-				border: "none",
-				borderBottom: "1px solid #f2f2f2",
-				background: page.key === activeKey ? "#f8fbeb" : "#fff",
-				cursor: "pointer"
-			},
-			children: [/* @__PURE__ */ jsx("div", {
+		children: [/* @__PURE__ */ jsxs("div", { children: [
+			/* @__PURE__ */ jsx(SectionHeader, {
+				title: "Pages",
+				sub: "SEO, indexatie en statische pagina-inhoud"
+			}),
+			/* @__PURE__ */ jsxs("div", {
 				style: {
-					fontFamily: "Arial Black, Arial, sans-serif",
-					fontSize: "12px",
-					textTransform: "uppercase",
-					color: "#1c1c1c",
-					marginBottom: "4px"
+					display: "flex",
+					justifyContent: "space-between",
+					gap: "12px",
+					alignItems: "center",
+					marginBottom: "18px"
 				},
-				children: page.name
-			}), /* @__PURE__ */ jsx("div", {
+				children: [/* @__PURE__ */ jsx("div", {
+					style: {
+						color: "#888",
+						fontSize: "12px",
+						lineHeight: 1.6
+					},
+					children: localizationSettings.enabled ? "Kies of je Nederlandse of Engelse paginacontent wilt bewerken." : "Meertaligheid staat uit. Alleen Nederlandse paginacontent is actief."
+				}), /* @__PURE__ */ jsx(LocaleToggle, {
+					enabled: localizationSettings.enabled,
+					locale,
+					onChange: setLocale
+				})]
+			}),
+			/* @__PURE__ */ jsx(Card, { children: pages.map((page) => /* @__PURE__ */ jsxs("button", {
+				type: "button",
+				onClick: () => setActiveKey(page.key),
 				style: {
-					color: "#888",
-					fontSize: "12px"
+					width: "100%",
+					textAlign: "left",
+					padding: "18px 20px",
+					border: "none",
+					borderBottom: "1px solid #f2f2f2",
+					background: page.key === activeKey ? "#f8fbeb" : "#fff",
+					cursor: "pointer"
 				},
-				children: page.path
-			})]
-		}, page.key)) })] }), /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsxs(Card, {
+				children: [/* @__PURE__ */ jsx("div", {
+					style: {
+						fontFamily: "Arial Black, Arial, sans-serif",
+						fontSize: "12px",
+						textTransform: "uppercase",
+						color: "#1c1c1c",
+						marginBottom: "4px"
+					},
+					children: page.name
+				}), /* @__PURE__ */ jsx("div", {
+					style: {
+						color: "#888",
+						fontSize: "12px"
+					},
+					children: page.path
+				})]
+			}, page.key)) })
+		] }), /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsxs(Card, {
 			style: { padding: "28px" },
 			children: [/* @__PURE__ */ jsxs("div", {
 				style: {
@@ -4726,13 +7684,7 @@ function SettingsPage() {
 	const { cms, updateCms } = useCms();
 	const [tab, setTab] = useState("general");
 	const [site, setSite] = useState(cms.site || {});
-	const [websiteSettings, setWebsiteSettings] = useState({
-		...cms.websiteSettings || {},
-		theme: {
-			...DEFAULT_THEME_SETTINGS,
-			...cms.websiteSettings?.theme || {}
-		}
-	});
+	const [websiteSettings, setWebsiteSettings] = useState(mergeWebsiteSettings(cms.websiteSettings || {}));
 	const [emailSettings, setEmailSettings] = useState({
 		host: "",
 		port: 587,
@@ -4750,13 +7702,7 @@ function SettingsPage() {
 	const [emailBusy, setEmailBusy] = useState(false);
 	useEffect(() => {
 		setSite(cms.site || {});
-		setWebsiteSettings({
-			...cms.websiteSettings || {},
-			theme: {
-				...DEFAULT_THEME_SETTINGS,
-				...cms.websiteSettings?.theme || {}
-			}
-		});
+		setWebsiteSettings(mergeWebsiteSettings(cms.websiteSettings || {}));
 	}, [cms]);
 	useEffect(() => {
 		api.getEmailSettings().then((data) => setEmailSettings(data)).catch(() => {});
@@ -5127,6 +8073,57 @@ function SettingsPage() {
 										children: item.value
 									})]
 								}, item.label))
+							})]
+						}),
+						/* @__PURE__ */ jsxs(Card, {
+							style: {
+								padding: "18px",
+								background: "#fafafa",
+								boxShadow: "none"
+							},
+							children: [/* @__PURE__ */ jsx("div", {
+								style: {
+									fontFamily: "var(--fw-dashboard-heading-font)",
+									fontWeight: 900,
+									fontSize: "12px",
+									textTransform: "uppercase",
+									color: "#1c1c1c",
+									marginBottom: "12px"
+								},
+								children: "Localization & internationalization"
+							}), /* @__PURE__ */ jsxs("div", {
+								style: {
+									display: "grid",
+									gap: "14px"
+								},
+								children: [
+									/* @__PURE__ */ jsx(CheckboxField, {
+										label: "Meertalige website inschakelen (NL + EN)",
+										checked: websiteSettings.localization?.enabled,
+										onChange: (value) => setWebsiteSettings((prev) => ({
+											...prev,
+											localization: {
+												...getLocalizationSettings(prev),
+												enabled: value
+											}
+										}))
+									}),
+									/* @__PURE__ */ jsx("div", {
+										style: {
+											color: "#666",
+											fontSize: "13px",
+											lineHeight: 1.6
+										},
+										children: "Handig als je deze website verkoopt: laat meertaligheid uit voor enkelvoudige sites, of zet het aan om aparte Nederlandse en Engelse content te beheren in de contentpagina's."
+									}),
+									/* @__PURE__ */ jsxs("div", {
+										style: {
+											fontSize: "12px",
+											color: "#888"
+										},
+										children: ["Beschikbare locales: ", (websiteSettings.localization?.locales || ["nl", "en"]).map((item) => item.toUpperCase()).join(", ")]
+									})
+								]
 							})]
 						}),
 						/* @__PURE__ */ jsx(FormField, {
@@ -5576,7 +8573,7 @@ function AdminPage() {
 				path: "homepage",
 				element: /* @__PURE__ */ jsx(PermissionRoute, {
 					permission: "content.homepage",
-					children: /* @__PURE__ */ jsx(HomepagePage, {})
+					children: /* @__PURE__ */ jsx(HomepageEditorPage, {})
 				})
 			}),
 			/* @__PURE__ */ jsx(Route, {
@@ -5615,4 +8612,4 @@ function AdminPage() {
 	}) });
 }
 //#endregion
-export { RichTextContent as a, api as c, getFontOption as i, AuthProvider as n, CmsProvider as o, DEFAULT_THEME_SETTINGS as r, useCms as s, AdminPage_exports as t };
+export { api as A, over_ons2_default as C, useCms as D, CmsProvider as E, localizePath as F, isLocalizationEnabled as M, getCanonicalPathname as N, LanguageProvider as O, getLocaleFromPathname as P, over_ons3_default as S, hero_background_default as T, StatsSection as _, RichTextContent as a, ClientLogosSection as b, Offshore_constructie_300x190_default as c, Afwerking_staalconstructie_met_natlak_300x225_default as d, UwProjectSection as f, OnzeSectoren as g, about_us1_default as h, getFontOption as i, getActiveLocales as j, useLanguage as k, lascertificaat_verplicht_featured_300x158_default as l, about_us2_default as m, AuthProvider as n, FaqSection as o, about_us3_default as p, DEFAULT_THEME_SETTINGS as r, ProjectenSlider as s, AdminPage_exports as t, kwaliteitscontrole_lassen_featured_300x225_default as u, WatOnsAndersMaakt as v, HeroBanner as w, WatFernaSection as x, over_ons1_default as y };

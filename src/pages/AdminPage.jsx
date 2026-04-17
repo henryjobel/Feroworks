@@ -12,10 +12,115 @@ import {
 } from "react-router-dom";
 import { api } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
-import { useCms } from "../cms/CmsContext";
+import { CmsContext, useCms } from "../cms/CmsContext";
+import HeroBanner from "../components/HeroBanner";
+import ClientLogosSection from "../components/ClientLogosSection";
+import WatFernaSection from "../components/WatFernaSection";
+import WatOnsAndersMaakt from "../components/WatOnsAndersMaakt";
+import StatsSection from "../components/StatsSection";
+import OnzeSectorenSection from "../components/OnzeSectorenSection";
+import ProjectenSlider from "../components/ProjectenSlider";
+import UwProjectSection from "../components/UwProjectSection";
+import FaqSection from "../components/FaqSection";
 import RichTextEditor from "../components/RichTextEditor";
 import { stripHtml } from "../components/RichTextContent";
+import { localizeCmsContent } from "../../../shared/content-localization.js";
 import { DEFAULT_THEME_SETTINGS, FONT_OPTIONS } from "../theme/themeConfig";
+
+const DEFAULT_LOCALIZATION_SETTINGS = {
+  enabled: false,
+  defaultLocale: "nl",
+  locales: ["nl", "en"],
+  localizedContent: { en: {} },
+};
+
+function getLocalizationSettings(websiteSettings = {}) {
+  return {
+    ...DEFAULT_LOCALIZATION_SETTINGS,
+    ...(websiteSettings.localization || {}),
+    localizedContent: {
+      ...DEFAULT_LOCALIZATION_SETTINGS.localizedContent,
+      ...(websiteSettings.localization?.localizedContent || {}),
+    },
+  };
+}
+
+function mergeWebsiteSettings(websiteSettings = {}) {
+  return {
+    ...websiteSettings,
+    theme: { ...DEFAULT_THEME_SETTINGS, ...(websiteSettings.theme || {}) },
+    localization: getLocalizationSettings(websiteSettings),
+  };
+}
+
+function getLocalizedSectionValue(cms, locale, sectionKey) {
+  if (locale === "nl") {
+    return structuredClone(cms[sectionKey]);
+  }
+  const localizedCms = localizeCmsContent({ ...cms, websiteSettings: mergeWebsiteSettings(cms.websiteSettings || {}) }, locale);
+  return structuredClone(localizedCms?.[sectionKey]);
+}
+
+function buildLocalizedWebsiteSettings(baseSettings, locale, sectionKey, value) {
+  const nextWebsiteSettings = mergeWebsiteSettings(baseSettings || {});
+  nextWebsiteSettings.localization = getLocalizationSettings(nextWebsiteSettings);
+  nextWebsiteSettings.localization.localizedContent = {
+    ...(nextWebsiteSettings.localization.localizedContent || {}),
+    [locale]: {
+      ...(nextWebsiteSettings.localization.localizedContent?.[locale] || {}),
+      [sectionKey]: value,
+    },
+  };
+  return nextWebsiteSettings;
+}
+
+function PreviewCmsProvider({ cms, children }) {
+  const previewValue = useMemo(
+    () => ({
+      cms,
+      rawCms: cms,
+      updateCms: async () => false,
+      resetCms: async () => {},
+      refreshCms: async () => {},
+      loading: false,
+      error: "",
+    }),
+    [cms],
+  );
+
+  return <CmsContext.Provider value={previewValue}>{children}</CmsContext.Provider>;
+}
+
+function LocaleToggle({ enabled, locale, onChange }) {
+  const locales = ["nl", "en"];
+  return (
+    <div style={{ display: "inline-flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
+      {locales.map((item) => (
+        <button
+          key={item}
+          type="button"
+          onClick={() => enabled && onChange(item)}
+          disabled={!enabled}
+          style={{
+            padding: "9px 14px",
+            borderRadius: "999px",
+            border: "none",
+            background: locale === item ? "#1c1c1c" : "#f2f2f2",
+            color: locale === item ? "#fff" : "#666",
+            fontFamily: "var(--fw-dashboard-heading-font)",
+            fontWeight: 900,
+            fontSize: "11px",
+            textTransform: "uppercase",
+            cursor: enabled ? "pointer" : "not-allowed",
+            opacity: enabled ? 1 : 0.55,
+          }}
+        >
+          {item.toUpperCase()}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 function SvgIcon({ d, size = 18, stroke = "currentColor", strokeWidth = 2 }) {
   return (
@@ -853,8 +958,22 @@ function CollectionRowActions({ editTo, publicTo, onDelete }) {
 
 function BlogListPage() {
   const { cms, updateCms } = useCms();
+  const localizationSettings = getLocalizationSettings(cms.websiteSettings || {});
+  const enabledLocales = localizationSettings.enabled ? localizationSettings.locales || ["nl", "en"] : ["nl"];
+  const [locale, setLocale] = useState("nl");
+  const blogItems = useMemo(() => getLocalizedSectionValue(cms, locale, "blog") || [], [cms, locale]);
+
+  useEffect(() => {
+    if (!enabledLocales.includes(locale)) {
+      setLocale("nl");
+    }
+  }, [enabledLocales, locale]);
 
   const handleDelete = async (slug) => {
+    if (locale !== "nl") {
+      window.alert("Items aanmaken of verwijderen doe je in de Nederlandse basiscontent. Gebruik EN alleen voor vertalingen.");
+      return;
+    }
     if (!window.confirm("Weet je zeker dat je deze blogpost wilt verwijderen?")) {
       return;
     }
@@ -863,7 +982,16 @@ function BlogListPage() {
 
   return (
     <div>
-      <SectionHeader title="Blog" sub="Elke post heeft een eigen create- en editpagina" action={<Link to="/admin/blog/new" style={{ textDecoration: "none" }}><PrimaryButton type="button">Nieuwe blogpost</PrimaryButton></Link>} />
+      <SectionHeader
+        title="Blog"
+        sub={locale === "nl" ? "Elke post heeft een eigen create- en editpagina" : "Je bewerkt nu alleen de Engelse vertalingen van bestaande blogposts"}
+        action={
+          <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+            <LocaleToggle enabled={localizationSettings.enabled} locale={locale} onChange={setLocale} />
+            {locale === "nl" ? <Link to="/admin/blog/new" style={{ textDecoration: "none" }}><PrimaryButton type="button">Nieuwe blogpost</PrimaryButton></Link> : null}
+          </div>
+        }
+      />
       <Card>
         <div style={{ padding: "20px 22px", borderBottom: "1px solid #f2f2f2", display: "grid", gridTemplateColumns: "2fr 1fr 120px 1fr", gap: "16px", fontSize: "11px", color: "#bbb", fontFamily: "Arial Black, Arial, sans-serif", textTransform: "uppercase" }}>
           <div>Titel</div>
@@ -871,7 +999,7 @@ function BlogListPage() {
           <div>Status</div>
           <div style={{ textAlign: "right" }}>Acties</div>
         </div>
-        {(cms.blog || []).map((post) => (
+        {blogItems.map((post) => (
           <div key={post.slug || post.id} style={{ padding: "18px 22px", borderBottom: "1px solid #f5f5f5", display: "grid", gridTemplateColumns: "2fr 1fr 120px 1fr", gap: "16px", alignItems: "center" }}>
             <div>
               <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "13px", color: "#1c1c1c", marginBottom: "5px" }}>{post.title}</div>
@@ -882,7 +1010,7 @@ function BlogListPage() {
             <CollectionRowActions editTo={`/admin/blog/${post.slug || post.id}/edit`} publicTo={`/blog/${post.slug || post.id}`} onDelete={() => handleDelete(post.slug || post.id)} />
           </div>
         ))}
-        {!(cms.blog || []).length ? <div style={{ padding: "24px", color: "#999" }}>Nog geen blogposts.</div> : null}
+        {!blogItems.length ? <div style={{ padding: "24px", color: "#999" }}>Nog geen blogposts.</div> : null}
       </Card>
     </div>
   );
@@ -890,8 +1018,22 @@ function BlogListPage() {
 
 function ServiceListPage() {
   const { cms, updateCms } = useCms();
+  const localizationSettings = getLocalizationSettings(cms.websiteSettings || {});
+  const enabledLocales = localizationSettings.enabled ? localizationSettings.locales || ["nl", "en"] : ["nl"];
+  const [locale, setLocale] = useState("nl");
+  const serviceItems = useMemo(() => getLocalizedSectionValue(cms, locale, "diensten") || [], [cms, locale]);
+
+  useEffect(() => {
+    if (!enabledLocales.includes(locale)) {
+      setLocale("nl");
+    }
+  }, [enabledLocales, locale]);
 
   const handleDelete = async (slug) => {
+    if (locale !== "nl") {
+      window.alert("Items aanmaken of verwijderen doe je in de Nederlandse basiscontent. Gebruik EN alleen voor vertalingen.");
+      return;
+    }
     if (!window.confirm("Weet je zeker dat je deze dienst wilt verwijderen?")) {
       return;
     }
@@ -900,9 +1042,18 @@ function ServiceListPage() {
 
   return (
     <div>
-      <SectionHeader title="Diensten" sub="Elke dienst heeft een eigen create- en editpagina" action={<Link to="/admin/diensten/new" style={{ textDecoration: "none" }}><PrimaryButton type="button">Nieuwe dienst</PrimaryButton></Link>} />
+      <SectionHeader
+        title="Diensten"
+        sub={locale === "nl" ? "Elke dienst heeft een eigen create- en editpagina" : "Je bewerkt nu alleen de Engelse vertalingen van bestaande diensten"}
+        action={
+          <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+            <LocaleToggle enabled={localizationSettings.enabled} locale={locale} onChange={setLocale} />
+            {locale === "nl" ? <Link to="/admin/diensten/new" style={{ textDecoration: "none" }}><PrimaryButton type="button">Nieuwe dienst</PrimaryButton></Link> : null}
+          </div>
+        }
+      />
       <Card>
-        {(cms.diensten || []).map((item) => (
+        {serviceItems.map((item) => (
           <div key={item.id} style={{ padding: "18px 22px", borderBottom: "1px solid #f5f5f5", display: "grid", gridTemplateColumns: "90px 1.5fr 1fr 1fr", gap: "16px", alignItems: "center" }}>
             <div style={{ fontFamily: "Arial Black, Arial, sans-serif", color: "#c8d400" }}>{item.nr}</div>
             <div>
@@ -913,7 +1064,7 @@ function ServiceListPage() {
             <CollectionRowActions editTo={`/admin/diensten/${item.id}/edit`} publicTo={`/diensten/${item.id}`} onDelete={() => handleDelete(item.id)} />
           </div>
         ))}
-        {!(cms.diensten || []).length ? <div style={{ padding: "24px", color: "#999" }}>Nog geen diensten.</div> : null}
+        {!serviceItems.length ? <div style={{ padding: "24px", color: "#999" }}>Nog geen diensten.</div> : null}
       </Card>
     </div>
   );
@@ -921,8 +1072,22 @@ function ServiceListPage() {
 
 function SectorListPage() {
   const { cms, updateCms } = useCms();
+  const localizationSettings = getLocalizationSettings(cms.websiteSettings || {});
+  const enabledLocales = localizationSettings.enabled ? localizationSettings.locales || ["nl", "en"] : ["nl"];
+  const [locale, setLocale] = useState("nl");
+  const sectorItems = useMemo(() => getLocalizedSectionValue(cms, locale, "sectoren") || [], [cms, locale]);
+
+  useEffect(() => {
+    if (!enabledLocales.includes(locale)) {
+      setLocale("nl");
+    }
+  }, [enabledLocales, locale]);
 
   const handleDelete = async (slug) => {
+    if (locale !== "nl") {
+      window.alert("Items aanmaken of verwijderen doe je in de Nederlandse basiscontent. Gebruik EN alleen voor vertalingen.");
+      return;
+    }
     if (!window.confirm("Weet je zeker dat je deze sector wilt verwijderen?")) {
       return;
     }
@@ -931,9 +1096,18 @@ function SectorListPage() {
 
   return (
     <div>
-      <SectionHeader title="Sectoren" sub="Elke sector heeft een eigen create- en editpagina" action={<Link to="/admin/sectoren/new" style={{ textDecoration: "none" }}><PrimaryButton type="button">Nieuwe sector</PrimaryButton></Link>} />
+      <SectionHeader
+        title="Sectoren"
+        sub={locale === "nl" ? "Elke sector heeft een eigen create- en editpagina" : "Je bewerkt nu alleen de Engelse vertalingen van bestaande sectoren"}
+        action={
+          <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+            <LocaleToggle enabled={localizationSettings.enabled} locale={locale} onChange={setLocale} />
+            {locale === "nl" ? <Link to="/admin/sectoren/new" style={{ textDecoration: "none" }}><PrimaryButton type="button">Nieuwe sector</PrimaryButton></Link> : null}
+          </div>
+        }
+      />
       <Card>
-        {(cms.sectoren || []).map((item) => (
+        {sectorItems.map((item) => (
           <div key={item.id} style={{ padding: "18px 22px", borderBottom: "1px solid #f5f5f5", display: "grid", gridTemplateColumns: "90px 1.5fr 1fr", gap: "16px", alignItems: "center" }}>
             <div style={{ fontFamily: "Arial Black, Arial, sans-serif", color: "#c8d400" }}>{item.nr}</div>
             <div>
@@ -943,7 +1117,7 @@ function SectorListPage() {
             <CollectionRowActions editTo={`/admin/sectoren/${item.id}/edit`} onDelete={() => handleDelete(item.id)} />
           </div>
         ))}
-        {!(cms.sectoren || []).length ? <div style={{ padding: "24px", color: "#999" }}>Nog geen sectoren.</div> : null}
+        {!sectorItems.length ? <div style={{ padding: "24px", color: "#999" }}>Nog geen sectoren.</div> : null}
       </Card>
     </div>
   );
@@ -954,7 +1128,11 @@ function BlogFormPage() {
   const { cms, updateCms } = useCms();
   const navigate = useNavigate();
   const editing = Boolean(slug);
-  const source = useMemo(() => (cms.blog || []).find((item) => (item.slug || item.id) === slug), [cms.blog, slug]);
+  const localizationSettings = getLocalizationSettings(cms.websiteSettings || {});
+  const enabledLocales = localizationSettings.enabled ? localizationSettings.locales || ["nl", "en"] : ["nl"];
+  const [locale, setLocale] = useState("nl");
+  const blogItems = useMemo(() => getLocalizedSectionValue(cms, locale, "blog") || [], [cms, locale]);
+  const source = useMemo(() => blogItems.find((item) => (item.slug || item.id) === slug), [blogItems, slug]);
   const [form, setForm] = useState({
     title: "",
     slug: "",
@@ -971,6 +1149,12 @@ function BlogFormPage() {
   });
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (!enabledLocales.includes(locale)) {
+      setLocale("nl");
+    }
+  }, [enabledLocales, locale]);
 
   useEffect(() => {
     if (source) {
@@ -998,14 +1182,22 @@ function BlogFormPage() {
   const setField = (key) => (value) => setForm((prev) => ({ ...prev, [key]: value }));
 
   const save = async () => {
+    if (!editing && locale !== "nl") {
+      window.alert("Nieuwe items maak je eerst in NL aan. Daarna kun je hier de EN-vertaling invullen.");
+      return;
+    }
     setSaving(true);
-    const finalSlug = makeSlug(form.slug || form.title, "blog-post");
+    const finalSlug = locale === "nl"
+      ? makeSlug(form.slug || form.title, "blog-post")
+      : (source?.slug || source?.id || slug);
     const payload = { ...form, slug: finalSlug };
     const items = editing
-      ? (cms.blog || []).map((item) => ((item.slug || item.id) === slug ? { ...item, ...payload, id: finalSlug } : item))
-      : [...(cms.blog || []), { ...payload, id: finalSlug }];
+      ? blogItems.map((item) => ((item.slug || item.id) === slug ? { ...item, ...payload, id: finalSlug } : item))
+      : [...blogItems, { ...payload, id: finalSlug }];
 
-    const ok = await updateCms("blog", items);
+    const ok = locale === "nl"
+      ? await updateCms("blog", items)
+      : await updateCms("websiteSettings", buildLocalizedWebsiteSettings(cms.websiteSettings, locale, "blog", items));
     setSaving(false);
     if (ok) {
       setMessage("Blogpost opgeslagen.");
@@ -1015,7 +1207,11 @@ function BlogFormPage() {
 
   return (
     <div>
-      <SectionHeader title={editing ? "Blogpost Bewerken" : "Nieuwe Blogpost"} sub="Titel, inhoud, rich text en SEO op een eigen pagina" />
+      <SectionHeader
+        title={editing ? "Blogpost Bewerken" : "Nieuwe Blogpost"}
+        sub={locale === "nl" ? "Titel, inhoud, rich text en SEO op een eigen pagina" : "Je bewerkt nu de Engelse vertaling van deze blogpost"}
+        action={<LocaleToggle enabled={localizationSettings.enabled} locale={locale} onChange={setLocale} />}
+      />
       <Card style={{ padding: "28px", maxWidth: "980px" }}>
         <div style={{ display: "grid", gap: "18px" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: "16px" }}>
@@ -1051,7 +1247,11 @@ function ServiceFormPage() {
   const { cms, updateCms } = useCms();
   const navigate = useNavigate();
   const editing = Boolean(slug);
-  const source = useMemo(() => (cms.diensten || []).find((item) => item.id === slug), [cms.diensten, slug]);
+  const localizationSettings = getLocalizationSettings(cms.websiteSettings || {});
+  const enabledLocales = localizationSettings.enabled ? localizationSettings.locales || ["nl", "en"] : ["nl"];
+  const [locale, setLocale] = useState("nl");
+  const serviceItems = useMemo(() => getLocalizedSectionValue(cms, locale, "diensten") || [], [cms, locale]);
+  const source = useMemo(() => serviceItems.find((item) => item.id === slug), [serviceItems, slug]);
   const [form, setForm] = useState({
     nr: "",
     title: "",
@@ -1066,6 +1266,12 @@ function ServiceFormPage() {
   });
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (!enabledLocales.includes(locale)) {
+      setLocale("nl");
+    }
+  }, [enabledLocales, locale]);
 
   useEffect(() => {
     if (source) {
@@ -1091,14 +1297,22 @@ function ServiceFormPage() {
   const setField = (key) => (value) => setForm((prev) => ({ ...prev, [key]: value }));
 
   const save = async () => {
+    if (!editing && locale !== "nl") {
+      window.alert("Nieuwe items maak je eerst in NL aan. Daarna kun je hier de EN-vertaling invullen.");
+      return;
+    }
     setSaving(true);
-    const finalSlug = makeSlug(form.slug || form.title, "dienst");
+    const finalSlug = locale === "nl"
+      ? makeSlug(form.slug || form.title, "dienst")
+      : (source?.id || slug);
     const payload = { ...form, id: finalSlug };
     const items = editing
-      ? (cms.diensten || []).map((item) => (item.id === slug ? payload : item))
-      : [...(cms.diensten || []), payload];
+      ? serviceItems.map((item) => (item.id === slug ? payload : item))
+      : [...serviceItems, payload];
 
-    const ok = await updateCms("diensten", items);
+    const ok = locale === "nl"
+      ? await updateCms("diensten", items)
+      : await updateCms("websiteSettings", buildLocalizedWebsiteSettings(cms.websiteSettings, locale, "diensten", items));
     setSaving(false);
     if (ok) {
       setMessage("Dienst opgeslagen.");
@@ -1108,7 +1322,11 @@ function ServiceFormPage() {
 
   return (
     <div>
-      <SectionHeader title={editing ? "Dienst Bewerken" : "Nieuwe Dienst"} sub="Eigen pagina voor inhoud, checklist en SEO" />
+      <SectionHeader
+        title={editing ? "Dienst Bewerken" : "Nieuwe Dienst"}
+        sub={locale === "nl" ? "Eigen pagina voor inhoud, checklist en SEO" : "Je bewerkt nu de Engelse vertaling van deze dienst"}
+        action={<LocaleToggle enabled={localizationSettings.enabled} locale={locale} onChange={setLocale} />}
+      />
       <Card style={{ padding: "28px", maxWidth: "980px" }}>
         <div style={{ display: "grid", gap: "18px" }}>
           <div style={{ display: "grid", gridTemplateColumns: "120px 1.4fr 1fr", gap: "16px" }}>
@@ -1140,7 +1358,11 @@ function SectorFormPage() {
   const { cms, updateCms } = useCms();
   const navigate = useNavigate();
   const editing = Boolean(slug);
-  const source = useMemo(() => (cms.sectoren || []).find((item) => item.id === slug), [cms.sectoren, slug]);
+  const localizationSettings = getLocalizationSettings(cms.websiteSettings || {});
+  const enabledLocales = localizationSettings.enabled ? localizationSettings.locales || ["nl", "en"] : ["nl"];
+  const [locale, setLocale] = useState("nl");
+  const sectorItems = useMemo(() => getLocalizedSectionValue(cms, locale, "sectoren") || [], [cms, locale]);
+  const source = useMemo(() => sectorItems.find((item) => item.id === slug), [sectorItems, slug]);
   const [form, setForm] = useState({
     nr: "",
     naam: "",
@@ -1155,6 +1377,12 @@ function SectorFormPage() {
   });
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (!enabledLocales.includes(locale)) {
+      setLocale("nl");
+    }
+  }, [enabledLocales, locale]);
 
   useEffect(() => {
     if (source) {
@@ -1180,14 +1408,22 @@ function SectorFormPage() {
   const setField = (key) => (value) => setForm((prev) => ({ ...prev, [key]: value }));
 
   const save = async () => {
+    if (!editing && locale !== "nl") {
+      window.alert("Nieuwe items maak je eerst in NL aan. Daarna kun je hier de EN-vertaling invullen.");
+      return;
+    }
     setSaving(true);
-    const finalSlug = makeSlug(form.slug || form.naam, "sector");
+    const finalSlug = locale === "nl"
+      ? makeSlug(form.slug || form.naam, "sector")
+      : (source?.id || slug);
     const payload = { ...form, id: finalSlug };
     const items = editing
-      ? (cms.sectoren || []).map((item) => (item.id === slug ? payload : item))
-      : [...(cms.sectoren || []), payload];
+      ? sectorItems.map((item) => (item.id === slug ? payload : item))
+      : [...sectorItems, payload];
 
-    const ok = await updateCms("sectoren", items);
+    const ok = locale === "nl"
+      ? await updateCms("sectoren", items)
+      : await updateCms("websiteSettings", buildLocalizedWebsiteSettings(cms.websiteSettings, locale, "sectoren", items));
     setSaving(false);
     if (ok) {
       setMessage("Sector opgeslagen.");
@@ -1197,7 +1433,11 @@ function SectorFormPage() {
 
   return (
     <div>
-      <SectionHeader title={editing ? "Sector Bewerken" : "Nieuwe Sector"} sub="Eigen pagina voor sectorinformatie en SEO" />
+      <SectionHeader
+        title={editing ? "Sector Bewerken" : "Nieuwe Sector"}
+        sub={locale === "nl" ? "Eigen pagina voor sectorinformatie en SEO" : "Je bewerkt nu de Engelse vertaling van deze sector"}
+        action={<LocaleToggle enabled={localizationSettings.enabled} locale={locale} onChange={setLocale} />}
+      />
       <Card style={{ padding: "28px", maxWidth: "980px" }}>
         <div style={{ display: "grid", gap: "18px" }}>
           <div style={{ display: "grid", gridTemplateColumns: "120px 1.4fr 1fr", gap: "16px" }}>
@@ -1254,6 +1494,17 @@ function HomepagePage() {
   return (
     <div style={{ display: "grid", gap: "24px", maxWidth: "1040px" }}>
       <SectionHeader title="Homepage" sub="Elke homepage-sectie heeft hier zijn eigen blok" />
+
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <LocaleToggle enabled={localizationSettings.enabled} locale={locale} onChange={setLocale} />
+      </div>
+      {!localizationSettings.enabled ? (
+        <Card style={{ padding: "18px", background: "#fffbe6", boxShadow: "none", border: "1px solid #f4e5a7" }}>
+          <div style={{ color: "#7c6200", fontSize: "13px", lineHeight: 1.6 }}>
+            Meertaligheid staat uit. Je bewerkt nu alleen de Nederlandse basiscontent. Zet dit aan in Settings om ook aparte EN-content te beheren.
+          </div>
+        </Card>
+      ) : null}
 
       <Card style={{ padding: "24px" }}>
         <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "12px", textTransform: "uppercase", marginBottom: "16px" }}>Hero</div>
@@ -1348,21 +1599,269 @@ function HomepagePage() {
   );
 }
 
+function HomepageEditorPage() {
+  const { cms, updateCms } = useCms();
+  const localizationSettings = getLocalizationSettings(cms.websiteSettings || {});
+  const enabledLocales = localizationSettings.enabled ? localizationSettings.locales || ["nl", "en"] : ["nl"];
+  const [locale, setLocale] = useState("nl");
+  const [hero, setHero] = useState(cms.hero || {});
+  const [watFerna, setWatFerna] = useState(cms.watFerna || {});
+  const [anders, setAnders] = useState(cms.anders || { items: [] });
+  const [projecten, setProjecten] = useState(cms.projecten || []);
+  const [faq, setFaq] = useState(cms.faq || []);
+  const [statsText, setStatsText] = useState(() => (cms.stats || []).map((item) => `${item.number} | ${item.desc}`).join("\n"));
+  const [saved, setSaved] = useState("");
+  const [openSection, setOpenSection] = useState("hero");
+
+  useEffect(() => {
+    if (!enabledLocales.includes(locale)) {
+      setLocale("nl");
+    }
+  }, [enabledLocales, locale]);
+
+  useEffect(() => {
+    setHero(getLocalizedSectionValue(cms, locale, "hero") || {});
+    setWatFerna(getLocalizedSectionValue(cms, locale, "watFerna") || {});
+    setAnders(getLocalizedSectionValue(cms, locale, "anders") || { items: [] });
+    setProjecten(getLocalizedSectionValue(cms, locale, "projecten") || []);
+    setFaq(getLocalizedSectionValue(cms, locale, "faq") || []);
+    const localizedStats = getLocalizedSectionValue(cms, locale, "stats") || [];
+    setStatsText(localizedStats.map((item) => `${item.number} | ${item.desc}`).join("\n"));
+  }, [cms, locale]);
+
+  const parsedStats = useMemo(
+    () => parseLines(statsText).map((line) => {
+      const [number, ...descParts] = line.split("|");
+      return { number: (number || "").trim(), desc: descParts.join("|").trim() };
+    }),
+    [statsText],
+  );
+
+  const previewCms = useMemo(() => ({
+    ...cms,
+    hero,
+    watFerna,
+    anders,
+    projecten,
+    faq,
+    stats: parsedStats,
+  }), [anders, cms, faq, hero, parsedStats, projecten, watFerna]);
+
+  const saveSection = async (key, value) => {
+    let ok = false;
+    if (locale === "nl") {
+      ok = await updateCms(key, value);
+    } else {
+      const nextWebsiteSettings = buildLocalizedWebsiteSettings(cms.websiteSettings, locale, key, value);
+      ok = await updateCms("websiteSettings", nextWebsiteSettings);
+    }
+
+    if (ok) {
+      setSaved(key);
+      window.setTimeout(() => setSaved(""), 1600);
+    }
+  };
+
+  const sections = [
+    {
+      key: "hero",
+      title: "Hero",
+      preview: <HeroBanner />,
+      note: "Bewerk headline, subtitel, CTA en hero-afbeelding. De preview hieronder gebruikt exact dezelfde hero-component als de live homepage.",
+      fields: (
+        <div style={{ display: "grid", gap: "16px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <FormField label="Titel regel 1" value={hero.line1} onChange={(value) => setHero((prev) => ({ ...prev, line1: value }))} />
+            <FormField label="Titel regel 2" value={hero.line2} onChange={(value) => setHero((prev) => ({ ...prev, line2: value }))} />
+          </div>
+          <FormField label="Subtitel" value={hero.subtitle} onChange={(value) => setHero((prev) => ({ ...prev, subtitle: value }))} multiline rows={4} />
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <FormField label="CTA tekst" value={hero.cta} onChange={(value) => setHero((prev) => ({ ...prev, cta: value }))} />
+            <FormField label="CTA link" value={hero.ctaLink} onChange={(value) => setHero((prev) => ({ ...prev, ctaLink: value }))} />
+          </div>
+          <FormField label="USP's (één per regel)" value={toMultiline(hero.checkItems)} onChange={(value) => setHero((prev) => ({ ...prev, checkItems: parseLines(value) }))} multiline rows={5} />
+          <ImageUpload label="Hero afbeelding" value={hero.image || ""} onChange={(value) => setHero((prev) => ({ ...prev, image: value }))} />
+          <SaveBar saving={false} message={saved === "hero" ? "Hero opgeslagen." : ""} onSave={() => saveSection("hero", hero)} />
+        </div>
+      ),
+    },
+    {
+      key: "logos",
+      title: "Client Logos",
+      preview: <ClientLogosSection />,
+      note: "Deze sectie gebruikt vaste logo-assets en heeft daarom alleen preview in deze editor.",
+    },
+    {
+      key: "watFerna",
+      title: "Wat FerroWorks Voor Je Doet",
+      preview: <WatFernaSection />,
+      fields: (
+        <div style={{ display: "grid", gap: "16px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <FormField label="Titel regel 1" value={watFerna.title1} onChange={(value) => setWatFerna((prev) => ({ ...prev, title1: value }))} />
+            <FormField label="Titel regel 2" value={watFerna.title2} onChange={(value) => setWatFerna((prev) => ({ ...prev, title2: value }))} />
+          </div>
+          <FormField label="Bullet items (één per regel)" value={toMultiline(watFerna.bulletItems)} onChange={(value) => setWatFerna((prev) => ({ ...prev, bulletItems: parseLines(value) }))} multiline rows={8} />
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <ImageUpload label="Afbeelding 1" value={watFerna.image1 || ""} onChange={(value) => setWatFerna((prev) => ({ ...prev, image1: value }))} />
+            <ImageUpload label="Afbeelding 2" value={watFerna.image2 || ""} onChange={(value) => setWatFerna((prev) => ({ ...prev, image2: value }))} />
+          </div>
+          <SaveBar saving={false} message={saved === "watFerna" ? "Sectie opgeslagen." : ""} onSave={() => saveSection("watFerna", watFerna)} />
+        </div>
+      ),
+    },
+    {
+      key: "anders",
+      title: "Wat Ons Anders Maakt",
+      preview: <WatOnsAndersMaakt />,
+      fields: (
+        <div style={{ display: "grid", gap: "16px" }}>
+          {(anders.items || []).map((item, index) => (
+            <Card key={index} style={{ padding: "18px", background: "#fafafa", boxShadow: "none" }}>
+              <div style={{ display: "grid", gap: "14px" }}>
+                <FormField label={`Titel ${index + 1}`} value={item.title} onChange={(value) => setAnders((prev) => ({ ...prev, items: prev.items.map((row, rowIndex) => rowIndex === index ? { ...row, title: value } : row) }))} />
+                <FormField label="Omschrijving" value={item.desc} onChange={(value) => setAnders((prev) => ({ ...prev, items: prev.items.map((row, rowIndex) => rowIndex === index ? { ...row, desc: value } : row) }))} multiline rows={3} />
+              </div>
+            </Card>
+          ))}
+          <ImageUpload label="Sectie afbeelding" value={anders.image || ""} onChange={(value) => setAnders((prev) => ({ ...prev, image: value }))} />
+          <SaveBar saving={false} message={saved === "anders" ? "Sectie opgeslagen." : ""} onSave={() => saveSection("anders", anders)} />
+        </div>
+      ),
+    },
+    {
+      key: "stats",
+      title: "Stats",
+      preview: <StatsSection />,
+      fields: (
+        <div style={{ display: "grid", gap: "16px" }}>
+          <FormField label="Één item per regel in formaat: getal | omschrijving" value={statsText} onChange={setStatsText} multiline rows={6} />
+          <SaveBar saving={false} message={saved === "stats" ? "Stats opgeslagen." : ""} onSave={() => saveSection("stats", parsedStats)} />
+        </div>
+      ),
+    },
+    {
+      key: "sectoren",
+      title: "Sectoren Highlight",
+      preview: <OnzeSectorenSection />,
+      note: "De inhoud van deze cards komt uit de sectorencollectie. Pas de teksten aan via Collections → Sectoren.",
+    },
+    {
+      key: "projecten",
+      title: "Projecten Slider",
+      preview: <ProjectenSlider />,
+      fields: (
+        <div style={{ display: "grid", gap: "16px" }}>
+          {projecten.map((project, index) => (
+            <Card key={index} style={{ padding: "18px", background: "#fafafa", boxShadow: "none" }}>
+              <div style={{ display: "grid", gap: "14px" }}>
+                <FormField label="Titel" value={project.title} onChange={(value) => setProjecten((prev) => prev.map((row, rowIndex) => rowIndex === index ? { ...row, title: value } : row))} />
+                <FormField label="Beschrijving" value={project.desc} onChange={(value) => setProjecten((prev) => prev.map((row, rowIndex) => rowIndex === index ? { ...row, desc: value } : row))} multiline rows={3} />
+                <ImageUpload label="Afbeelding" value={project.image || ""} onChange={(value) => setProjecten((prev) => prev.map((row, rowIndex) => rowIndex === index ? { ...row, image: value } : row))} />
+              </div>
+            </Card>
+          ))}
+          <SaveBar saving={false} message={saved === "projecten" ? "Projecten opgeslagen." : ""} onSave={() => saveSection("projecten", projecten)} />
+        </div>
+      ),
+    },
+    {
+      key: "cta",
+      title: "Uw Project In Goede Handen",
+      preview: <UwProjectSection />,
+      note: "Deze CTA-sectie is nog statisch opgebouwd. Ik kan die in een volgende stap ook CMS-beheerbaar maken als je wilt.",
+    },
+    {
+      key: "faq",
+      title: "FAQ",
+      preview: <FaqSection />,
+      fields: (
+        <div style={{ display: "grid", gap: "16px" }}>
+          {faq.map((item, index) => (
+            <Card key={index} style={{ padding: "18px", background: "#fafafa", boxShadow: "none" }}>
+              <div style={{ display: "grid", gap: "14px" }}>
+                <FormField label="Vraag" value={item.q} onChange={(value) => setFaq((prev) => prev.map((row, rowIndex) => rowIndex === index ? { ...row, q: value } : row))} />
+                <FormField label="Antwoord" value={item.a} onChange={(value) => setFaq((prev) => prev.map((row, rowIndex) => rowIndex === index ? { ...row, a: value } : row))} multiline rows={4} />
+              </div>
+            </Card>
+          ))}
+          <SaveBar saving={false} message={saved === "faq" ? "FAQ opgeslagen." : ""} onSave={() => saveSection("faq", faq)} />
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <div style={{ display: "grid", gap: "24px" }}>
+      <SectionHeader
+        title="Homepage"
+        sub="Bekijk eerst de echte sectie-preview. Klik daarna op edit om alleen dat blok te wijzigen."
+        action={<LocaleToggle enabled={localizationSettings.enabled} locale={locale} onChange={setLocale} />}
+      />
+      {!localizationSettings.enabled ? (
+        <Card style={{ padding: "18px", background: "#fffbe6", boxShadow: "none", border: "1px solid #f4e5a7" }}>
+          <div style={{ color: "#7c6200", fontSize: "13px", lineHeight: 1.6 }}>
+            Meertaligheid staat uit. Je bewerkt nu alleen de Nederlandse basiscontent. Zet dit aan in Settings om ook aparte EN-content te beheren.
+          </div>
+        </Card>
+      ) : null}
+      {sections.map((section) => (
+        <Card key={section.key} style={{ overflow: "hidden" }}>
+          <div style={{ padding: "18px 22px", borderBottom: "1px solid #f0f0f0", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", flexWrap: "wrap" }}>
+            <div>
+              <div style={{ fontFamily: "var(--fw-dashboard-heading-font)", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", color: "#1c1c1c" }}>{section.title}</div>
+              {section.note ? <div style={{ color: "#888", fontSize: "12px", marginTop: "4px" }}>{section.note}</div> : null}
+            </div>
+            {section.fields ? (
+              <SecondaryButton type="button" onClick={() => setOpenSection((prev) => prev === section.key ? "" : section.key)}>
+                {openSection === section.key ? "Sluit editor" : "Edit section"}
+              </SecondaryButton>
+            ) : null}
+          </div>
+          <div style={{ background: "#f5f6f7", padding: "18px" }}>
+            <div style={{ background: "#fff", borderRadius: "10px", overflow: "hidden", border: "1px solid #ececec" }}>
+              <PreviewCmsProvider cms={previewCms}>
+                {section.preview}
+              </PreviewCmsProvider>
+            </div>
+          </div>
+          {section.fields && openSection === section.key ? (
+            <div style={{ padding: "0 22px 22px" }}>
+              {section.fields}
+            </div>
+          ) : null}
+        </Card>
+      ))}
+    </div>
+  );
+}
+
 function AboutPage() {
   const { cms, updateCms } = useCms();
+  const localizationSettings = getLocalizationSettings(cms.websiteSettings || {});
+  const enabledLocales = localizationSettings.enabled ? localizationSettings.locales || ["nl", "en"] : ["nl"];
+  const [locale, setLocale] = useState("nl");
   const [overOns, setOverOns] = useState(cms.overOns || {});
   const [saved, setSaved] = useState("");
 
   useEffect(() => {
-    setOverOns(cms.overOns || {});
-  }, [cms]);
+    if (!enabledLocales.includes(locale)) {
+      setLocale("nl");
+    }
+  }, [enabledLocales, locale]);
+
+  useEffect(() => {
+    setOverOns(getLocalizedSectionValue(cms, locale, "overOns") || {});
+  }, [cms, locale]);
 
   const updateNested = (section, field, value) => {
     setOverOns((prev) => ({ ...prev, [section]: { ...(prev[section] || {}), [field]: value } }));
   };
 
   const save = async () => {
-    const ok = await updateCms("overOns", overOns);
+    const ok = locale === "nl"
+      ? await updateCms("overOns", overOns)
+      : await updateCms("websiteSettings", buildLocalizedWebsiteSettings(cms.websiteSettings, locale, "overOns", overOns));
     if (ok) {
       setSaved("Over Ons opgeslagen.");
       window.setTimeout(() => setSaved(""), 1600);
@@ -1437,16 +1936,26 @@ function AboutPage() {
 
 function PagesPage() {
   const { cms, updateCms } = useCms();
+  const localizationSettings = getLocalizationSettings(cms.websiteSettings || {});
+  const enabledLocales = localizationSettings.enabled ? localizationSettings.locales || ["nl", "en"] : ["nl"];
+  const [locale, setLocale] = useState("nl");
   const [pages, setPages] = useState(cms.pages || []);
   const [activeKey, setActiveKey] = useState((cms.pages || [])[0]?.key || "");
   const [saved, setSaved] = useState("");
 
   useEffect(() => {
-    setPages(cms.pages || []);
-    if (!activeKey && cms.pages?.length) {
-      setActiveKey(cms.pages[0].key);
+    if (!enabledLocales.includes(locale)) {
+      setLocale("nl");
     }
-  }, [cms.pages, activeKey]);
+  }, [enabledLocales, locale]);
+
+  useEffect(() => {
+    const localizedPages = getLocalizedSectionValue(cms, locale, "pages") || [];
+    setPages(localizedPages);
+    if (!localizedPages.some((item) => item.key === activeKey)) {
+      setActiveKey(localizedPages[0]?.key || "");
+    }
+  }, [activeKey, cms, locale]);
 
   const activePage = pages.find((item) => item.key === activeKey) || pages[0];
 
@@ -1455,7 +1964,9 @@ function PagesPage() {
   };
 
   const save = async () => {
-    const ok = await updateCms("pages", pages);
+    const ok = locale === "nl"
+      ? await updateCms("pages", pages)
+      : await updateCms("websiteSettings", buildLocalizedWebsiteSettings(cms.websiteSettings, locale, "pages", pages));
     if (ok) {
       setSaved("Pagina-instellingen opgeslagen.");
       window.setTimeout(() => setSaved(""), 1600);
@@ -1470,6 +1981,14 @@ function PagesPage() {
     <div style={{ display: "grid", gridTemplateColumns: "320px minmax(0, 1fr)", gap: "24px" }}>
       <div>
         <SectionHeader title="Pages" sub="SEO, indexatie en statische pagina-inhoud" />
+        <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", alignItems: "center", marginBottom: "18px" }}>
+          <div style={{ color: "#888", fontSize: "12px", lineHeight: 1.6 }}>
+            {localizationSettings.enabled
+              ? "Kies of je Nederlandse of Engelse paginacontent wilt bewerken."
+              : "Meertaligheid staat uit. Alleen Nederlandse paginacontent is actief."}
+          </div>
+          <LocaleToggle enabled={localizationSettings.enabled} locale={locale} onChange={setLocale} />
+        </div>
         <Card>
           {pages.map((page) => (
             <button
@@ -1724,7 +2243,7 @@ function SettingsPage() {
   const { cms, updateCms } = useCms();
   const [tab, setTab] = useState("general");
   const [site, setSite] = useState(cms.site || {});
-  const [websiteSettings, setWebsiteSettings] = useState({ ...(cms.websiteSettings || {}), theme: { ...DEFAULT_THEME_SETTINGS, ...(cms.websiteSettings?.theme || {}) } });
+  const [websiteSettings, setWebsiteSettings] = useState(mergeWebsiteSettings(cms.websiteSettings || {}));
   const [emailSettings, setEmailSettings] = useState({ host: "", port: 587, secure: false, user: "", pass: "", hasPassword: false, from: "", replyTo: "", templates: [], mailConfigured: false });
   const [testEmail, setTestEmail] = useState("");
   const [saved, setSaved] = useState("");
@@ -1732,7 +2251,7 @@ function SettingsPage() {
 
   useEffect(() => {
     setSite(cms.site || {});
-    setWebsiteSettings({ ...(cms.websiteSettings || {}), theme: { ...DEFAULT_THEME_SETTINGS, ...(cms.websiteSettings?.theme || {}) } });
+    setWebsiteSettings(mergeWebsiteSettings(cms.websiteSettings || {}));
   }, [cms]);
 
   useEffect(() => {
@@ -1874,6 +2393,22 @@ function SettingsPage() {
                 ))}
               </div>
             </Card>
+            <Card style={{ padding: "18px", background: "#fafafa", boxShadow: "none" }}>
+              <div style={{ fontFamily: "var(--fw-dashboard-heading-font)", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", color: "#1c1c1c", marginBottom: "12px" }}>Localization & internationalization</div>
+              <div style={{ display: "grid", gap: "14px" }}>
+                <CheckboxField
+                  label="Meertalige website inschakelen (NL + EN)"
+                  checked={websiteSettings.localization?.enabled}
+                  onChange={(value) => setWebsiteSettings((prev) => ({ ...prev, localization: { ...getLocalizationSettings(prev), enabled: value } }))}
+                />
+                <div style={{ color: "#666", fontSize: "13px", lineHeight: 1.6 }}>
+                  Handig als je deze website verkoopt: laat meertaligheid uit voor enkelvoudige sites, of zet het aan om aparte Nederlandse en Engelse content te beheren in de contentpagina's.
+                </div>
+                <div style={{ fontSize: "12px", color: "#888" }}>
+                  Beschikbare locales: {(websiteSettings.localization?.locales || ["nl", "en"]).map((item) => item.toUpperCase()).join(", ")}
+                </div>
+              </div>
+            </Card>
             <FormField label="robots.txt configuratie" value={websiteSettings.robotsText || ""} onChange={(value) => setWebsiteSettings((prev) => ({ ...prev, robotsText: value }))} multiline rows={8} />
             <FormField label="Extra head HTML" value={websiteSettings.extraHeadHtml || ""} onChange={(value) => setWebsiteSettings((prev) => ({ ...prev, extraHeadHtml: value }))} multiline rows={8} />
             <SaveBar saving={false} message={saved} onSave={saveWebsite} />
@@ -1989,7 +2524,7 @@ export default function AdminPage() {
         <Route path="sectoren/new" element={<PermissionRoute permission="collections.sectors"><SectorFormPage /></PermissionRoute>} />
         <Route path="sectoren/:slug/edit" element={<PermissionRoute permission="collections.sectors"><SectorFormPage /></PermissionRoute>} />
         <Route path="leads" element={<PermissionRoute permission="leads.view"><LeadsPage /></PermissionRoute>} />
-        <Route path="homepage" element={<PermissionRoute permission="content.homepage"><HomepagePage /></PermissionRoute>} />
+        <Route path="homepage" element={<PermissionRoute permission="content.homepage"><HomepageEditorPage /></PermissionRoute>} />
         <Route path="over-ons" element={<PermissionRoute permission="content.about"><AboutPage /></PermissionRoute>} />
         <Route path="pages" element={<PermissionRoute permission="content.pages"><PagesPage /></PermissionRoute>} />
         <Route path="staff" element={<PermissionRoute permission="staff.manage"><StaffPage /></PermissionRoute>} />

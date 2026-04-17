@@ -1,61 +1,8 @@
-import { a as RichTextContent, c as api, i as getFontOption, n as AuthProvider, o as CmsProvider, r as DEFAULT_THEME_SETTINGS, s as useCms } from "./assets/admin-B18FhdYm.js";
-import { Suspense, createContext, lazy, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { A as api, C as over_ons2_default, D as useCms, E as CmsProvider, F as localizePath, M as isLocalizationEnabled, N as getCanonicalPathname, O as LanguageProvider, P as getLocaleFromPathname, S as over_ons3_default, T as hero_background_default, _ as StatsSection, a as RichTextContent, b as ClientLogosSection, c as Offshore_constructie_300x190_default, d as Afwerking_staalconstructie_met_natlak_300x225_default, f as UwProjectSection, g as OnzeSectoren, h as about_us1_default, i as getFontOption, j as getActiveLocales, k as useLanguage, l as lascertificaat_verplicht_featured_300x158_default, m as about_us2_default, n as AuthProvider, o as FaqSection, p as about_us3_default, r as DEFAULT_THEME_SETTINGS, s as ProjectenSlider, u as kwaliteitscontrole_lassen_featured_300x225_default, v as WatOnsAndersMaakt, w as HeroBanner, x as WatFernaSection, y as over_ons1_default } from "./assets/admin-Bp1cyg8M.js";
+import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { renderToString } from "react-dom/server";
-import { BrowserRouter, Link, Outlet, Route, Routes, StaticRouter, useLocation, useNavigate, useParams } from "react-router-dom";
+import { BrowserRouter, Link, Navigate, Outlet, Route, Routes, StaticRouter, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
-//#region src/i18n/translations.js
-var SUPPORTED_LANGUAGES = [{
-	code: "nl",
-	label: "Nederlands"
-}];
-var translations = { nl: { nav: {
-	overOns: "Over ons",
-	diensten: "Diensten",
-	sectoren: "Sectoren",
-	blog: "Blog",
-	contact: "Contact",
-	cta: "NEEM CONTACT OP",
-	brandTagline: "metaalwerk",
-	menuToggle: "Menu openen"
-} } };
-//#endregion
-//#region src/i18n/LanguageContext.jsx
-var LanguageContext = createContext(null);
-var DEFAULT_LANGUAGE = "nl";
-function getValueByPath(obj, path) {
-	return path.split(".").reduce((acc, key) => {
-		if (acc && Object.prototype.hasOwnProperty.call(acc, key)) return acc[key];
-	}, obj);
-}
-function LanguageProvider({ children }) {
-	const [language, setLanguage] = useState(DEFAULT_LANGUAGE);
-	useEffect(() => {
-		if (typeof document !== "undefined") document.documentElement.lang = language;
-	}, [language]);
-	const value = useMemo(() => {
-		const t = (key, fallback = "") => {
-			const found = getValueByPath(translations[language] || {}, key);
-			if (typeof found === "string") return found;
-			return fallback || key;
-		};
-		return {
-			language,
-			setLanguage,
-			supportedLanguages: SUPPORTED_LANGUAGES,
-			t
-		};
-	}, [language]);
-	return /* @__PURE__ */ jsx(LanguageContext.Provider, {
-		value,
-		children
-	});
-}
-function useLanguage() {
-	const ctx = useContext(LanguageContext);
-	if (!ctx) throw new Error("useLanguage must be used inside <LanguageProvider>");
-	return ctx;
-}
-//#endregion
 //#region src/components/Navbar.jsx
 var navLinks = [
 	{
@@ -81,9 +28,11 @@ var navLinks = [
 ];
 function Navbar() {
 	const [menuOpen, setMenuOpen] = useState(false);
-	const { t } = useLanguage();
+	const { t, language, setLanguage, supportedLanguages, localizePath } = useLanguage();
 	const { cms } = useCms();
 	const phone = cms.site?.tel || "+31 (0)165 205 617";
+	const localizationEnabled = isLocalizationEnabled(cms.websiteSettings || {});
+	const visibleLanguages = supportedLanguages.filter((item) => getActiveLocales(cms.websiteSettings || {}).includes(item.code));
 	return /* @__PURE__ */ jsxs("nav", {
 		className: "w-full bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm",
 		children: [/* @__PURE__ */ jsxs("div", {
@@ -91,7 +40,7 @@ function Navbar() {
 			style: { height: "78px" },
 			children: [
 				/* @__PURE__ */ jsxs(Link, {
-					to: "/",
+					to: localizePath("/"),
 					className: "flex items-center gap-2 shrink-0 no-underline",
 					style: { maxWidth: "calc(100% - 56px)" },
 					children: [/* @__PURE__ */ jsxs("svg", {
@@ -132,7 +81,7 @@ function Navbar() {
 				/* @__PURE__ */ jsx("ul", {
 					className: "hidden lg:flex items-center gap-7 xl:gap-9 list-none flex-1 justify-center m-0 p-0",
 					children: navLinks.map((item) => /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(Link, {
-						to: item.to,
+						to: localizePath(item.to),
 						className: "site-heading text-gray-800 text-[17px] font-semibold tracking-[0.01em] no-underline transition-colors duration-200 whitespace-nowrap",
 						onMouseEnter: (e) => e.currentTarget.style.color = "var(--fw-website-primary)",
 						onMouseLeave: (e) => e.currentTarget.style.color = "",
@@ -141,18 +90,50 @@ function Navbar() {
 				}),
 				/* @__PURE__ */ jsxs("div", {
 					className: "hidden lg:flex items-center gap-5 xl:gap-6 shrink-0",
-					children: [/* @__PURE__ */ jsx("a", {
-						href: `tel:${phone.replace(/[\s()]/g, "")}`,
-						className: "text-gray-800 text-[16px] font-medium no-underline hover:text-[var(--fw-website-primary-strong)] transition-colors duration-200 whitespace-nowrap",
-						children: phone
-					}), /* @__PURE__ */ jsx(Link, {
-						to: "/contact",
-						className: "site-heading no-underline text-white text-[14px] font-bold tracking-wide px-6 py-3 rounded-full whitespace-nowrap transition-colors duration-200 theme-primary-bg",
-						style: { color: "var(--fw-website-secondary)" },
-						onMouseEnter: (e) => e.currentTarget.style.filter = "brightness(0.94)",
-						onMouseLeave: (e) => e.currentTarget.style.filter = "none",
-						children: t("nav.cta", "CONTACT US")
-					})]
+					children: [
+						localizationEnabled ? /* @__PURE__ */ jsx("div", {
+							style: {
+								display: "inline-flex",
+								alignItems: "center",
+								gap: "6px",
+								border: "1px solid #ececec",
+								borderRadius: "999px",
+								padding: "4px"
+							},
+							"aria-label": t("nav.languageLabel", "Language"),
+							children: visibleLanguages.map((item) => /* @__PURE__ */ jsx("button", {
+								type: "button",
+								onClick: () => setLanguage(item.code),
+								style: {
+									minWidth: "42px",
+									border: "none",
+									borderRadius: "999px",
+									background: language === item.code ? "var(--fw-website-primary)" : "transparent",
+									color: language === item.code ? "var(--fw-website-secondary)" : "#556070",
+									fontSize: "11px",
+									fontWeight: 800,
+									letterSpacing: "0.6px",
+									padding: "8px 10px",
+									cursor: "pointer",
+									textTransform: "uppercase"
+								},
+								children: item.shortLabel || item.code
+							}, item.code))
+						}) : null,
+						/* @__PURE__ */ jsx("a", {
+							href: `tel:${phone.replace(/[\s()]/g, "")}`,
+							className: "text-gray-800 text-[16px] font-medium no-underline hover:text-[var(--fw-website-primary-strong)] transition-colors duration-200 whitespace-nowrap",
+							children: phone
+						}),
+						/* @__PURE__ */ jsx(Link, {
+							to: localizePath("/contact"),
+							className: "site-heading no-underline text-white text-[14px] font-bold tracking-wide px-6 py-3 rounded-full whitespace-nowrap transition-colors duration-200 theme-primary-bg",
+							style: { color: "var(--fw-website-secondary)" },
+							onMouseEnter: (e) => e.currentTarget.style.filter = "brightness(0.94)",
+							onMouseLeave: (e) => e.currentTarget.style.filter = "none",
+							children: t("nav.cta", "CONTACT US")
+						})
+					]
 				}),
 				/* @__PURE__ */ jsxs("button", {
 					className: "site-menu-button lg:hidden flex flex-col justify-center items-center gap-1.5 w-10 h-10 bg-transparent border-none cursor-pointer p-0",
@@ -178,18 +159,44 @@ function Navbar() {
 			className: "lg:hidden bg-white border-t border-gray-100 px-6 py-4 flex flex-col gap-4",
 			children: [
 				navLinks.map((item) => /* @__PURE__ */ jsx(Link, {
-					to: item.to,
+					to: localizePath(item.to),
 					className: "text-gray-800 text-[18px] font-semibold no-underline py-3 border-b border-gray-100",
 					onClick: () => setMenuOpen(false),
 					children: t(`nav.${item.key}`, item.key)
 				}, item.key)),
+				localizationEnabled ? /* @__PURE__ */ jsx("div", {
+					style: {
+						display: "flex",
+						gap: "8px",
+						paddingTop: "4px"
+					},
+					children: visibleLanguages.map((item) => /* @__PURE__ */ jsx("button", {
+						type: "button",
+						onClick: () => {
+							setLanguage(item.code);
+							setMenuOpen(false);
+						},
+						style: {
+							border: "1px solid #e5e7eb",
+							borderRadius: "999px",
+							background: language === item.code ? "var(--fw-website-primary)" : "#fff",
+							color: language === item.code ? "var(--fw-website-secondary)" : "#4b5563",
+							fontSize: "11px",
+							fontWeight: 800,
+							letterSpacing: "0.6px",
+							padding: "8px 12px",
+							textTransform: "uppercase"
+						},
+						children: item.shortLabel || item.code
+					}, item.code))
+				}) : null,
 				/* @__PURE__ */ jsx("a", {
 					href: `tel:${phone.replace(/[\s()]/g, "")}`,
 					className: "text-gray-800 text-[16px] font-medium no-underline py-3",
 					children: phone
 				}),
 				/* @__PURE__ */ jsx(Link, {
-					to: "/contact",
+					to: localizePath("/contact"),
 					className: "site-heading no-underline text-[14px] font-bold tracking-wide px-6 py-3 rounded-full text-center theme-primary-bg",
 					style: { color: "var(--fw-website-secondary)" },
 					onClick: () => setMenuOpen(false),
@@ -200,1704 +207,10 @@ function Navbar() {
 	});
 }
 //#endregion
-//#region src/assets/hero-background.jpeg
-var hero_background_default = "/assets/hero-background-a4nmQpHQ.jpeg";
-//#endregion
-//#region src/components/HeroBanner.jsx
-function HeroBanner() {
-	const { cms } = useCms();
-	const hero = cms.hero || {};
-	return /* @__PURE__ */ jsxs("section", {
-		className: "home-hero",
-		style: {
-			position: "relative",
-			width: "100%",
-			minHeight: "calc(100vh - 72px)",
-			display: "flex",
-			alignItems: "center",
-			overflow: "hidden",
-			backgroundColor: "#141616"
-		},
-		children: [
-			/* @__PURE__ */ jsx("div", {
-				className: "hero-bg",
-				style: {
-					position: "absolute",
-					inset: 0,
-					backgroundImage: `url(${hero.image || "/assets/hero-background-a4nmQpHQ.jpeg"})`,
-					backgroundSize: "cover",
-					backgroundPosition: "center right",
-					backgroundRepeat: "no-repeat"
-				}
-			}),
-			/* @__PURE__ */ jsx("div", {
-				className: "absolute inset-0 md:hidden",
-				style: { background: "rgba(20,22,22,0.82)" }
-			}),
-			/* @__PURE__ */ jsx("div", {
-				className: "absolute inset-0 hidden md:block",
-				style: { background: "linear-gradient(90deg, rgba(20,22,22,0.88) 0%, rgba(20,22,22,0.80) 30%, rgba(20,22,22,0.55) 55%, rgba(20,22,22,0.15) 80%, rgba(20,22,22,0.0) 100%)" }
-			}),
-			/* @__PURE__ */ jsxs("div", {
-				className: "relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8",
-				style: {
-					paddingTop: "60px",
-					paddingBottom: "60px"
-				},
-				children: [
-					/* @__PURE__ */ jsx("div", {
-						className: "hidden md:block",
-						style: {
-							position: "absolute",
-							top: "0px",
-							right: "32px"
-						},
-						children: /* @__PURE__ */ jsxs("svg", {
-							width: "96",
-							height: "108",
-							viewBox: "0 0 102 115",
-							fill: "none",
-							xmlns: "http://www.w3.org/2000/svg",
-							children: [
-								/* @__PURE__ */ jsx("path", {
-									d: "M13 13H56V28H28V87H13V13Z",
-									stroke: "var(--fw-website-primary)",
-									strokeWidth: "7"
-								}),
-								/* @__PURE__ */ jsx("path", {
-									d: "M89 102H46V87H74V28H89V102Z",
-									stroke: "var(--fw-website-primary)",
-									strokeWidth: "7"
-								}),
-								/* @__PURE__ */ jsx("path", {
-									d: "M28 28H46V68H56V28H74",
-									stroke: "var(--fw-website-primary)",
-									strokeWidth: "7",
-									fill: "none"
-								})
-							]
-						})
-					}),
-					/* @__PURE__ */ jsx("h1", {
-						style: {
-							margin: 0,
-							padding: 0,
-							color: "var(--fw-website-primary)",
-							fontFamily: "var(--fw-website-heading-font)",
-							fontSize: "clamp(30px, 3.2vw, 52px)",
-							lineHeight: 1.05,
-							letterSpacing: "-0.5px",
-							textTransform: "uppercase",
-							fontWeight: 900
-						},
-						children: hero.line1
-					}),
-					/* @__PURE__ */ jsx("h2", {
-						style: {
-							margin: 0,
-							padding: 0,
-							color: "#F3F3F3",
-							fontFamily: "var(--fw-website-heading-font)",
-							fontSize: "clamp(30px, 3.2vw, 52px)",
-							lineHeight: 1.05,
-							letterSpacing: "-0.5px",
-							textTransform: "uppercase",
-							fontWeight: 900
-						},
-						children: hero.line2
-					}),
-					/* @__PURE__ */ jsx("p", {
-						style: {
-							marginTop: "32px",
-							marginBottom: "32px",
-							color: "#E0E0E0",
-							fontSize: "15px",
-							lineHeight: 1.65,
-							fontWeight: 400,
-							maxWidth: "480px"
-						},
-						children: hero.subtitle.split("\n").map((line, i) => /* @__PURE__ */ jsxs("span", { children: [line, i < hero.subtitle.split("\n").length - 1 && /* @__PURE__ */ jsx("br", {})] }, i))
-					}),
-					/* @__PURE__ */ jsx("div", { style: {
-						width: "100%",
-						height: "1px",
-						backgroundColor: "rgba(255,255,255,0.18)",
-						marginBottom: "22px"
-					} }),
-					/* @__PURE__ */ jsx("div", {
-						className: "grid grid-cols-2 md:grid-cols-4 hero-checks",
-						style: {
-							gap: "12px",
-							marginBottom: "42px"
-						},
-						children: (hero.checkItems || []).map((text, i) => /* @__PURE__ */ jsxs("div", {
-							style: {
-								display: "flex",
-								alignItems: "flex-start",
-								gap: "10px"
-							},
-							children: [/* @__PURE__ */ jsx("svg", {
-								width: "13",
-								height: "13",
-								viewBox: "0 0 16 16",
-								fill: "none",
-								style: {
-									flexShrink: 0,
-									marginTop: "2px"
-								},
-								children: /* @__PURE__ */ jsx("path", {
-									d: "M2 8.5L6 12.5L14 4.5",
-									stroke: "var(--fw-website-primary)",
-									strokeWidth: "2.6",
-									strokeLinecap: "round",
-									strokeLinejoin: "round"
-								})
-							}), /* @__PURE__ */ jsx("span", {
-								style: {
-									color: "#D8D8D8",
-									fontSize: "13px",
-									lineHeight: 1.45,
-									fontWeight: 400
-								},
-								children: text
-							})]
-						}, i))
-					}),
-					/* @__PURE__ */ jsx(Link, {
-						to: "/contact",
-						style: {
-							display: "inline-block",
-							textDecoration: "none",
-							backgroundColor: "var(--fw-website-primary)",
-							color: "var(--fw-website-secondary)",
-							borderRadius: "999px",
-							padding: "15px 32px",
-							fontSize: "13px",
-							fontWeight: 900,
-							textTransform: "uppercase",
-							fontFamily: "var(--fw-website-heading-font)",
-							letterSpacing: "1px",
-							transition: "background-color 0.2s"
-						},
-						onMouseEnter: (e) => e.currentTarget.style.filter = "brightness(0.94)",
-						onMouseLeave: (e) => e.currentTarget.style.filter = "none",
-						children: hero.cta
-					})
-				]
-			})
-		]
-	});
-}
-//#endregion
-//#region src/assets/over-ons2.png
-var over_ons2_default = "/assets/over-ons2-Cfi8JRv3.png";
-//#endregion
-//#region src/assets/over-ons3.png
-var over_ons3_default = "/assets/over-ons3-B7TQ4OxP.png";
-//#endregion
-//#region src/components/WatFernaSection.jsx
-var bulletItems = [
-	"Heldere afspraken, zonder verrassingen.",
-	"Totaal ontzorgen van ontwerp tot montage.",
-	"Reparatie en onderhoud op locatie.",
-	"Advies en ondersteuning bij ontwerp en uitvoerbaarheid.",
-	"Eén partner voor het volledige traject.",
-	"Maakbaar, praktisch en doordacht.",
-	"Transparant in kosten en planning."
-];
-function WatFernaSection() {
-	const { cms } = useCms();
-	const wf = cms.watFerna || {};
-	const ref = useRef(null);
-	const [vis, setVis] = useState(false);
-	useEffect(() => {
-		const obs = new IntersectionObserver(([e]) => {
-			if (e.isIntersecting) setVis(true);
-		}, { threshold: .1 });
-		if (ref.current) obs.observe(ref.current);
-		return () => obs.disconnect();
-	}, []);
-	return /* @__PURE__ */ jsxs("section", {
-		ref,
-		style: {
-			background: "#f4f4f4",
-			padding: "72px 0"
-		},
-		children: [
-			/* @__PURE__ */ jsx("style", { children: `
-        .wf-left  { opacity:0; transform:translateX(-36px); transition: opacity .65s ease, transform .65s ease; }
-        .wf-img1  { opacity:0; transform:translateY(-24px); transition: opacity .65s .2s ease, transform .65s .2s ease; }
-        .wf-img2  { opacity:0; transform:translateY(24px);  transition: opacity .65s .4s ease, transform .65s .4s ease; }
-        .wf-sq    { opacity:0; transform:scale(0.4);        transition: opacity .5s .55s ease, transform .5s .55s ease; }
-        .wf-on .wf-left,
-        .wf-on .wf-img1,
-        .wf-on .wf-img2,
-        .wf-on .wf-sq { opacity:1; transform:none; }
-      ` }),
-			/* @__PURE__ */ jsxs("div", {
-				className: "max-w-7xl mx-auto px-6 md:px-8 wf-grid " + (vis ? "wf-on" : ""),
-				style: {
-					display: "grid",
-					gridTemplateColumns: "1fr 1.4fr",
-					gap: "72px",
-					alignItems: "start"
-				},
-				children: [/* @__PURE__ */ jsxs("div", {
-					className: "wf-left",
-					children: [/* @__PURE__ */ jsxs("h2", {
-						style: {
-							margin: "0 0 24px 0",
-							fontFamily: "Arial Black, Arial, sans-serif",
-							fontWeight: 900,
-							fontSize: "clamp(20px,2.2vw,28px)",
-							lineHeight: 1.1,
-							textTransform: "uppercase",
-							letterSpacing: "-0.2px"
-						},
-						children: [
-							/* @__PURE__ */ jsx("span", {
-								style: { color: "var(--fw-website-primary)" },
-								children: wf.title1
-							}),
-							/* @__PURE__ */ jsx("br", {}),
-							/* @__PURE__ */ jsx("span", {
-								style: { color: "#1c1c1c" },
-								children: wf.title2
-							})
-						]
-					}), /* @__PURE__ */ jsx("ul", {
-						style: {
-							listStyle: "none",
-							margin: 0,
-							padding: 0,
-							display: "flex",
-							flexDirection: "column",
-							gap: "13px"
-						},
-						children: (wf.bulletItems || bulletItems).map((item, i) => /* @__PURE__ */ jsxs("li", {
-							style: {
-								display: "flex",
-								alignItems: "flex-start",
-								gap: "9px"
-							},
-							children: [/* @__PURE__ */ jsx("span", { style: {
-								width: "5px",
-								height: "5px",
-								borderRadius: "50%",
-								background: "#555",
-								marginTop: "7px",
-								flexShrink: 0
-							} }), /* @__PURE__ */ jsx("span", {
-								style: {
-									color: "#555",
-									fontSize: "15px",
-									lineHeight: 1.6
-								},
-								children: item
-							})]
-						}, i))
-					})]
-				}), /* @__PURE__ */ jsxs("div", {
-					className: "wf-visual",
-					style: {
-						position: "relative",
-						height: "360px"
-					},
-					children: [
-						/* @__PURE__ */ jsx("div", {
-							className: "wf-sq",
-							style: {
-								position: "absolute",
-								bottom: 0,
-								right: 0,
-								width: "90px",
-								height: "90px",
-								background: "var(--fw-website-primary)",
-								zIndex: 1
-							}
-						}),
-						/* @__PURE__ */ jsx("div", {
-							className: "wf-img1",
-							style: {
-								position: "absolute",
-								top: 0,
-								left: 0,
-								width: "67%",
-								height: "72%",
-								overflow: "hidden",
-								zIndex: 2,
-								boxShadow: "0 2px 16px rgba(0,0,0,0.13)"
-							},
-							children: /* @__PURE__ */ jsx("img", {
-								src: wf.image1 || "/assets/over-ons2-Cfi8JRv3.png",
-								alt: "Ferna werkplaats",
-								style: {
-									width: "100%",
-									height: "100%",
-									objectFit: "cover",
-									display: "block"
-								}
-							})
-						}),
-						/* @__PURE__ */ jsx("div", {
-							className: "wf-img2",
-							style: {
-								position: "absolute",
-								bottom: 0,
-								right: "36px",
-								width: "42%",
-								height: "68%",
-								overflow: "hidden",
-								zIndex: 3,
-								boxShadow: "0 2px 16px rgba(0,0,0,0.16)"
-							},
-							children: /* @__PURE__ */ jsx("img", {
-								src: wf.image2 || "/assets/over-ons3-B7TQ4OxP.png",
-								alt: "Ferna medewerker",
-								style: {
-									width: "100%",
-									height: "100%",
-									objectFit: "cover",
-									objectPosition: "top",
-									display: "block"
-								}
-							})
-						})
-					]
-				})]
-			}),
-			/* @__PURE__ */ jsx("style", { children: `
-        @media (max-width: 768px) {
-          .wf-grid { grid-template-columns: 1fr !important; gap: 42px !important; }
-        }
-      ` })
-		]
-	});
-}
-//#endregion
-//#region src/components/ClientLogosSection.jsx
-var logos = [
-	{
-		src: "/assets/volkerwessels-logo-DyhTrYGo.svg",
-		alt: "VolkerWessels"
-	},
-	{
-		src: "/assets/polytec-logo-gNLn9cuF.png",
-		alt: "Polytec"
-	},
-	{
-		src: "/assets/logo_verwater_jubileum-CF5Foz1h.svg",
-		alt: "Verwater"
-	},
-	{
-		src: "/assets/logo-de-kok-staalbouw-BTTth3jB.svg",
-		alt: "De Kok Staalbouw"
-	},
-	{
-		src: "/assets/ivens-logo-B1kdlLqy.png",
-		alt: "Ivens"
-	},
-	{
-		src: "/assets/actemium-vector-logo-qqk0EJat.svg",
-		alt: "Actemium"
-	}
-];
-function ClientLogosSection() {
-	return /* @__PURE__ */ jsxs("section", {
-		style: {
-			background: "#fff",
-			borderTop: "1px solid #e8e8e8",
-			borderBottom: "1px solid #e8e8e8",
-			padding: "36px 0"
-		},
-		children: [/* @__PURE__ */ jsx("style", { children: `
-        @keyframes logo-scroll {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .logo-track {
-          display: flex;
-          width: max-content;
-          animation: logo-scroll 22s linear infinite;
-        }
-        .logo-track:hover {
-          animation-play-state: paused;
-        }
-        .logo-item {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 0 52px;
-          flex-shrink: 0;
-        }
-        .logo-item img {
-          height: 52px;
-          width: auto;
-          max-width: 160px;
-          object-fit: contain;
-          filter: grayscale(100%) opacity(0.55);
-          transition: filter 0.3s ease;
-          display: block;
-        }
-        .logo-item:hover img {
-          filter: grayscale(0%) opacity(1);
-        }
-      ` }), /* @__PURE__ */ jsx("div", {
-			className: "max-w-7xl mx-auto px-6 md:px-8",
-			style: { overflow: "hidden" },
-			children: /* @__PURE__ */ jsxs("div", {
-				className: "logo-track",
-				children: [logos.map((logo, i) => /* @__PURE__ */ jsx("div", {
-					className: "logo-item",
-					children: /* @__PURE__ */ jsx("img", {
-						src: logo.src,
-						alt: logo.alt
-					})
-				}, `a-${i}`)), logos.map((logo, i) => /* @__PURE__ */ jsx("div", {
-					className: "logo-item",
-					children: /* @__PURE__ */ jsx("img", {
-						src: logo.src,
-						alt: logo.alt
-					})
-				}, `b-${i}`))]
-			})
-		})]
-	});
-}
-//#endregion
-//#region src/assets/over-ons1.png
-var over_ons1_default = "/assets/over-ons1-DD0I2h8C.png";
-//#endregion
-//#region src/components/WatOnsAndersMaakt.jsx
-var defaultItems = [
-	{
-		title: "GROOT GENOEG OM REGIE TE VOEREN",
-		desc: "Wij hebben de slagkracht en expertise om technische metaalprojecten volledig te realiseren."
-	},
-	{
-		title: "KLEIN GENOEG OM DIRECT TE SCHAKELEN",
-		desc: "Direct contact, snel schakelen en meebewegen met jouw planning."
-	},
-	{
-		title: "PERSOONLIJK GENOEG OM VOORUIT TE DENKEN",
-		desc: "We adviseren, optimaliseren en zorgen dat jouw project van begin tot eind klopt."
-	}
-];
-function CheckIcon$3() {
-	return /* @__PURE__ */ jsx("svg", {
-		width: "22",
-		height: "22",
-		viewBox: "0 0 22 22",
-		fill: "none",
-		style: {
-			flexShrink: 0,
-			marginTop: "3px"
-		},
-		children: /* @__PURE__ */ jsx("polyline", {
-			points: "3,11 9,17 20,5",
-			stroke: "var(--fw-website-primary)",
-			strokeWidth: "2.8",
-			strokeLinecap: "round",
-			strokeLinejoin: "round"
-		})
-	});
-}
-function WatOnsAndersMaakt() {
-	const { cms } = useCms();
-	const items = cms.anders && cms.anders.items || defaultItems;
-	const andersImage = cms.anders && cms.anders.image || null;
-	const ref = useRef(null);
-	const [vis, setVis] = useState(false);
-	useEffect(() => {
-		const obs = new IntersectionObserver(([e]) => {
-			if (e.isIntersecting) setVis(true);
-		}, { threshold: .1 });
-		if (ref.current) obs.observe(ref.current);
-		return () => obs.disconnect();
-	}, []);
-	return /* @__PURE__ */ jsxs("section", {
-		style: {
-			background: "#fff",
-			padding: "80px 0"
-		},
-		children: [
-			/* @__PURE__ */ jsx("style", { children: `
-        .woa-left  { opacity:0; transform:translateX(-32px); transition: opacity .6s ease, transform .6s ease; }
-        .woa-right { opacity:0; transform:translateX(32px);  transition: opacity .6s .2s ease, transform .6s .2s ease; }
-        .woa-sq    { opacity:0; transform:scale(0.4);        transition: opacity .5s .45s ease, transform .5s .45s ease; }
-        .woa-on .woa-left,
-        .woa-on .woa-right,
-        .woa-on .woa-sq { opacity:1; transform:none; }
-      ` }),
-			/* @__PURE__ */ jsxs("div", {
-				ref,
-				className: "max-w-7xl mx-auto px-6 md:px-8 woa-grid " + (vis ? "woa-on" : ""),
-				style: {
-					display: "grid",
-					gridTemplateColumns: "1fr 1fr",
-					gap: "80px",
-					alignItems: "center"
-				},
-				children: [/* @__PURE__ */ jsxs("div", {
-					className: "woa-left",
-					children: [/* @__PURE__ */ jsx("h2", {
-						style: {
-							fontFamily: "Arial Black, Arial, sans-serif",
-							fontWeight: 900,
-							fontSize: "clamp(22px, 2.4vw, 32px)",
-							textTransform: "uppercase",
-							color: "#1c1c1c",
-							margin: "0 0 40px 0",
-							lineHeight: 1.1,
-							letterSpacing: "-0.3px"
-						},
-						children: "WAT ONS ANDERS MAAKT"
-					}), /* @__PURE__ */ jsx("div", {
-						style: {
-							display: "flex",
-							flexDirection: "column",
-							gap: "36px"
-						},
-						children: items.map((item, i) => /* @__PURE__ */ jsxs("div", {
-							style: {
-								display: "flex",
-								gap: "14px",
-								alignItems: "flex-start"
-							},
-							children: [/* @__PURE__ */ jsx(CheckIcon$3, {}), /* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx("p", {
-								style: {
-									fontFamily: "Arial Black, Arial, sans-serif",
-									fontWeight: 900,
-									fontSize: "13.5px",
-									textTransform: "uppercase",
-									color: "#1c1c1c",
-									margin: "0 0 10px 0",
-									lineHeight: 1.3,
-									letterSpacing: "0.2px"
-								},
-								children: item.title
-							}), /* @__PURE__ */ jsx("p", {
-								style: {
-									fontSize: "14.5px",
-									color: "#555",
-									margin: 0,
-									lineHeight: 1.65
-								},
-								children: item.desc
-							})] })]
-						}, i))
-					})]
-				}), /* @__PURE__ */ jsxs("div", {
-					className: "woa-right",
-					style: { position: "relative" },
-					children: [/* @__PURE__ */ jsx("div", {
-						style: {
-							position: "relative",
-							zIndex: 2,
-							lineHeight: 0
-						},
-						children: /* @__PURE__ */ jsx("img", {
-							src: andersImage || "/assets/over-ons1-DD0I2h8C.png",
-							alt: "Ferna machinepark",
-							style: {
-								width: "100%",
-								height: "440px",
-								objectFit: "cover",
-								objectPosition: "center",
-								display: "block"
-							},
-							className: "woa-image"
-						})
-					}), /* @__PURE__ */ jsx("div", {
-						className: "woa-sq",
-						style: {
-							position: "absolute",
-							bottom: "-24px",
-							right: "-24px",
-							width: "80px",
-							height: "80px",
-							background: "var(--fw-website-primary)",
-							zIndex: 1
-						}
-					})]
-				})]
-			}),
-			/* @__PURE__ */ jsx("style", { children: `
-        @media (max-width: 768px) {
-          .woa-grid { grid-template-columns: 1fr !important; gap: 42px !important; }
-        }
-      ` })
-		]
-	});
-}
-//#endregion
-//#region src/components/StatsSection.jsx
-function StatItem({ number, desc, delay }) {
-	return /* @__PURE__ */ jsxs("div", {
-		style: {
-			display: "flex",
-			flexDirection: "column",
-			alignItems: "flex-start",
-			gap: "10px",
-			flex: 1
-		},
-		children: [/* @__PURE__ */ jsxs("div", {
-			style: {
-				position: "relative",
-				padding: "8px 12px"
-			},
-			children: [
-				/* @__PURE__ */ jsx("span", { style: {
-					position: "absolute",
-					top: 0,
-					left: 0,
-					width: "12px",
-					height: "12px",
-					borderTop: "2.5px solid var(--fw-website-primary)",
-					borderLeft: "2.5px solid var(--fw-website-primary)"
-				} }),
-				/* @__PURE__ */ jsx("span", { style: {
-					position: "absolute",
-					bottom: 0,
-					right: 0,
-					width: "12px",
-					height: "12px",
-					borderBottom: "2.5px solid var(--fw-website-primary)",
-					borderRight: "2.5px solid var(--fw-website-primary)"
-				} }),
-				/* @__PURE__ */ jsx("span", {
-					style: {
-						fontFamily: "Arial Black, Arial, sans-serif",
-						fontWeight: 900,
-						fontSize: "clamp(26px, 3vw, 38px)",
-						color: "#1c1c1c",
-						lineHeight: 1,
-						letterSpacing: "-0.5px"
-					},
-					children: number
-				})
-			]
-		}), /* @__PURE__ */ jsx("p", {
-			style: {
-				fontSize: "13px",
-				color: "#555",
-				margin: 0,
-				lineHeight: 1.5,
-				maxWidth: "140px"
-			},
-			children: desc
-		})]
-	});
-}
-function StatsSection() {
-	const { cms } = useCms();
-	const stats = cms.stats || [];
-	const ref = useRef(null);
-	const [vis, setVis] = useState(false);
-	useEffect(() => {
-		const obs = new IntersectionObserver(([e]) => {
-			if (e.isIntersecting) setVis(true);
-		}, { threshold: .15 });
-		if (ref.current) obs.observe(ref.current);
-		return () => obs.disconnect();
-	}, []);
-	return /* @__PURE__ */ jsxs("section", {
-		style: {
-			background: "#f4f4f4",
-			padding: "52px 0"
-		},
-		children: [/* @__PURE__ */ jsx("style", { children: `
-        .ss-item {
-          opacity: 0;
-          transform: translateY(20px);
-          transition: opacity .5s ease, transform .5s ease;
-        }
-        .ss-item:nth-child(1) { transition-delay: 0s; }
-        .ss-item:nth-child(2) { transition-delay: 0.12s; }
-        .ss-item:nth-child(3) { transition-delay: 0.24s; }
-        .ss-item:nth-child(4) { transition-delay: 0.36s; }
-        .ss-on .ss-item { opacity: 1; transform: none; }
-
-        @media (max-width: 640px) {
-          .ss-grid { grid-template-columns: 1fr 1fr !important; gap: 36px !important; }
-        }
-      ` }), /* @__PURE__ */ jsx("div", {
-			ref,
-			className: "max-w-7xl mx-auto px-6 md:px-8 ss-grid " + (vis ? "ss-on" : ""),
-			style: {
-				display: "grid",
-				gridTemplateColumns: "repeat(4, 1fr)",
-				gap: "48px",
-				alignItems: "start"
-			},
-			children: stats.map((s, i) => /* @__PURE__ */ jsx("div", {
-				className: "ss-item",
-				children: /* @__PURE__ */ jsx(StatItem, {
-					number: s.number,
-					desc: s.desc
-				})
-			}, i))
-		})]
-	});
-}
-//#endregion
-//#region src/components/OnzeSectorenSection.jsx
-var sectorItems = [
-	{
-		title: "BOUW &\nUTILITEIT",
-		description: "Staalconstructies, standaard hekwerken en prefab balkons voor bouw- en utiliteitsprojecten.",
-		icon: /* @__PURE__ */ jsxs("svg", {
-			width: "54",
-			height: "54",
-			viewBox: "0 0 54 54",
-			fill: "none",
-			xmlns: "http://www.w3.org/2000/svg",
-			className: "text-[#2f2f2f]",
-			children: [
-				/* @__PURE__ */ jsx("rect", {
-					x: "10",
-					y: "24",
-					width: "14",
-					height: "20",
-					stroke: "currentColor",
-					strokeWidth: "2.2"
-				}),
-				/* @__PURE__ */ jsx("rect", {
-					x: "30",
-					y: "16",
-					width: "14",
-					height: "28",
-					stroke: "currentColor",
-					strokeWidth: "2.2"
-				}),
-				/* @__PURE__ */ jsx("path", {
-					d: "M8 44H46",
-					stroke: "currentColor",
-					strokeWidth: "2.2",
-					strokeLinecap: "round"
-				}),
-				/* @__PURE__ */ jsx("path", {
-					d: "M14 37H20M14 32H20",
-					stroke: "currentColor",
-					strokeWidth: "1.8",
-					strokeLinecap: "round"
-				}),
-				/* @__PURE__ */ jsx("path", {
-					d: "M34 37H40M34 32H40M34 27H40M34 22H40",
-					stroke: "currentColor",
-					strokeWidth: "1.8",
-					strokeLinecap: "round"
-				})
-			]
-		})
-	},
-	{
-		title: "INDUSTRIE",
-		description: "Machinebouw, maatwerk staalconstructies, industriÃ«le installaties en laswerkzaamheden op locatie.",
-		icon: /* @__PURE__ */ jsxs("svg", {
-			width: "54",
-			height: "54",
-			viewBox: "0 0 54 54",
-			fill: "none",
-			xmlns: "http://www.w3.org/2000/svg",
-			className: "text-[#2f2f2f]",
-			children: [
-				/* @__PURE__ */ jsx("circle", {
-					cx: "27",
-					cy: "27",
-					r: "7",
-					stroke: "currentColor",
-					strokeWidth: "2.2"
-				}),
-				/* @__PURE__ */ jsx("path", {
-					d: "M27 11V16M27 38V43M11 27H16M38 27H43",
-					stroke: "currentColor",
-					strokeWidth: "2.5",
-					strokeLinecap: "round"
-				}),
-				/* @__PURE__ */ jsx("path", {
-					d: "M15.9 15.9L19.4 19.4M34.6 34.6L38.1 38.1M38.1 15.9L34.6 19.4M19.4 34.6L15.9 38.1",
-					stroke: "currentColor",
-					strokeWidth: "2.5",
-					strokeLinecap: "round"
-				})
-			]
-		})
-	},
-	{
-		title: "ARCHITECTUUR\n& DESIGN",
-		description: "Design trappen en interieur- en exterieur maatwerk voor architectuur- en designprojecten.",
-		icon: /* @__PURE__ */ jsxs("svg", {
-			width: "54",
-			height: "54",
-			viewBox: "0 0 54 54",
-			fill: "none",
-			xmlns: "http://www.w3.org/2000/svg",
-			className: "text-[#2f2f2f]",
-			children: [/* @__PURE__ */ jsx("path", {
-				d: "M10 44H44",
-				stroke: "currentColor",
-				strokeWidth: "2.2",
-				strokeLinecap: "round"
-			}), /* @__PURE__ */ jsx("path", {
-				d: "M10 44V38H20V32H30V26H40V14",
-				stroke: "currentColor",
-				strokeWidth: "2.2",
-				strokeLinejoin: "miter",
-				strokeLinecap: "round"
-			})]
-		})
-	},
-	{
-		title: "MARITIEM",
-		description: "Maatwerk staal- en aluminium constructies voor jachtbouw en maritieme toepassingen.",
-		icon: /* @__PURE__ */ jsxs("svg", {
-			width: "54",
-			height: "54",
-			viewBox: "0 0 54 54",
-			fill: "none",
-			xmlns: "http://www.w3.org/2000/svg",
-			className: "text-[#2f2f2f]",
-			children: [
-				/* @__PURE__ */ jsx("circle", {
-					cx: "27",
-					cy: "14",
-					r: "3.5",
-					stroke: "currentColor",
-					strokeWidth: "2.2"
-				}),
-				/* @__PURE__ */ jsx("path", {
-					d: "M27 17.5V43",
-					stroke: "currentColor",
-					strokeWidth: "2.2"
-				}),
-				/* @__PURE__ */ jsx("path", {
-					d: "M20 25H34",
-					stroke: "currentColor",
-					strokeWidth: "2.2",
-					strokeLinecap: "round"
-				}),
-				/* @__PURE__ */ jsx("path", {
-					d: "M16 43C16 37 21 32.5 27 32.5C33 32.5 38 37 38 43",
-					stroke: "currentColor",
-					strokeWidth: "2.2",
-					strokeLinecap: "round"
-				})
-			]
-		})
-	}
-];
-function SectorCard({ item }) {
-	return /* @__PURE__ */ jsxs("div", {
-		className: "home-sector-card bg-[#f6f6f6] shadow-[0_18px_34px_rgba(0,0,0,0.06)] flex flex-col",
-		children: [
-			/* @__PURE__ */ jsx("div", {
-				className: "home-sector-icon",
-				children: item.icon
-			}),
-			/* @__PURE__ */ jsx("h3", {
-				className: "home-sector-title text-[#333333] font-black uppercase whitespace-pre-line leading-[1.08] tracking-[-0.6px]",
-				style: { fontFamily: "Arial Black, Arial, sans-serif" },
-				children: item.title
-			}),
-			/* @__PURE__ */ jsx("p", {
-				className: "home-sector-desc text-[#7b7b7b] font-medium",
-				children: item.description
-			}),
-			/* @__PURE__ */ jsx(Link, {
-				to: "/contact",
-				className: "home-sector-link mt-auto inline-block text-[#9ca600] font-black uppercase tracking-[-0.2px]",
-				style: { fontFamily: "Arial Black, Arial, sans-serif" },
-				children: "LEES MEER"
-			})
-		]
-	});
-}
-function OnzeSectoren() {
-	const { cms } = useCms();
-	const mergedItems = sectorItems.map((item, i) => ({
-		...item,
-		title: cms.sectoren && cms.sectoren[i] ? cms.sectoren[i].naam.replace(" & ", " &\n") : item.title,
-		description: cms.sectoren && cms.sectoren[i] ? cms.sectoren[i].description : item.description
-	}));
-	return /* @__PURE__ */ jsxs("section", {
-		className: "w-full bg-[#f3f3f3] pt-[48px] pb-[100px]",
-		children: [/* @__PURE__ */ jsx("style", { children: `
-        .home-sector-grid {
-          display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
-          gap: 26px;
-          margin-bottom: 42px;
-        }
-
-        .home-sector-card {
-          min-height: 382px;
-          padding: 42px 30px 34px;
-          position: relative;
-          overflow: hidden;
-          border-top: 4px solid transparent;
-          transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
-        }
-
-        .home-sector-card::after {
-          content: "";
-          position: absolute;
-          top: 0;
-          right: 0;
-          width: 46px;
-          height: 46px;
-          background: var(--fw-website-primary);
-          opacity: .14;
-          transform: translate(16px, -16px);
-        }
-
-        .home-sector-card:hover {
-          transform: translateY(-4px);
-          border-color: var(--fw-website-primary);
-          box-shadow: 0 18px 38px rgba(0,0,0,.1);
-        }
-
-        .home-sector-icon {
-          margin-bottom: 34px;
-          color: #2f2f2f;
-        }
-
-        .home-sector-title {
-          font-size: 27px;
-          margin-bottom: 18px;
-        }
-
-        .home-sector-desc {
-          font-size: 17px;
-          line-height: 1.42;
-          margin-bottom: 26px;
-        }
-
-        .home-sector-link {
-          font-size: 15px;
-        }
-
-        @media (max-width: 1024px) {
-          .home-sector-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 18px;
-          }
-        }
-
-        @media (max-width: 640px) {
-          .home-sector-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 12px;
-            margin-bottom: 32px;
-          }
-
-          .home-sector-card {
-            min-height: 258px;
-            padding: 18px 14px 16px;
-            border-top-color: var(--fw-website-primary);
-          }
-
-          .home-sector-card::after {
-            width: 34px;
-            height: 34px;
-            transform: translate(12px, -12px);
-          }
-
-          .home-sector-icon {
-            margin-bottom: 16px;
-          }
-
-          .home-sector-icon svg {
-            width: 38px;
-            height: 38px;
-          }
-
-          .home-sector-title {
-            font-size: 15px;
-            line-height: 1.16;
-            letter-spacing: 0;
-            margin-bottom: 10px;
-          }
-
-          .home-sector-desc {
-            font-size: 12px;
-            line-height: 1.45;
-            margin-bottom: 16px;
-          }
-
-          .home-sector-link {
-            font-size: 11px;
-            color: #7f8900;
-          }
-        }
-
-        @media (max-width: 360px) {
-          .home-sector-grid {
-            gap: 10px;
-          }
-
-          .home-sector-card {
-            min-height: 244px;
-            padding: 16px 12px 14px;
-          }
-
-          .home-sector-title {
-            font-size: 13.5px;
-          }
-
-          .home-sector-desc {
-            font-size: 11.5px;
-          }
-        }
-      ` }), /* @__PURE__ */ jsxs("div", {
-			className: "max-w-[1200px] mx-auto px-6",
-			children: [
-				/* @__PURE__ */ jsxs("div", {
-					className: "text-center mb-[44px]",
-					children: [/* @__PURE__ */ jsx("h2", {
-						className: "text-[#333333] uppercase font-black text-[34px] leading-none tracking-[-0.8px] mb-[16px]",
-						style: { fontFamily: "Arial Black, Arial, sans-serif" },
-						children: "ONZE SECTOREN"
-					}), /* @__PURE__ */ jsx("p", {
-						className: "text-[#6f6f6f] uppercase font-black text-[16px] tracking-[-0.2px]",
-						style: { fontFamily: "Arial Black, Arial, sans-serif" },
-						children: "MAATWERK VOOR ELKE SECTOR"
-					})]
-				}),
-				/* @__PURE__ */ jsx("div", {
-					className: "home-sector-grid",
-					children: mergedItems.map((item, index) => /* @__PURE__ */ jsx(SectorCard, { item }, index))
-				}),
-				/* @__PURE__ */ jsx("div", {
-					className: "flex justify-center",
-					children: /* @__PURE__ */ jsx(Link, {
-						to: "/contact",
-						className: "inline-flex items-center justify-center min-w-[188px] h-[52px] rounded-full bg-[#b4bf00] text-white uppercase font-black text-[14px] px-8 hover:opacity-95 transition",
-						style: { fontFamily: "Arial Black, Arial, sans-serif" },
-						children: "NEEM CONTACT OP"
-					})
-				})
-			]
-		})]
-	});
-}
-//#endregion
-//#region src/assets/about/about-us1.jpeg
-var about_us1_default = "/assets/about-us1-Fdlmxb8O.jpeg";
-//#endregion
-//#region src/assets/about/about-us2.jpeg
-var about_us2_default = "/assets/about-us2-Dd2z2xke.jpeg";
-//#endregion
-//#region src/assets/about/about-us3.jpeg
-var about_us3_default = "/assets/about-us3-De6QPg3_.jpeg";
-//#endregion
-//#region src/components/UwProjectSection.jsx
-function UwProjectSection() {
-	const ref = useRef(null);
-	const [vis, setVis] = useState(false);
-	useEffect(() => {
-		const obs = new IntersectionObserver(([e]) => {
-			if (e.isIntersecting) setVis(true);
-		}, { threshold: .1 });
-		if (ref.current) obs.observe(ref.current);
-		return () => obs.disconnect();
-	}, []);
-	return /* @__PURE__ */ jsxs("section", {
-		style: {
-			background: "#f7f7f7",
-			padding: "80px 0"
-		},
-		children: [/* @__PURE__ */ jsx("style", { children: `
-        .up-img1 { opacity:0; transform:translateX(-28px); transition: opacity .6s ease, transform .6s ease; }
-        .up-img2 { opacity:0; transform:translateY(-20px); transition: opacity .6s .15s ease, transform .6s .15s ease; }
-        .up-img3 { opacity:0; transform:translateY(28px);  transition: opacity .6s .3s ease, transform .6s .3s ease; }
-        .up-sq   { opacity:0; transform:scale(0.4);        transition: opacity .5s .45s ease, transform .5s .45s ease; }
-        .up-right { opacity:0; transform:translateX(32px); transition: opacity .65s .1s ease, transform .65s .1s ease; }
-        .up-on .up-img1,
-        .up-on .up-img2,
-        .up-on .up-img3,
-        .up-on .up-sq,
-        .up-on .up-right { opacity:1; transform:none; }
-
-        @media (max-width: 768px) {
-          .up-grid { grid-template-columns: 1fr !important; }
-          .up-photos { height: 380px !important; }
-        }
-      ` }), /* @__PURE__ */ jsxs("div", {
-			ref,
-			className: "max-w-7xl mx-auto px-6 md:px-8 up-grid " + (vis ? "up-on" : ""),
-			style: {
-				display: "grid",
-				gridTemplateColumns: "1fr 1fr",
-				gap: "80px",
-				alignItems: "center"
-			},
-			children: [/* @__PURE__ */ jsxs("div", {
-				className: "up-photos",
-				style: {
-					position: "relative",
-					height: "500px"
-				},
-				children: [
-					/* @__PURE__ */ jsx("div", {
-						className: "up-sq",
-						style: {
-							position: "absolute",
-							bottom: "0",
-							left: "8%",
-							width: "88px",
-							height: "88px",
-							background: "var(--fw-website-primary)",
-							zIndex: 1
-						}
-					}),
-					/* @__PURE__ */ jsx("div", {
-						className: "up-img1",
-						style: {
-							position: "absolute",
-							top: "60px",
-							left: "0",
-							width: "44%",
-							height: "68%",
-							overflow: "hidden",
-							zIndex: 2,
-							boxShadow: "0 4px 18px rgba(0,0,0,0.13)"
-						},
-						children: /* @__PURE__ */ jsx("img", {
-							src: about_us2_default,
-							alt: "Ferna medewerker",
-							style: {
-								width: "100%",
-								height: "100%",
-								objectFit: "cover",
-								objectPosition: "top",
-								display: "block"
-							}
-						})
-					}),
-					/* @__PURE__ */ jsx("div", {
-						className: "up-img2",
-						style: {
-							position: "absolute",
-							top: "0",
-							left: "36%",
-							width: "30%",
-							height: "30%",
-							overflow: "hidden",
-							zIndex: 3,
-							boxShadow: "0 4px 18px rgba(0,0,0,0.13)"
-						},
-						children: /* @__PURE__ */ jsx("img", {
-							src: about_us1_default,
-							alt: "Ferna werkplaats",
-							style: {
-								width: "100%",
-								height: "100%",
-								objectFit: "cover",
-								objectPosition: "center",
-								display: "block"
-							}
-						})
-					}),
-					/* @__PURE__ */ jsx("div", {
-						className: "up-img3",
-						style: {
-							position: "absolute",
-							bottom: "0",
-							right: "0",
-							width: "56%",
-							height: "62%",
-							overflow: "hidden",
-							zIndex: 4,
-							boxShadow: "0 4px 20px rgba(0,0,0,0.15)"
-						},
-						children: /* @__PURE__ */ jsx("img", {
-							src: about_us3_default,
-							alt: "Ferna directie",
-							style: {
-								width: "100%",
-								height: "100%",
-								objectFit: "cover",
-								objectPosition: "top",
-								display: "block"
-							}
-						})
-					})
-				]
-			}), /* @__PURE__ */ jsxs("div", {
-				className: "up-right",
-				children: [
-					/* @__PURE__ */ jsxs("h2", {
-						style: {
-							fontFamily: "Arial Black, Arial, sans-serif",
-							fontWeight: 900,
-							fontSize: "clamp(24px, 2.8vw, 38px)",
-							lineHeight: 1.1,
-							margin: "0 0 28px 0",
-							letterSpacing: "-0.3px"
-						},
-						children: [/* @__PURE__ */ jsx("span", {
-							style: { color: "var(--fw-website-primary)" },
-							children: "UW PROJECT IN "
-						}), /* @__PURE__ */ jsx("span", {
-							style: { color: "#1c1c1c" },
-							children: "GOEDE HANDEN"
-						})]
-					}),
-					/* @__PURE__ */ jsx("p", {
-						style: {
-							fontSize: "15px",
-							color: "#555",
-							lineHeight: 1.7,
-							margin: "0 0 20px 0"
-						},
-						children: "FerroWorks is opgericht als familiebedrijf en werkt nog steeds zo. Korte lijnen, persoonlijke betrokkenheid, Ã©Ã©n partner voor het volledige traject."
-					}),
-					/* @__PURE__ */ jsx("p", {
-						style: {
-							fontSize: "15px",
-							color: "#555",
-							lineHeight: 1.7,
-							margin: "0 0 36px 0"
-						},
-						children: "Van ontwerp en engineering tot productie, coating en montage op locatie. Specialist in maatwerk staal, RVS en aluminium projecten voor industrie, bouw, architectuur en maritiem."
-					}),
-					/* @__PURE__ */ jsx("a", {
-						href: "/contact",
-						style: {
-							display: "inline-block",
-							background: "var(--fw-website-primary-strong)",
-							color: "#fff",
-							fontFamily: "Arial Black, Arial, sans-serif",
-							fontWeight: 900,
-							fontSize: "13px",
-							textTransform: "uppercase",
-							letterSpacing: "0.8px",
-							padding: "16px 36px",
-							borderRadius: "50px",
-							textDecoration: "none",
-							transition: "background 0.2s"
-						},
-						onMouseEnter: (e) => e.currentTarget.style.background = "#7aa318",
-						onMouseLeave: (e) => e.currentTarget.style.background = "var(--fw-website-primary-strong)",
-						children: "NEEM CONTACT OP"
-					})
-				]
-			})]
-		})]
-	});
-}
-//#endregion
-//#region src/assets/past work/Afwerking-staalconstructie-met-natlak-300x225.webp
-var Afwerking_staalconstructie_met_natlak_300x225_default = "/assets/Afwerking-staalconstructie-met-natlak-300x225-6cndE0Eo.webp";
-//#endregion
-//#region src/assets/past work/kwaliteitscontrole-lassen-featured-300x225.webp
-var kwaliteitscontrole_lassen_featured_300x225_default = "/assets/kwaliteitscontrole-lassen-featured-300x225-Cwe_r9KD.webp";
-//#endregion
-//#region src/assets/past work/lascertificaat-verplicht-featured-300x158.webp
-var lascertificaat_verplicht_featured_300x158_default = "/assets/lascertificaat-verplicht-featured-300x158-CWiBZQqV.webp";
-//#endregion
-//#region src/assets/past work/Offshore-constructie-300x190.webp
-var Offshore_constructie_300x190_default = "/assets/Offshore-constructie-300x190-DmuHP4xB.webp";
-//#endregion
-//#region src/components/ProjectenSlider.jsx
-var FALLBACK_IMAGES$3 = [
-	Afwerking_staalconstructie_met_natlak_300x225_default,
-	kwaliteitscontrole_lassen_featured_300x225_default,
-	lascertificaat_verplicht_featured_300x158_default,
-	Offshore_constructie_300x190_default
-];
-var defaultSlides = [
-	{
-		title: "MEETBUIZEN T.B.V. VLOEISTOFTANK",
-		desc: "Voor deze klant hebben we maatwerk meetbuizen ten behoeve van een vloeistoftank geproduceerd.",
-		image: null
-	},
-	{
-		title: "STAALCONSTRUCTIE OFFSHORE PLATFORM",
-		desc: "Complexe staalconstructie vervaardigd voor een offshore platform, volledig Lloyd's-gecertificeerd.",
-		image: null
-	},
-	{
-		title: "PIJPLEIDINGWERK PETROCHEMIE",
-		desc: "Maatwerkpiping en koppelstukken geleverd voor een raffinaderij in de petrochemische sector.",
-		image: null
-	},
-	{
-		title: "TANKBOUW INDUSTRIEEL COMPLEX",
-		desc: "Walsdelen, daksecties en mangaten geproduceerd voor een groot industrieel tankbouwproject.",
-		image: null
-	}
-];
-function ProjectenSlider() {
-	const { cms } = useCms();
-	const slides = cms.projecten && cms.projecten.length ? cms.projecten : defaultSlides;
-	const [current, setCurrent] = useState(0);
-	const [animating, setAnimating] = useState(false);
-	const ref = useRef(null);
-	const [vis, setVis] = useState(false);
-	useEffect(() => {
-		const obs = new IntersectionObserver(([e]) => {
-			if (e.isIntersecting) setVis(true);
-		}, { threshold: .1 });
-		if (ref.current) obs.observe(ref.current);
-		return () => obs.disconnect();
-	}, []);
-	const goTo = (idx) => {
-		if (animating || idx === current) return;
-		setAnimating(true);
-		setTimeout(() => {
-			setCurrent(idx);
-			setAnimating(false);
-		}, 250);
-	};
-	const prev = () => goTo((current - 1 + slides.length) % slides.length);
-	const next = () => goTo((current + 1) % slides.length);
-	const slide = slides[Math.min(current, slides.length - 1)] || defaultSlides[0];
-	const slideImg = slide.image || FALLBACK_IMAGES$3[Math.min(current, FALLBACK_IMAGES$3.length - 1)] || FALLBACK_IMAGES$3[0];
-	return /* @__PURE__ */ jsxs("section", {
-		style: {
-			background: "#efefef",
-			padding: "72px 0 64px"
-		},
-		children: [
-			/* @__PURE__ */ jsx("style", { children: `
-        .ps-wrap { opacity:0; transform:translateY(20px); transition: opacity .6s ease, transform .6s ease; }
-        .ps-vis  { opacity:1; transform:none; }
-        .ps-slide { opacity:1; transition: opacity .25s ease; }
-        .ps-slide.fade { opacity:0; }
-        .ps-arrow {
-          width:40px; height:40px; border-radius:50%; border:none;
-          background:rgba(255,255,255,0.7); cursor:pointer;
-          display:flex; align-items:center; justify-content:center;
-          flex-shrink:0; transition: background 0.2s;
-        }
-        .ps-arrow:hover { background:#fff; }
-        .ps-dot {
-          width:10px; height:10px; border-radius:50%;
-          border:none; cursor:pointer; transition: background 0.2s;
-          padding:0;
-        }
-      ` }),
-			/* @__PURE__ */ jsxs("div", {
-				ref,
-				className: "max-w-7xl mx-auto px-6 md:px-8 ps-wrap " + (vis ? "ps-vis" : ""),
-				children: [
-					/* @__PURE__ */ jsxs("h2", {
-						style: {
-							fontFamily: "Arial Black, Arial, sans-serif",
-							fontWeight: 900,
-							fontSize: "clamp(20px, 2.4vw, 30px)",
-							textTransform: "uppercase",
-							margin: "0 0 40px 0",
-							letterSpacing: "-0.3px",
-							textAlign: "center"
-						},
-						children: [/* @__PURE__ */ jsx("span", {
-							style: { color: "var(--fw-website-primary)" },
-							children: "PROJECTEN "
-						}), /* @__PURE__ */ jsx("span", {
-							style: { color: "#1c1c1c" },
-							children: "UIT HET VERLEDEN"
-						})]
-					}),
-					/* @__PURE__ */ jsxs("div", {
-						className: "ps-row",
-						style: {
-							display: "flex",
-							alignItems: "center",
-							gap: "16px"
-						},
-						children: [
-							/* @__PURE__ */ jsx("button", {
-								className: "ps-arrow",
-								onClick: prev,
-								"aria-label": "Vorige",
-								children: /* @__PURE__ */ jsx("svg", {
-									width: "16",
-									height: "16",
-									viewBox: "0 0 16 16",
-									fill: "none",
-									children: /* @__PURE__ */ jsx("polyline", {
-										points: "10,2 4,8 10,14",
-										stroke: "#555",
-										strokeWidth: "2",
-										strokeLinecap: "round",
-										strokeLinejoin: "round"
-									})
-								})
-							}),
-							/* @__PURE__ */ jsxs("div", {
-								className: "ps-slide" + (animating ? " fade" : ""),
-								style: {
-									flex: 1,
-									background: "#fff",
-									display: "grid",
-									gridTemplateColumns: "1.1fr 1fr",
-									minHeight: "260px",
-									overflow: "hidden"
-								},
-								children: [/* @__PURE__ */ jsx("div", {
-									style: {
-										overflow: "hidden",
-										lineHeight: 0
-									},
-									children: /* @__PURE__ */ jsx("img", {
-										src: slideImg,
-										alt: slide.title,
-										style: {
-											width: "100%",
-											height: "100%",
-											objectFit: "cover",
-											display: "block",
-											minHeight: "240px"
-										}
-									})
-								}), /* @__PURE__ */ jsxs("div", {
-									className: "ps-copy",
-									style: {
-										padding: "36px 36px",
-										display: "flex",
-										flexDirection: "column",
-										justifyContent: "center"
-									},
-									children: [/* @__PURE__ */ jsx("h3", {
-										style: {
-											fontFamily: "Arial Black, Arial, sans-serif",
-											fontWeight: 900,
-											fontSize: "clamp(15px, 1.5vw, 18px)",
-											textTransform: "uppercase",
-											color: "#1c1c1c",
-											margin: "0 0 16px 0",
-											lineHeight: 1.2,
-											letterSpacing: "0.1px"
-										},
-										children: slide.title
-									}), /* @__PURE__ */ jsx("p", {
-										style: {
-											fontSize: "14px",
-											color: "#666",
-											lineHeight: 1.7,
-											margin: 0
-										},
-										children: slide.desc
-									})]
-								})]
-							}),
-							/* @__PURE__ */ jsx("button", {
-								className: "ps-arrow",
-								onClick: next,
-								"aria-label": "Volgende",
-								children: /* @__PURE__ */ jsx("svg", {
-									width: "16",
-									height: "16",
-									viewBox: "0 0 16 16",
-									fill: "none",
-									children: /* @__PURE__ */ jsx("polyline", {
-										points: "6,2 12,8 6,14",
-										stroke: "#555",
-										strokeWidth: "2",
-										strokeLinecap: "round",
-										strokeLinejoin: "round"
-									})
-								})
-							})
-						]
-					}),
-					/* @__PURE__ */ jsx("div", {
-						style: {
-							display: "flex",
-							justifyContent: "center",
-							gap: "8px",
-							marginTop: "24px"
-						},
-						children: slides.map((_, i) => /* @__PURE__ */ jsx("button", {
-							className: "ps-dot",
-							onClick: () => goTo(i),
-							"aria-label": `Slide ${i + 1}`,
-							style: { background: i === current ? "var(--fw-website-primary)" : "#bbb" }
-						}, i))
-					}),
-					/* @__PURE__ */ jsx("div", {
-						style: {
-							textAlign: "center",
-							marginTop: "36px"
-						},
-						children: /* @__PURE__ */ jsx("a", {
-							href: "/contact",
-							style: {
-								display: "inline-block",
-								background: "var(--fw-website-primary-strong)",
-								color: "#fff",
-								fontFamily: "Arial Black, Arial, sans-serif",
-								fontWeight: 900,
-								fontSize: "13px",
-								textTransform: "uppercase",
-								letterSpacing: "0.8px",
-								padding: "16px 36px",
-								borderRadius: "50px",
-								textDecoration: "none",
-								transition: "background 0.2s"
-							},
-							onMouseEnter: (e) => e.currentTarget.style.background = "#7aa318",
-							onMouseLeave: (e) => e.currentTarget.style.background = "var(--fw-website-primary-strong)",
-							children: "NEEM CONTACT OP"
-						})
-					})
-				]
-			}),
-			/* @__PURE__ */ jsx("style", { children: `
-        @media (max-width: 640px) {
-          .ps-slide { grid-template-columns: 1fr !important; }
-        }
-      ` })
-		]
-	});
-}
-//#endregion
-//#region src/components/FaqSection.jsx
-function FaqItem({ q, a }) {
-	const [open, setOpen] = useState(false);
-	return /* @__PURE__ */ jsxs("div", {
-		style: {
-			background: "#fff",
-			marginBottom: "12px",
-			borderRadius: "2px",
-			overflow: "hidden",
-			boxShadow: "0 1px 4px rgba(0,0,0,0.06)"
-		},
-		children: [/* @__PURE__ */ jsxs("button", {
-			onClick: () => setOpen((v) => !v),
-			style: {
-				width: "100%",
-				display: "flex",
-				justifyContent: "space-between",
-				alignItems: "center",
-				padding: "22px 28px",
-				background: open ? "var(--fw-website-primary)" : "none",
-				border: "none",
-				cursor: "pointer",
-				textAlign: "left",
-				gap: "24px",
-				transition: "background 0.25s ease"
-			},
-			children: [/* @__PURE__ */ jsx("span", {
-				style: {
-					fontFamily: "Arial Black, Arial, sans-serif",
-					fontWeight: 900,
-					fontSize: "13.5px",
-					textTransform: "uppercase",
-					color: "#1c1c1c",
-					letterSpacing: "0.1px",
-					lineHeight: 1.3
-				},
-				children: q
-			}), /* @__PURE__ */ jsx("span", {
-				style: {
-					flexShrink: 0,
-					width: "22px",
-					height: "22px",
-					display: "flex",
-					alignItems: "center",
-					justifyContent: "center",
-					transition: "transform 0.3s ease",
-					transform: open ? "rotate(45deg)" : "rotate(0deg)"
-				},
-				children: /* @__PURE__ */ jsxs("svg", {
-					width: "18",
-					height: "18",
-					viewBox: "0 0 18 18",
-					fill: "none",
-					children: [/* @__PURE__ */ jsx("line", {
-						x1: "9",
-						y1: "2",
-						x2: "9",
-						y2: "16",
-						stroke: open ? "#1c1c1c" : "#aaa",
-						strokeWidth: "1.8",
-						strokeLinecap: "round"
-					}), /* @__PURE__ */ jsx("line", {
-						x1: "2",
-						y1: "9",
-						x2: "16",
-						y2: "9",
-						stroke: open ? "#1c1c1c" : "#aaa",
-						strokeWidth: "1.8",
-						strokeLinecap: "round"
-					})]
-				})
-			})]
-		}), /* @__PURE__ */ jsx("div", {
-			style: {
-				maxHeight: open ? "300px" : "0",
-				overflow: "hidden",
-				transition: "max-height 0.35s ease"
-			},
-			children: /* @__PURE__ */ jsx("p", {
-				style: {
-					margin: "0",
-					padding: "0 28px 22px",
-					fontSize: "14.5px",
-					color: "#666",
-					lineHeight: 1.7
-				},
-				children: a
-			})
-		})]
-	});
-}
-function FaqSection() {
-	const { cms } = useCms();
-	const faqs = cms.faq || [];
-	const ref = useRef(null);
-	const [vis, setVis] = useState(false);
-	useEffect(() => {
-		const obs = new IntersectionObserver(([e]) => {
-			if (e.isIntersecting) setVis(true);
-		}, { threshold: .1 });
-		if (ref.current) obs.observe(ref.current);
-		return () => obs.disconnect();
-	}, []);
-	return /* @__PURE__ */ jsxs("section", {
-		style: {
-			background: "#ebebeb",
-			padding: "80px 0"
-		},
-		children: [/* @__PURE__ */ jsx("style", { children: `
-        .faq-wrap { opacity:0; transform:translateY(20px); transition: opacity .6s ease, transform .6s ease; }
-        .faq-vis  { opacity:1; transform:none; }
-      ` }), /* @__PURE__ */ jsxs("div", {
-			ref,
-			className: "max-w-7xl mx-auto px-6 md:px-8 faq-wrap " + (vis ? "faq-vis" : ""),
-			children: [/* @__PURE__ */ jsx("h2", {
-				style: {
-					fontFamily: "Arial Black, Arial, sans-serif",
-					fontWeight: 900,
-					fontSize: "clamp(22px, 2.6vw, 32px)",
-					textTransform: "uppercase",
-					color: "#1c1c1c",
-					textAlign: "center",
-					margin: "0 0 48px 0",
-					letterSpacing: "-0.3px"
-				},
-				children: "VRAGEN DIE INKOPERS ONS STELLEN"
-			}), /* @__PURE__ */ jsx("div", {
-				style: {
-					maxWidth: "720px",
-					margin: "0 auto"
-				},
-				children: faqs.map((item, i) => /* @__PURE__ */ jsx(FaqItem, {
-					q: item.q,
-					a: item.a
-				}, item.q + i))
-			})]
-		})]
-	});
-}
-//#endregion
 //#region src/components/Footer.jsx
 function Footer() {
 	const { cms } = useCms();
+	const { t, localizePath } = useLanguage();
 	const site = cms.site || {};
 	const phone = site.tel || "+31 (0)165 205 601";
 	const email = site.email || "info@ferroworks.nl";
@@ -1985,7 +298,7 @@ function Footer() {
 									marginTop: "1px",
 									letterSpacing: "0.5px"
 								},
-								children: site.tagline || "metaalwerk"
+								children: site.tagline || t("nav.brandTagline", "metalwork")
 							})]
 						})]
 					}),
@@ -2125,7 +438,7 @@ function Footer() {
 						margin: 0
 					},
 					children: [
-						"© FerroWorks. All Rights Reserved | Marketing door",
+						t("footer.rights", "© FerroWorks. All Rights Reserved | Marketing by"),
 						" ",
 						/* @__PURE__ */ jsx("a", {
 							href: "https://leadi.nl",
@@ -2146,20 +459,20 @@ function Footer() {
 					},
 					children: [
 						{
-							label: "VACATURES",
+							label: t("footer.vacancies", "VACATURES"),
 							href: "#"
 						},
 						{
-							label: "MACHINEPARK",
+							label: t("footer.machinePark", "MACHINEPARK"),
 							href: "#"
 						},
 						{
-							label: "PRIVACY POLICY",
-							href: "/privacy-policy"
+							label: t("footer.privacy", "PRIVACY POLICY"),
+							href: localizePath("/privacy-policy")
 						},
 						{
-							label: "ALGEMENE VOORWAARDEN",
-							href: "/algemene-voorwaarden"
+							label: t("footer.terms", "ALGEMENE VOORWAARDEN"),
+							href: localizePath("/algemene-voorwaarden")
 						}
 					].map((link) => /* @__PURE__ */ jsx("a", {
 						href: link.href,
@@ -2225,6 +538,7 @@ function CheckIcon$2() {
 	});
 }
 function PageHero$4() {
+	const { t, localizePath } = useLanguage();
 	return /* @__PURE__ */ jsxs("section", {
 		style: {
 			position: "relative",
@@ -2264,7 +578,7 @@ function PageHero$4() {
 						},
 						children: [
 							/* @__PURE__ */ jsx(Link, {
-								to: "/",
+								to: localizePath("/"),
 								style: {
 									color: "var(--fw-website-primary)",
 									fontSize: "13px",
@@ -2273,14 +587,14 @@ function PageHero$4() {
 									letterSpacing: "0.5px",
 									textTransform: "uppercase"
 								},
-								children: "Home"
+								children: t("common.home", "Home")
 							}),
 							/* @__PURE__ */ jsx("span", {
 								style: {
 									color: "#666",
 									fontSize: "13px"
 								},
-								children: "â€º"
+								children: ">"
 							}),
 							/* @__PURE__ */ jsx("span", {
 								style: {
@@ -2290,7 +604,7 @@ function PageHero$4() {
 									letterSpacing: "0.5px",
 									textTransform: "uppercase"
 								},
-								children: "Over Ons"
+								children: t("aboutPage.breadcrumb", "About")
 							})
 						]
 					}),
@@ -2306,10 +620,10 @@ function PageHero$4() {
 						},
 						children: [/* @__PURE__ */ jsx("span", {
 							style: { color: "var(--fw-website-primary)" },
-							children: "VORMGEVERS "
+							children: t("aboutPage.heroTitle", "METAL ")
 						}), /* @__PURE__ */ jsx("span", {
 							style: { color: "#fff" },
-							children: "IN METAAL"
+							children: t("aboutPage.heroAccent", "MAKERS")
 						})]
 					}),
 					/* @__PURE__ */ jsx("p", {
@@ -2320,7 +634,7 @@ function PageHero$4() {
 							lineHeight: 1.6,
 							maxWidth: "520px"
 						},
-						children: "FerroWorks begeleidt metaalprojecten van ontwerp en engineering tot productie en montage. Specialist in maatwerk Staal, RVS en Aluminium."
+						children: t("aboutPage.heroText", "FerroWorks guides metal projects from design and engineering to production and installation. Specialists in custom Steel, Stainless Steel and Aluminium.")
 					}),
 					/* @__PURE__ */ jsx("div", { style: {
 						width: "56px",
@@ -2337,6 +651,7 @@ function PageHero$4() {
 function OnsVerhaal() {
 	const [ref, vis] = useInView$6();
 	const { cms } = useCms();
+	const { t } = useLanguage();
 	const v = cms.overOns && cms.overOns.verhaal || {};
 	return /* @__PURE__ */ jsxs("section", {
 		style: {
@@ -2372,7 +687,7 @@ function OnsVerhaal() {
 							letterSpacing: "2px",
 							textTransform: "uppercase"
 						},
-						children: "ONS VERHAAL"
+						children: t("aboutPage.storyEyebrow", "OUR STORY")
 					}),
 					/* @__PURE__ */ jsxs("h2", {
 						style: {
@@ -2563,6 +878,7 @@ var FALLBACK_SERVICES = [
 function WatWeDoen() {
 	const [ref, vis] = useInView$6();
 	const { cms } = useCms();
+	const { t } = useLanguage();
 	const wwd = cms.overOns && cms.overOns.watWeDoen || {};
 	const services = wwd.items ? typeof wwd.items === "string" ? wwd.items.split("\n").filter(Boolean) : wwd.items : FALLBACK_SERVICES;
 	return /* @__PURE__ */ jsxs("section", {
@@ -2597,7 +913,7 @@ function WatWeDoen() {
 							letterSpacing: "2px",
 							textTransform: "uppercase"
 						},
-						children: "ONZE DIENSTEN"
+						children: t("aboutPage.servicesEyebrow", "OUR SERVICES")
 					}),
 					/* @__PURE__ */ jsxs("h2", {
 						style: {
@@ -2612,12 +928,12 @@ function WatWeDoen() {
 						children: [
 							/* @__PURE__ */ jsx("span", {
 								style: { color: "var(--fw-website-primary)" },
-								children: "WAT FERROWORKS"
+								children: t("aboutPage.servicesTitle", "WHAT FERROWORKS")
 							}),
 							/* @__PURE__ */ jsx("br", {}),
 							/* @__PURE__ */ jsx("span", {
 								style: { color: "#1c1c1c" },
-								children: "VOOR JE DOET"
+								children: t("aboutPage.servicesAccent", "DOES FOR YOU")
 							})
 						]
 					}),
@@ -2699,6 +1015,7 @@ var FALLBACK_DIFFERENTIATORS = [
 function WatOnsAnders() {
 	const [ref, vis] = useInView$6();
 	const { cms } = useCms();
+	const { t } = useLanguage();
 	const differentiators = cms.overOns && cms.overOns.andersItems && cms.overOns.andersItems.length ? cms.overOns.andersItems : FALLBACK_DIFFERENTIATORS;
 	return /* @__PURE__ */ jsxs("section", {
 		style: {
@@ -2728,7 +1045,7 @@ function WatOnsAnders() {
 						letterSpacing: "2px",
 						textTransform: "uppercase"
 					},
-					children: "WAAROM FERROWORKS"
+					children: t("aboutPage.whyEyebrow", "WHY FERROWORKS")
 				}), /* @__PURE__ */ jsxs("h2", {
 					style: {
 						margin: 0,
@@ -2741,10 +1058,10 @@ function WatOnsAnders() {
 					},
 					children: [/* @__PURE__ */ jsx("span", {
 						style: { color: "#1c1c1c" },
-						children: "WAT ONS "
+						children: t("aboutPage.whyTitle", "WHAT MAKES US ")
 					}), /* @__PURE__ */ jsx("span", {
 						style: { color: "var(--fw-website-primary)" },
-						children: "ANDERS MAAKT"
+						children: t("aboutPage.whyAccent", "DIFFERENT")
 					})]
 				})]
 			}), /* @__PURE__ */ jsx("div", {
@@ -2805,6 +1122,7 @@ function WatOnsAnders() {
 function TeamSection() {
 	const [ref, vis] = useInView$6();
 	const { cms } = useCms();
+	const { t } = useLanguage();
 	const team = cms.overOns && cms.overOns.team || {};
 	const teamItems = team.items ? typeof team.items === "string" ? team.items.split("\n").filter(Boolean) : team.items : [
 		"Ruim 15 jaar ervaring in metaalmaatwerk",
@@ -2938,7 +1256,7 @@ function TeamSection() {
 							letterSpacing: "2px",
 							textTransform: "uppercase"
 						},
-						children: "ONS TEAM"
+						children: t("aboutPage.teamEyebrow", "OUR TEAM")
 					}),
 					/* @__PURE__ */ jsxs("h2", {
 						style: {
@@ -3003,35 +1321,36 @@ function TeamSection() {
 		})]
 	});
 }
-var sectoren = [
-	{
-		naam: "Bouw & Utiliteit",
-		diensten: [
-			"Staalconstructies",
-			"Standaard hekwerken",
-			"Prefab balkons"
-		]
-	},
-	{
-		naam: "Industrie",
-		diensten: [
-			"Machinebouw",
-			"Maatwerk staalconstructies",
-			"IndustriÃ«le installaties",
-			"Laswerkzaamheden op locatie"
-		]
-	},
-	{
-		naam: "Architectuur & Design",
-		diensten: ["Design trappen", "Interieur- en exterieur maatwerk"]
-	},
-	{
-		naam: "Maritiem",
-		diensten: ["Jachtbouw"]
-	}
-];
 function SectorenOverzicht() {
 	const [ref, vis] = useInView$6();
+	const { t } = useLanguage();
+	const sectoren = [
+		...t("aboutPage.sectors.0.naam") ? [{
+			naam: t("aboutPage.sectors.0.naam"),
+			diensten: [
+				t("aboutPage.sectors.0.diensten.0"),
+				t("aboutPage.sectors.0.diensten.1"),
+				t("aboutPage.sectors.0.diensten.2")
+			]
+		}] : [],
+		...t("aboutPage.sectors.1.naam") ? [{
+			naam: t("aboutPage.sectors.1.naam"),
+			diensten: [
+				t("aboutPage.sectors.1.diensten.0"),
+				t("aboutPage.sectors.1.diensten.1"),
+				t("aboutPage.sectors.1.diensten.2"),
+				t("aboutPage.sectors.1.diensten.3")
+			]
+		}] : [],
+		...t("aboutPage.sectors.2.naam") ? [{
+			naam: t("aboutPage.sectors.2.naam"),
+			diensten: [t("aboutPage.sectors.2.diensten.0"), t("aboutPage.sectors.2.diensten.1")]
+		}] : [],
+		...t("aboutPage.sectors.3.naam") ? [{
+			naam: t("aboutPage.sectors.3.naam"),
+			diensten: [t("aboutPage.sectors.3.diensten.0")]
+		}] : []
+	];
 	return /* @__PURE__ */ jsxs("section", {
 		style: {
 			background: "#1c1c1c",
@@ -3061,7 +1380,7 @@ function SectorenOverzicht() {
 						letterSpacing: "2px",
 						textTransform: "uppercase"
 					},
-					children: "WAT WE BOUWEN"
+					children: t("aboutPage.sectorsEyebrow", "WHAT WE BUILD")
 				}), /* @__PURE__ */ jsxs("h2", {
 					style: {
 						margin: 0,
@@ -3073,9 +1392,9 @@ function SectorenOverzicht() {
 						letterSpacing: "-0.3px",
 						color: "#fff"
 					},
-					children: ["ONZE ", /* @__PURE__ */ jsx("span", {
+					children: [t("aboutPage.sectorsTitle", "OUR "), /* @__PURE__ */ jsx("span", {
 						style: { color: "var(--fw-website-primary)" },
-						children: "SECTOREN"
+						children: t("aboutPage.sectorsAccent", "SECTORS")
 					})]
 				})]
 			}), /* @__PURE__ */ jsx("div", {
@@ -3140,22 +1459,23 @@ function SectorenOverzicht() {
 		})]
 	});
 }
-var certs = [
-	{
-		code: "VCA",
-		label: "Veiligheid, gezondheid & milieu"
-	},
-	{
-		code: "EN-1090",
-		label: "Staal- en aluminiumconstructies"
-	},
-	{
-		code: "CE",
-		label: "Conformiteit & veiligheidsstandaard"
-	}
-];
 function Certificeringen() {
 	const [ref, vis] = useInView$6();
+	const { t } = useLanguage();
+	const certs = [
+		{
+			code: t("aboutPage.certs.0.code", "VCA"),
+			label: t("aboutPage.certs.0.label", "Safety, health and environment")
+		},
+		{
+			code: t("aboutPage.certs.1.code", "EN-1090"),
+			label: t("aboutPage.certs.1.label", "Steel and aluminium structures")
+		},
+		{
+			code: t("aboutPage.certs.2.code", "CE"),
+			label: t("aboutPage.certs.2.label", "Conformity and safety standard")
+		}
+	];
 	return /* @__PURE__ */ jsxs("section", {
 		style: {
 			background: "#fff",
@@ -3184,7 +1504,7 @@ function Certificeringen() {
 						letterSpacing: "2px",
 						textTransform: "uppercase"
 					},
-					children: "ONZE CERTIFICERINGEN"
+					children: t("aboutPage.certEyebrow", "OUR CERTIFICATIONS")
 				}), /* @__PURE__ */ jsxs("h2", {
 					style: {
 						margin: 0,
@@ -3197,10 +1517,10 @@ function Certificeringen() {
 					},
 					children: [/* @__PURE__ */ jsx("span", {
 						style: { color: "#1c1c1c" },
-						children: "GECERTIFICEERD "
+						children: t("aboutPage.certTitle", "CERTIFIED ")
 					}), /* @__PURE__ */ jsx("span", {
 						style: { color: "var(--fw-website-primary)" },
-						children: "VCA, EN-1090 & CE"
+						children: t("aboutPage.certAccent", "VCA, EN-1090 & CE")
 					})]
 				})]
 			}), /* @__PURE__ */ jsx("div", {
@@ -3262,6 +1582,7 @@ function Certificeringen() {
 	});
 }
 function CtaSection$2() {
+	const { t, localizePath } = useLanguage();
 	return /* @__PURE__ */ jsx("section", {
 		style: {
 			background: "#f4f4f4",
@@ -3291,10 +1612,14 @@ function CtaSection$2() {
 						lineHeight: 1.1,
 						letterSpacing: "-0.3px"
 					},
-					children: ["KLAAR OM ", /* @__PURE__ */ jsx("span", {
-						style: { color: "var(--fw-website-primary)" },
-						children: "TE STARTEN?"
-					})]
+					children: [
+						t("common.startProject", "READY TO"),
+						" ",
+						/* @__PURE__ */ jsx("span", {
+							style: { color: "var(--fw-website-primary)" },
+							children: t("common.startProjectAccent", "GET STARTED?")
+						})
+					]
 				}), /* @__PURE__ */ jsx("p", {
 					style: {
 						color: "#999",
@@ -3302,7 +1627,7 @@ function CtaSection$2() {
 						margin: 0,
 						lineHeight: 1.5
 					},
-					children: "Stuur uw tekening op of neem contact op â€” wij reageren binnen 24 uur."
+					children: t("common.startProjectText", "Send your drawing or contact us - we respond within 24 hours.")
 				})] }), /* @__PURE__ */ jsxs("div", {
 					className: "fw-cta-actions",
 					style: {
@@ -3311,7 +1636,7 @@ function CtaSection$2() {
 						flexWrap: "wrap"
 					},
 					children: [/* @__PURE__ */ jsx(Link, {
-						to: "/contact",
+						to: localizePath("/contact"),
 						style: {
 							fontFamily: "Arial Black, Arial, sans-serif",
 							fontWeight: 900,
@@ -3326,7 +1651,7 @@ function CtaSection$2() {
 						},
 						onMouseEnter: (e) => e.currentTarget.style.background = "var(--fw-website-primary-strong)",
 						onMouseLeave: (e) => e.currentTarget.style.background = "var(--fw-website-primary)",
-						children: "NEEM CONTACT OP"
+						children: t("common.contactUs", "CONTACT US")
 					}), /* @__PURE__ */ jsx("a", {
 						href: "tel:+31165205617",
 						style: {
@@ -3344,7 +1669,7 @@ function CtaSection$2() {
 						},
 						onMouseEnter: (e) => e.currentTarget.style.borderColor = "var(--fw-website-primary)",
 						onMouseLeave: (e) => e.currentTarget.style.borderColor = "#555",
-						children: "BEL ONS"
+						children: t("common.callUs", "CALL US")
 					})]
 				})]
 			})
@@ -3380,6 +1705,7 @@ function useInView$5(threshold = .12) {
 }
 function PageHero$3() {
 	const { cms } = useCms();
+	const { t, localizePath } = useLanguage();
 	const hero = (cms.contact || {}).hero || {};
 	return /* @__PURE__ */ jsxs("section", {
 		style: {
@@ -3420,7 +1746,7 @@ function PageHero$3() {
 						},
 						children: [
 							/* @__PURE__ */ jsx(Link, {
-								to: "/",
+								to: localizePath("/"),
 								style: {
 									color: "var(--fw-website-primary)",
 									fontSize: "13px",
@@ -3429,14 +1755,14 @@ function PageHero$3() {
 									letterSpacing: "0.5px",
 									textTransform: "uppercase"
 								},
-								children: "Home"
+								children: t("common.home", "Home")
 							}),
 							/* @__PURE__ */ jsx("span", {
 								style: {
 									color: "#666",
 									fontSize: "13px"
 								},
-								children: "â€º"
+								children: ">"
 							}),
 							/* @__PURE__ */ jsx("span", {
 								style: {
@@ -3446,7 +1772,7 @@ function PageHero$3() {
 									letterSpacing: "0.5px",
 									textTransform: "uppercase"
 								},
-								children: "Contact"
+								children: t("contactPage.breadcrumb", "Contact")
 							})
 						]
 					}),
@@ -3493,6 +1819,7 @@ function PageHero$3() {
 function ContactMain() {
 	const [ref, vis] = useInView$5(.08);
 	const { cms } = useCms();
+	const { t } = useLanguage();
 	const c = cms.contact || {};
 	const site = cms.site || {};
 	const [formData, setFormData] = useState({
@@ -3541,7 +1868,7 @@ function ContactMain() {
 			setSubmitted(true);
 		} catch (err) {
 			setSending(false);
-			setError(err.message || "Versturen mislukt.");
+			setError(err.message || t("contactPage.error", "Sending failed."));
 		}
 	}
 	const inputStyle = {
@@ -3599,7 +1926,7 @@ function ContactMain() {
 							letterSpacing: "2px",
 							textTransform: "uppercase"
 						},
-						children: "STUUR EEN BERICHT"
+						children: t("contactPage.sendMessage", "SEND A MESSAGE")
 					}),
 					/* @__PURE__ */ jsxs("h2", {
 						style: {
@@ -3613,10 +1940,10 @@ function ContactMain() {
 						},
 						children: [/* @__PURE__ */ jsx("span", {
 							style: { color: "#1c1c1c" },
-							children: "WIJ REAGEREN "
+							children: t("contactPage.replyWithin", "WE RESPOND ")
 						}), /* @__PURE__ */ jsx("span", {
 							style: { color: "var(--fw-website-primary)" },
-							children: "BINNEN 24 UUR"
+							children: t("contactPage.replyWithinAccent", "WITHIN 24 HOURS")
 						})]
 					}),
 					submitted ? /* @__PURE__ */ jsxs("div", {
@@ -3634,7 +1961,7 @@ function ContactMain() {
 								textTransform: "uppercase",
 								marginBottom: "10px"
 							},
-							children: "Bericht ontvangen!"
+							children: t("contactPage.successTitle", "Message received!")
 						}), /* @__PURE__ */ jsx("p", {
 							style: {
 								color: "#555",
@@ -3642,7 +1969,7 @@ function ContactMain() {
 								lineHeight: 1.7,
 								margin: 0
 							},
-							children: "Bedankt voor uw bericht. Wij nemen zo snel mogelijk contact met u op."
+							children: t("contactPage.successText", "Thank you for your message. We will get back to you as soon as possible.")
 						})]
 					}) : /* @__PURE__ */ jsxs("form", {
 						onSubmit: handleSubmit,
@@ -3661,7 +1988,7 @@ function ContactMain() {
 								},
 								children: [/* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx("label", {
 									style: labelStyle,
-									children: "Naam *"
+									children: t("contactPage.fieldName", "Name *")
 								}), /* @__PURE__ */ jsx("input", {
 									className: "fw-input",
 									style: inputStyle,
@@ -3669,11 +1996,11 @@ function ContactMain() {
 									name: "naam",
 									value: formData.naam,
 									onChange: handleChange,
-									placeholder: "Uw naam",
+									placeholder: t("contactPage.placeholderName", "Your name"),
 									required: true
 								})] }), /* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx("label", {
 									style: labelStyle,
-									children: "Bedrijf"
+									children: t("contactPage.fieldCompany", "Company")
 								}), /* @__PURE__ */ jsx("input", {
 									className: "fw-input",
 									style: inputStyle,
@@ -3681,7 +2008,7 @@ function ContactMain() {
 									name: "bedrijf",
 									value: formData.bedrijf,
 									onChange: handleChange,
-									placeholder: "Uw bedrijfsnaam"
+									placeholder: t("contactPage.placeholderCompany", "Your company name")
 								})] })]
 							}),
 							/* @__PURE__ */ jsxs("div", {
@@ -3693,7 +2020,7 @@ function ContactMain() {
 								},
 								children: [/* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx("label", {
 									style: labelStyle,
-									children: "E-mailadres *"
+									children: t("contactPage.fieldEmail", "Email address *")
 								}), /* @__PURE__ */ jsx("input", {
 									className: "fw-input",
 									style: inputStyle,
@@ -3701,11 +2028,11 @@ function ContactMain() {
 									name: "email",
 									value: formData.email,
 									onChange: handleChange,
-									placeholder: "uw@email.nl",
+									placeholder: t("contactPage.placeholderEmail", "your@email.com"),
 									required: true
 								})] }), /* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx("label", {
 									style: labelStyle,
-									children: "Telefoon"
+									children: t("contactPage.fieldPhone", "Phone")
 								}), /* @__PURE__ */ jsx("input", {
 									className: "fw-input",
 									style: inputStyle,
@@ -3713,12 +2040,12 @@ function ContactMain() {
 									name: "telefoon",
 									value: formData.telefoon,
 									onChange: handleChange,
-									placeholder: "+31 ..."
+									placeholder: t("contactPage.placeholderPhone", "+31 ...")
 								})] })]
 							}),
 							/* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx("label", {
 								style: labelStyle,
-								children: "Bericht *"
+								children: t("contactPage.fieldMessage", "Message *")
 							}), /* @__PURE__ */ jsx("textarea", {
 								className: "fw-input",
 								style: {
@@ -3729,12 +2056,12 @@ function ContactMain() {
 								name: "bericht",
 								value: formData.bericht,
 								onChange: handleChange,
-								placeholder: "Beschrijf uw project of vraag...",
+								placeholder: t("contactPage.placeholderMessage", "Describe your project or question..."),
 								required: true
 							})] }),
 							/* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx("label", {
 								style: labelStyle,
-								children: "Tekening / bijlage"
+								children: t("contactPage.fieldAttachment", "Drawing / attachment")
 							}), /* @__PURE__ */ jsxs("div", {
 								style: {
 									border: "1.5px dashed #ccc",
@@ -3796,12 +2123,12 @@ function ContactMain() {
 											color: "#888",
 											margin: 0
 										},
-										children: ["Sleep een bestand of ", /* @__PURE__ */ jsx("span", {
+										children: [t("contactPage.uploadPrompt", "Drop a file or "), /* @__PURE__ */ jsx("span", {
 											style: {
 												color: "var(--fw-website-primary)",
 												fontWeight: 700
 											},
-											children: "klik om te uploaden"
+											children: t("contactPage.uploadAction", "click to upload")
 										})]
 									}),
 									/* @__PURE__ */ jsx("p", {
@@ -3810,7 +2137,7 @@ function ContactMain() {
 											color: "#bbb",
 											margin: "4px 0 0"
 										},
-										children: attachment ? attachment.name : "PDF, DWG, DXF, JPG, PNG"
+										children: attachment ? attachment.name : t("contactPage.uploadTypes", "PDF, DWG, DXF, JPG, PNG")
 									})
 								]
 							})] }),
@@ -3844,7 +2171,7 @@ function ContactMain() {
 								onMouseLeave: (e) => {
 									if (!sending) e.currentTarget.style.background = "var(--fw-website-primary)";
 								},
-								children: sending ? "VERZENDEN..." : "VERSTUUR BERICHT"
+								children: sending ? t("contactPage.sending", "SENDING...") : t("contactPage.send", "SEND MESSAGE")
 							})
 						]
 					})
@@ -3867,7 +2194,7 @@ function ContactMain() {
 							letterSpacing: "2px",
 							textTransform: "uppercase"
 						},
-						children: "CONTACTGEGEVENS"
+						children: t("contactPage.details", "CONTACT DETAILS")
 					}),
 					/* @__PURE__ */ jsxs("h2", {
 						style: {
@@ -3881,10 +2208,10 @@ function ContactMain() {
 						},
 						children: [/* @__PURE__ */ jsx("span", {
 							style: { color: "#1c1c1c" },
-							children: "DIRECT "
+							children: t("contactPage.reachable", "DIRECTLY ")
 						}), /* @__PURE__ */ jsx("span", {
 							style: { color: "var(--fw-website-primary)" },
-							children: "BEREIKBAAR"
+							children: t("contactPage.reachableAccent", "AVAILABLE")
 						})]
 					}),
 					[
@@ -3902,7 +2229,7 @@ function ContactMain() {
 									strokeLinejoin: "round"
 								})
 							}),
-							label: "Telefoon",
+							label: t("contactPage.phone", "Phone"),
 							value: tel,
 							href: `tel:${tel.replace(/[\s()]/g, "")}`
 						},
@@ -3926,7 +2253,7 @@ function ContactMain() {
 									strokeLinejoin: "round"
 								})]
 							}),
-							label: "E-mail",
+							label: t("contactPage.email", "Email"),
 							value: email,
 							href: `mailto:${email}`
 						},
@@ -3950,7 +2277,7 @@ function ContactMain() {
 									strokeWidth: "2"
 								})]
 							}),
-							label: "Adres",
+							label: t("contactPage.address", "Address"),
 							value: adres,
 							href: `https://maps.google.com/?q=${encodeURIComponent(adres.replace(/\n/g, " "))}`
 						}
@@ -4018,7 +2345,7 @@ function ContactMain() {
 								color: "var(--fw-website-primary)",
 								marginBottom: "16px"
 							},
-							children: "OPENINGSTIJDEN"
+							children: t("contactPage.hours", "OPENING HOURS")
 						}), openingstijden.map(([dag, tijd], i) => /* @__PURE__ */ jsxs("div", {
 							style: {
 								display: "flex",
@@ -4051,8 +2378,10 @@ function ContactMain() {
 }
 function MapSection() {
 	const { cms } = useCms();
+	const { t } = useLanguage();
 	const c = cms.contact || {};
 	const adres = (cms.site || {}).adres || c.adres || "Westelijke Havendijk 31\n4703 RL Roosendaal";
+	const mapSrc = c.mapEmbed || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2478.8!2d4.4630!3d51.5300!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c417d4d3e40000%3A0x0!2sWestelijke+Havendijk+31%2C+4703+RL+Roosendaal!5e0!3m2!1snl!2snl!4v1";
 	return /* @__PURE__ */ jsx("section", {
 		style: {
 			background: "#f4f4f4",
@@ -4066,8 +2395,8 @@ function MapSection() {
 				overflow: "hidden"
 			},
 			children: [/* @__PURE__ */ jsx("iframe", {
-				title: "FerroWorks locatie",
-				src: c.mapEmbed || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2478.8!2d4.4630!3d51.5300!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c417d4d3e40000%3A0x0!2sWestelijke+Havendijk+31%2C+4703+RL+Roosendaal!5e0!3m2!1snl!2snl!4v1",
+				title: t("contactPage.mapTitle", "FerroWorks location"),
+				src: mapSrc,
 				width: "100%",
 				height: "420",
 				style: {
@@ -4113,6 +2442,7 @@ function MapSection() {
 function ContactStrip() {
 	const [ref, vis] = useInView$5(.2);
 	const { cms } = useCms();
+	const { t } = useLanguage();
 	const c = cms.contact || {};
 	const site = cms.site || {};
 	const tel = site.tel || c.tel || "+31 (0)165 205 601";
@@ -4133,7 +2463,7 @@ function ContactStrip() {
 					strokeLinejoin: "round"
 				})
 			}),
-			title: "BELLEN",
+			title: t("contactPage.call", "CALL"),
 			value: tel,
 			href: `tel:${tel.replace(/[\s()]/g, "")}`
 		},
@@ -4157,7 +2487,7 @@ function ContactStrip() {
 					strokeLinejoin: "round"
 				})]
 			}),
-			title: "MAILEN",
+			title: t("contactPage.mail", "EMAIL"),
 			value: email,
 			href: `mailto:${email}`
 		},
@@ -4181,7 +2511,7 @@ function ContactStrip() {
 					strokeWidth: "2"
 				})]
 			}),
-			title: "BEZOEKEN",
+			title: t("contactPage.visit", "VISIT"),
 			value: adres,
 			href: `https://maps.google.com/?q=${encodeURIComponent(adres.replace(/\n/g, " "))}`
 		}
@@ -4344,16 +2674,8 @@ var FALLBACK_POSTS$1 = [
 		featured: false
 	}
 ];
-var categories = [
-	"Alle",
-	"Vakmanschap",
-	"Offshore",
-	"Afwerking",
-	"Certificering",
-	"Productie",
-	"Industrie"
-];
 function PageHero$2() {
+	const { t, localizePath } = useLanguage();
 	return /* @__PURE__ */ jsxs("section", {
 		style: {
 			position: "relative",
@@ -4393,7 +2715,7 @@ function PageHero$2() {
 						},
 						children: [
 							/* @__PURE__ */ jsx(Link, {
-								to: "/",
+								to: localizePath("/"),
 								style: {
 									color: "var(--fw-website-primary)",
 									fontSize: "13px",
@@ -4402,14 +2724,14 @@ function PageHero$2() {
 									letterSpacing: "0.5px",
 									textTransform: "uppercase"
 								},
-								children: "Home"
+								children: t("common.home", "Home")
 							}),
 							/* @__PURE__ */ jsx("span", {
 								style: {
 									color: "#666",
 									fontSize: "13px"
 								},
-								children: "â€º"
+								children: ">"
 							}),
 							/* @__PURE__ */ jsx("span", {
 								style: {
@@ -4435,10 +2757,10 @@ function PageHero$2() {
 						},
 						children: [/* @__PURE__ */ jsx("span", {
 							style: { color: "var(--fw-website-primary)" },
-							children: "KENNIS & "
+							children: t("blogPage.heroTitle", "KNOWLEDGE & ")
 						}), /* @__PURE__ */ jsx("span", {
 							style: { color: "#fff" },
-							children: "INZICHTEN"
+							children: t("blogPage.heroAccent", "INSIGHTS")
 						})]
 					}),
 					/* @__PURE__ */ jsx("p", {
@@ -4449,7 +2771,7 @@ function PageHero$2() {
 							lineHeight: 1.6,
 							maxWidth: "520px"
 						},
-						children: "Vakartikelen, projectverhalen en technische inzichten vanuit de dagelijkse praktijk van FerroWorks."
+						children: t("blogPage.heroText", "Industry articles, project stories and technical insights from FerroWorks' day-to-day practice.")
 					}),
 					/* @__PURE__ */ jsx("div", { style: {
 						width: "56px",
@@ -4465,6 +2787,7 @@ function PageHero$2() {
 }
 function FeaturedPost({ post, imgSrc }) {
 	const [ref, vis] = useInView$4();
+	const { t, localizePath } = useLanguage();
 	return /* @__PURE__ */ jsxs("section", {
 		style: {
 			background: "#f4f4f4",
@@ -4532,7 +2855,7 @@ function FeaturedPost({ post, imgSrc }) {
 								letterSpacing: "1px",
 								color: "#1c1c1c"
 							},
-							children: "Uitgelicht"
+							children: t("blogPage.featured", "Featured")
 						})
 					})
 				]
@@ -4574,9 +2897,10 @@ function FeaturedPost({ post, imgSrc }) {
 									fontSize: "13px"
 								},
 								children: [
-									"Â· ",
+									"· ",
 									post.readTime,
-									" leestijd"
+									" ",
+									t("blogPage.readTime", "read time")
 								]
 							})
 						]
@@ -4604,7 +2928,7 @@ function FeaturedPost({ post, imgSrc }) {
 						children: post.excerpt
 					}),
 					/* @__PURE__ */ jsx(Link, {
-						to: `/blog/${post.slug || post.id}`,
+						to: localizePath(`/blog/${post.slug || post.id}`),
 						style: {
 							fontFamily: "Arial Black, Arial, sans-serif",
 							fontWeight: 900,
@@ -4620,7 +2944,7 @@ function FeaturedPost({ post, imgSrc }) {
 						},
 						onMouseEnter: (e) => e.currentTarget.style.background = "var(--fw-website-primary-strong)",
 						onMouseLeave: (e) => e.currentTarget.style.background = "var(--fw-website-primary)",
-						children: "LEES ARTIKEL"
+						children: t("common.readArticle", "READ ARTICLE")
 					})
 				]
 			})]
@@ -4628,6 +2952,7 @@ function FeaturedPost({ post, imgSrc }) {
 	});
 }
 function BlogCard({ post, imgSrc, delay = 0 }) {
+	const { t, localizePath } = useLanguage();
 	return /* @__PURE__ */ jsxs("div", {
 		className: "blog-card",
 		style: {
@@ -4711,9 +3036,10 @@ function BlogCard({ post, imgSrc, delay = 0 }) {
 							fontSize: "12px"
 						},
 						children: [
-							"Â· ",
+							"· ",
 							post.readTime,
-							" leestijd"
+							" ",
+							t("blogPage.readTime", "read time")
 						]
 					})]
 				}),
@@ -4741,7 +3067,7 @@ function BlogCard({ post, imgSrc, delay = 0 }) {
 					children: [post.excerpt.substring(0, 120), "..."]
 				}),
 				/* @__PURE__ */ jsxs(Link, {
-					to: `/blog/${post.slug || post.id}`,
+					to: localizePath(`/blog/${post.slug || post.id}`),
 					style: {
 						display: "inline-flex",
 						alignItems: "center",
@@ -4757,7 +3083,7 @@ function BlogCard({ post, imgSrc, delay = 0 }) {
 					},
 					onMouseEnter: (e) => e.currentTarget.style.gap = "10px",
 					onMouseLeave: (e) => e.currentTarget.style.gap = "6px",
-					children: ["LEES MEER", /* @__PURE__ */ jsx("svg", {
+					children: [t("common.readMore", "READ MORE"), /* @__PURE__ */ jsx("svg", {
 						width: "14",
 						height: "14",
 						viewBox: "0 0 24 24",
@@ -4777,8 +3103,18 @@ function BlogCard({ post, imgSrc, delay = 0 }) {
 }
 function BlogGrid({ posts }) {
 	const [ref, vis] = useInView$4(.05);
-	const [activeCategory, setActiveCategory] = useState("Alle");
-	const filtered = activeCategory === "Alle" ? posts.filter((p) => !p.featured) : posts.filter((p) => !p.featured && p.category === activeCategory);
+	const { t } = useLanguage();
+	const categories = [
+		t("blogPage.categories.all", "All"),
+		t("blogPage.categories.craftsmanship", "Craftsmanship"),
+		t("blogPage.categories.offshore", "Offshore"),
+		t("blogPage.categories.finishing", "Finishing"),
+		t("blogPage.categories.certification", "Certification"),
+		t("blogPage.categories.production", "Production"),
+		t("blogPage.categories.industry", "Industry")
+	];
+	const [activeCategory, setActiveCategory] = useState(categories[0]);
+	const filtered = activeCategory === categories[0] ? posts.filter((p) => !p.featured) : posts.filter((p) => !p.featured && p.category === activeCategory);
 	return /* @__PURE__ */ jsxs("section", {
 		style: {
 			background: "#f4f4f4",
@@ -4812,7 +3148,7 @@ function BlogGrid({ posts }) {
 						letterSpacing: "2px",
 						textTransform: "uppercase"
 					},
-					children: "ALLE ARTIKELEN"
+					children: t("blogPage.allArticles", "ALL ARTICLES")
 				}), /* @__PURE__ */ jsxs("h2", {
 					style: {
 						margin: 0,
@@ -4825,10 +3161,10 @@ function BlogGrid({ posts }) {
 					},
 					children: [/* @__PURE__ */ jsx("span", {
 						style: { color: "#1c1c1c" },
-						children: "RECENTE "
+						children: t("blogPage.recentTitle", "RECENT ")
 					}), /* @__PURE__ */ jsx("span", {
 						style: { color: "var(--fw-website-primary)" },
-						children: "PUBLICATIES"
+						children: t("blogPage.recentAccent", "PUBLICATIONS")
 					})]
 				})] }), /* @__PURE__ */ jsx("div", {
 					style: {
@@ -4873,7 +3209,7 @@ function BlogGrid({ posts }) {
 						textTransform: "uppercase",
 						letterSpacing: "1px"
 					},
-					children: "Geen artikelen gevonden in deze categorie."
+					children: t("blogPage.noResults", "No articles found in this category.")
 				})
 			})]
 		})]
@@ -4881,6 +3217,7 @@ function BlogGrid({ posts }) {
 }
 function NewsletterCta() {
 	const [ref, vis] = useInView$4(.2);
+	const { t } = useLanguage();
 	const [email, setEmail] = useState("");
 	const [done, setDone] = useState(false);
 	const [error, setError] = useState("");
@@ -4891,7 +3228,7 @@ function NewsletterCta() {
 			setDone(true);
 			setError("");
 		} catch (err) {
-			setError(err.message || "Inschrijven mislukt.");
+			setError(err.message || t("blogPage.newsletterError", "Subscription failed."));
 		}
 	}
 	return /* @__PURE__ */ jsxs("section", {
@@ -4923,7 +3260,7 @@ function NewsletterCta() {
 							letterSpacing: "2px",
 							textTransform: "uppercase"
 						},
-						children: "BLIJF OP DE HOOGTE"
+						children: t("blogPage.newsletterEyebrow", "STAY INFORMED")
 					}),
 					/* @__PURE__ */ jsxs("h2", {
 						style: {
@@ -4936,9 +3273,9 @@ function NewsletterCta() {
 							color: "#fff",
 							margin: "0 0 16px 0"
 						},
-						children: ["ONTVANG ONZE ", /* @__PURE__ */ jsx("span", {
+						children: [t("blogPage.newsletterTitle", "RECEIVE OUR "), /* @__PURE__ */ jsx("span", {
 							style: { color: "var(--fw-website-primary)" },
-							children: "NIEUWSBRIEF"
+							children: t("blogPage.newsletterAccent", "NEWSLETTER")
 						})]
 					}),
 					/* @__PURE__ */ jsx("p", {
@@ -4948,7 +3285,7 @@ function NewsletterCta() {
 							lineHeight: 1.6,
 							margin: "0 0 32px 0"
 						},
-						children: "Nieuwe artikelen, projectupdates en technische tips â€” direct in uw inbox."
+						children: t("blogPage.newsletterText", "New articles, project updates and technical tips - straight to your inbox.")
 					}),
 					done ? /* @__PURE__ */ jsx("div", {
 						style: {
@@ -4965,7 +3302,7 @@ function NewsletterCta() {
 								color: "#fff",
 								textTransform: "uppercase"
 							},
-							children: "Inschrijving gelukt! âœ“"
+							children: t("blogPage.newsletterSuccess", "Subscription successful! ✓")
 						})
 					}) : /* @__PURE__ */ jsxs("form", {
 						className: "nl-form",
@@ -5013,7 +3350,7 @@ function NewsletterCta() {
 							},
 							onMouseEnter: (e) => e.currentTarget.style.background = "var(--fw-website-primary-strong)",
 							onMouseLeave: (e) => e.currentTarget.style.background = "var(--fw-website-primary)",
-							children: "INSCHRIJVEN"
+							children: t("blogPage.newsletterCta", "SUBSCRIBE")
 						})]
 					}),
 					error && /* @__PURE__ */ jsx("p", {
@@ -5030,6 +3367,7 @@ function NewsletterCta() {
 	});
 }
 function CtaStrip$2() {
+	const { t, localizePath } = useLanguage();
 	return /* @__PURE__ */ jsx("section", {
 		style: {
 			background: "#f4f4f4",
@@ -5059,9 +3397,9 @@ function CtaStrip$2() {
 						lineHeight: 1.1,
 						letterSpacing: "-0.3px"
 					},
-					children: ["EEN PROJECT IN ", /* @__PURE__ */ jsx("span", {
+					children: [t("blogPage.ctaTitle", "HAVE A PROJECT "), /* @__PURE__ */ jsx("span", {
 						style: { color: "var(--fw-website-primary)" },
-						children: "GEDACHTEN?"
+						children: t("blogPage.ctaAccent", "IN MIND?")
 					})]
 				}), /* @__PURE__ */ jsx("p", {
 					style: {
@@ -5069,9 +3407,9 @@ function CtaStrip$2() {
 						fontSize: "14px",
 						margin: 0
 					},
-					children: "Neem contact op â€” wij denken graag met u mee."
+					children: t("blogPage.ctaText", "Get in touch - we would love to think along with you.")
 				})] }), /* @__PURE__ */ jsx(Link, {
-					to: "/contact",
+					to: localizePath("/contact"),
 					className: "fw-primary-action",
 					style: {
 						fontFamily: "Arial Black, Arial, sans-serif",
@@ -5089,7 +3427,7 @@ function CtaStrip$2() {
 					},
 					onMouseEnter: (e) => e.currentTarget.style.background = "var(--fw-website-primary-strong)",
 					onMouseLeave: (e) => e.currentTarget.style.background = "var(--fw-website-primary)",
-					children: "NEEM CONTACT OP"
+					children: t("common.contactUs", "CONTACT US")
 				})]
 			})
 		})
@@ -6276,6 +4614,7 @@ function CheckIcon$1() {
 	});
 }
 function PageHero$1() {
+	const { t, localizePath } = useLanguage();
 	return /* @__PURE__ */ jsxs("section", {
 		style: {
 			position: "relative",
@@ -6315,7 +4654,7 @@ function PageHero$1() {
 						},
 						children: [
 							/* @__PURE__ */ jsx(Link, {
-								to: "/",
+								to: localizePath("/"),
 								style: {
 									color: "var(--fw-website-primary)",
 									fontSize: "13px",
@@ -6324,14 +4663,14 @@ function PageHero$1() {
 									letterSpacing: "0.5px",
 									textTransform: "uppercase"
 								},
-								children: "Home"
+								children: t("common.home", "Home")
 							}),
 							/* @__PURE__ */ jsx("span", {
 								style: {
 									color: "#666",
 									fontSize: "13px"
 								},
-								children: "â€º"
+								children: ">"
 							}),
 							/* @__PURE__ */ jsx("span", {
 								style: {
@@ -6341,7 +4680,7 @@ function PageHero$1() {
 									letterSpacing: "0.5px",
 									textTransform: "uppercase"
 								},
-								children: "Diensten"
+								children: t("servicesPage.breadcrumb", "Services")
 							})
 						]
 					}),
@@ -6357,10 +4696,10 @@ function PageHero$1() {
 						},
 						children: [/* @__PURE__ */ jsx("span", {
 							style: { color: "var(--fw-website-primary)" },
-							children: "ONZE "
+							children: t("servicesPage.heroTitle", "OUR ")
 						}), /* @__PURE__ */ jsx("span", {
 							style: { color: "#fff" },
-							children: "DIENSTEN"
+							children: t("servicesPage.heroAccent", "SERVICES")
 						})]
 					}),
 					/* @__PURE__ */ jsx("p", {
@@ -6371,7 +4710,7 @@ function PageHero$1() {
 							lineHeight: 1.6,
 							maxWidth: "560px"
 						},
-						children: "Van ontwerp en engineering tot productie, coating en montage â€” FerroWorks ontzorgt u volledig in metaalmaatwerk van A tot Z."
+						children: t("servicesPage.heroText", "From design and engineering to production, coating and installation - FerroWorks supports your custom metal project from A to Z.")
 					}),
 					/* @__PURE__ */ jsx("div", { style: {
 						width: "56px",
@@ -6387,6 +4726,39 @@ function PageHero$1() {
 }
 function IntroStrip$1() {
 	const [ref, vis] = useInView$2(.2);
+	const { t } = useLanguage();
+	const items = [
+		{
+			num: "15+",
+			...t("servicesPage.stats.0.label") ? {
+				label: t("servicesPage.stats.0.label"),
+				sub: t("servicesPage.stats.0.sub")
+			} : {
+				label: "Years of experience",
+				sub: "in custom metalwork"
+			}
+		},
+		{
+			num: "100%",
+			...t("servicesPage.stats.1.label") ? {
+				label: t("servicesPage.stats.1.label"),
+				sub: t("servicesPage.stats.1.sub")
+			} : {
+				label: "In-house production",
+				sub: "without subcontractors"
+			}
+		},
+		{
+			num: "A-Z",
+			...t("servicesPage.stats.2.label") ? {
+				label: t("servicesPage.stats.2.label"),
+				sub: t("servicesPage.stats.2.sub")
+			} : {
+				label: "Complete support",
+				sub: "from design to installation"
+			}
+		}
+	];
 	return /* @__PURE__ */ jsxs("section", {
 		style: {
 			background: "#1c1c1c",
@@ -6400,23 +4772,7 @@ function IntroStrip$1() {
 				gridTemplateColumns: "repeat(3,1fr)",
 				borderLeft: "3px solid var(--fw-website-primary)"
 			},
-			children: [
-				{
-					num: "15+",
-					label: "Jaar ervaring",
-					sub: "in metaalmaatwerk"
-				},
-				{
-					num: "100%",
-					label: "Eigen productie",
-					sub: "zonder onderaannemers"
-				},
-				{
-					num: "A-Z",
-					label: "Volledig ontzorgd",
-					sub: "van ontwerp tot montage"
-				}
-			].map((item, i) => /* @__PURE__ */ jsxs("div", {
+			children: items.map((item, i) => /* @__PURE__ */ jsxs("div", {
 				className: "is-d",
 				style: {
 					padding: "8px 32px",
@@ -6461,6 +4817,7 @@ function IntroStrip$1() {
 }
 function DienstBlock({ dienst, index }) {
 	const [ref, vis] = useInView$2();
+	const { t, localizePath } = useLanguage();
 	const isEven = index % 2 === 0;
 	const bg = isEven ? "#f4f4f4" : "#fff";
 	const img = dienst.image || FALLBACK_IMAGES$2[index % FALLBACK_IMAGES$2.length];
@@ -6544,7 +4901,7 @@ function DienstBlock({ dienst, index }) {
 			}, i))
 		}),
 		/* @__PURE__ */ jsxs(Link, {
-			to: `/diensten/${dienst.id}`,
+			to: localizePath(`/diensten/${dienst.id}`),
 			style: {
 				display: "inline-flex",
 				alignItems: "center",
@@ -6561,7 +4918,7 @@ function DienstBlock({ dienst, index }) {
 			},
 			onMouseEnter: (e) => e.currentTarget.style.background = "var(--fw-website-primary-strong)",
 			onMouseLeave: (e) => e.currentTarget.style.background = "var(--fw-website-primary)",
-			children: ["MEER INFORMATIE", /* @__PURE__ */ jsx("svg", {
+			children: [t("servicesPage.moreInfo", "MORE INFORMATION"), /* @__PURE__ */ jsx("svg", {
 				width: "14",
 				height: "14",
 				viewBox: "0 0 24 24",
@@ -6646,6 +5003,7 @@ function DienstBlock({ dienst, index }) {
 	});
 }
 function CtaSection$1() {
+	const { t, localizePath } = useLanguage();
 	return /* @__PURE__ */ jsx("section", {
 		style: {
 			background: "#f4f4f4",
@@ -6675,10 +5033,14 @@ function CtaSection$1() {
 						lineHeight: 1.1,
 						letterSpacing: "-0.3px"
 					},
-					children: ["KLAAR OM ", /* @__PURE__ */ jsx("span", {
-						style: { color: "var(--fw-website-primary)" },
-						children: "TE STARTEN?"
-					})]
+					children: [
+						t("common.startProject", "READY TO"),
+						" ",
+						/* @__PURE__ */ jsx("span", {
+							style: { color: "var(--fw-website-primary)" },
+							children: t("common.startProjectAccent", "GET STARTED?")
+						})
+					]
 				}), /* @__PURE__ */ jsx("p", {
 					style: {
 						color: "#999",
@@ -6686,7 +5048,7 @@ function CtaSection$1() {
 						margin: 0,
 						lineHeight: 1.5
 					},
-					children: "Stuur uw tekening op of neem contact op â€” wij reageren binnen 24 uur."
+					children: t("common.startProjectText", "Send your drawing or contact us - we respond within 24 hours.")
 				})] }), /* @__PURE__ */ jsxs("div", {
 					className: "fw-cta-actions",
 					style: {
@@ -6695,7 +5057,7 @@ function CtaSection$1() {
 						flexWrap: "wrap"
 					},
 					children: [/* @__PURE__ */ jsx(Link, {
-						to: "/contact",
+						to: localizePath("/contact"),
 						style: {
 							fontFamily: "Arial Black, Arial, sans-serif",
 							fontWeight: 900,
@@ -6710,7 +5072,7 @@ function CtaSection$1() {
 						},
 						onMouseEnter: (e) => e.currentTarget.style.background = "var(--fw-website-primary-strong)",
 						onMouseLeave: (e) => e.currentTarget.style.background = "var(--fw-website-primary)",
-						children: "OFFERTE AANVRAGEN"
+						children: t("common.getQuote", "REQUEST A QUOTE")
 					}), /* @__PURE__ */ jsx("a", {
 						href: "tel:+31165205617",
 						style: {
@@ -6728,7 +5090,7 @@ function CtaSection$1() {
 						},
 						onMouseEnter: (e) => e.currentTarget.style.borderColor = "var(--fw-website-primary)",
 						onMouseLeave: (e) => e.currentTarget.style.borderColor = "#555",
-						children: "BEL ONS"
+						children: t("common.callUs", "CALL US")
 					})]
 				})]
 			})
@@ -7908,6 +6270,7 @@ function CheckIcon() {
 	});
 }
 function PageHero() {
+	const { t, localizePath } = useLanguage();
 	return /* @__PURE__ */ jsxs("section", {
 		style: {
 			position: "relative",
@@ -7947,7 +6310,7 @@ function PageHero() {
 						},
 						children: [
 							/* @__PURE__ */ jsx(Link, {
-								to: "/",
+								to: localizePath("/"),
 								style: {
 									color: "var(--fw-website-primary)",
 									fontSize: "13px",
@@ -7956,14 +6319,14 @@ function PageHero() {
 									letterSpacing: "0.5px",
 									textTransform: "uppercase"
 								},
-								children: "Home"
+								children: t("common.home", "Home")
 							}),
 							/* @__PURE__ */ jsx("span", {
 								style: {
 									color: "#666",
 									fontSize: "13px"
 								},
-								children: "â€º"
+								children: ">"
 							}),
 							/* @__PURE__ */ jsx("span", {
 								style: {
@@ -7973,7 +6336,7 @@ function PageHero() {
 									letterSpacing: "0.5px",
 									textTransform: "uppercase"
 								},
-								children: "Sectoren"
+								children: t("sectorsPage.breadcrumb", "Sectors")
 							})
 						]
 					}),
@@ -7989,10 +6352,10 @@ function PageHero() {
 						},
 						children: [/* @__PURE__ */ jsx("span", {
 							style: { color: "var(--fw-website-primary)" },
-							children: "STAAL, RVS & ALU "
+							children: t("sectorsPage.heroTitle", "STEEL, STAINLESS & ALU ")
 						}), /* @__PURE__ */ jsx("span", {
 							style: { color: "#fff" },
-							children: "IN ELKE SECTOR"
+							children: t("sectorsPage.heroAccent", "FOR EVERY SECTOR")
 						})]
 					}),
 					/* @__PURE__ */ jsx("p", {
@@ -8003,7 +6366,7 @@ function PageHero() {
 							lineHeight: 1.6,
 							maxWidth: "540px"
 						},
-						children: "FerroWorks levert maatwerk metaaloplossingen voor bouw, industrie, architectuur en maritieme toepassingen. Altijd vakkundig, altijd op maat."
+						children: t("sectorsPage.heroText", "FerroWorks delivers custom metal solutions for construction, industry, architecture and maritime applications. Always skilled, always tailored.")
 					}),
 					/* @__PURE__ */ jsx("div", { style: {
 						width: "56px",
@@ -8081,6 +6444,7 @@ function IntroStrip() {
 }
 function SectorBlock({ sector, index }) {
 	const [ref, vis] = useInView();
+	const { t, localizePath } = useLanguage();
 	const isEven = index % 2 === 0;
 	const bg = isEven ? "#f4f4f4" : "#fff";
 	const img = sector.image || FALLBACK_IMAGES[index % FALLBACK_IMAGES.length];
@@ -8095,7 +6459,11 @@ function SectorBlock({ sector, index }) {
 				textTransform: "uppercase",
 				letterSpacing: "1.5px"
 			},
-			children: [sector.nr, " â€” SECTOR"]
+			children: [
+				sector.nr,
+				" - ",
+				t("sectorsPage.sectorLabel", "SECTOR")
+			]
 		}),
 		/* @__PURE__ */ jsx("h2", {
 			style: {
@@ -8151,7 +6519,7 @@ function SectorBlock({ sector, index }) {
 			}, i))
 		}),
 		/* @__PURE__ */ jsxs(Link, {
-			to: "/contact",
+			to: localizePath("/contact"),
 			style: {
 				display: "inline-flex",
 				alignItems: "center",
@@ -8168,7 +6536,7 @@ function SectorBlock({ sector, index }) {
 			},
 			onMouseEnter: (e) => e.currentTarget.style.background = "var(--fw-website-primary-strong)",
 			onMouseLeave: (e) => e.currentTarget.style.background = "var(--fw-website-primary)",
-			children: ["OFFERTE AANVRAGEN", /* @__PURE__ */ jsx("svg", {
+			children: [t("common.getQuote", "REQUEST A QUOTE"), /* @__PURE__ */ jsx("svg", {
 				width: "14",
 				height: "14",
 				viewBox: "0 0 24 24",
@@ -8254,6 +6622,29 @@ function SectorBlock({ sector, index }) {
 }
 function DienstenBanner() {
 	const [ref, vis] = useInView(.15);
+	const { t, localizePath } = useLanguage();
+	const items = [
+		{
+			title: "Engineering & Ontwerp",
+			to: localizePath("/diensten/engineering")
+		},
+		{
+			title: "Productie in eigen beheer",
+			to: localizePath("/diensten/productie")
+		},
+		{
+			title: "Coating & Afwerking",
+			to: localizePath("/diensten/coating")
+		},
+		{
+			title: "Montage op locatie",
+			to: localizePath("/diensten/montage")
+		},
+		{
+			title: "Reparatie & Onderhoud",
+			to: localizePath("/diensten/reparatie")
+		}
+	];
 	return /* @__PURE__ */ jsxs("section", {
 		style: {
 			background: "#1c1c1c",
@@ -8274,7 +6665,7 @@ function DienstenBanner() {
 						letterSpacing: "2px",
 						textTransform: "uppercase"
 					},
-					children: "OOK INTERESSANT"
+					children: t("sectorsPage.relatedEyebrow", "ALSO INTERESTING")
 				}), /* @__PURE__ */ jsxs("h2", {
 					style: {
 						margin: 0,
@@ -8286,9 +6677,9 @@ function DienstenBanner() {
 						lineHeight: 1.1,
 						letterSpacing: "-0.3px"
 					},
-					children: ["ONZE ", /* @__PURE__ */ jsx("span", {
+					children: [t("sectorsPage.relatedTitle", "OUR "), /* @__PURE__ */ jsx("span", {
 						style: { color: "var(--fw-website-primary)" },
-						children: "DIENSTEN"
+						children: t("sectorsPage.relatedAccent", "SERVICES")
 					})]
 				})]
 			}), /* @__PURE__ */ jsx("div", {
@@ -8298,28 +6689,7 @@ function DienstenBanner() {
 					gridTemplateColumns: "repeat(5,1fr)",
 					gap: "16px"
 				},
-				children: [
-					{
-						title: "Engineering & Ontwerp",
-						to: "/diensten/engineering"
-					},
-					{
-						title: "Productie in eigen beheer",
-						to: "/diensten/productie"
-					},
-					{
-						title: "Coating & Afwerking",
-						to: "/diensten/coating"
-					},
-					{
-						title: "Montage op locatie",
-						to: "/diensten/montage"
-					},
-					{
-						title: "Reparatie & Onderhoud",
-						to: "/diensten/reparatie"
-					}
-				].map((item, i) => /* @__PURE__ */ jsxs(Link, {
+				children: items.map((item, i) => /* @__PURE__ */ jsxs(Link, {
 					to: item.to,
 					className: "db-card",
 					style: {
@@ -8348,7 +6718,7 @@ function DienstenBanner() {
 							color: "var(--fw-website-primary)",
 							fontSize: "12px"
 						},
-						children: "â†’ Meer info"
+						children: t("sectorsPage.moreInfo", "→ More info")
 					})]
 				}, i))
 			})]
@@ -8356,6 +6726,7 @@ function DienstenBanner() {
 	});
 }
 function CtaSection() {
+	const { t, localizePath } = useLanguage();
 	return /* @__PURE__ */ jsx("section", {
 		style: {
 			background: "#f4f4f4",
@@ -8385,10 +6756,14 @@ function CtaSection() {
 						lineHeight: 1.1,
 						letterSpacing: "-0.3px"
 					},
-					children: ["KLAAR OM ", /* @__PURE__ */ jsx("span", {
-						style: { color: "var(--fw-website-primary)" },
-						children: "TE STARTEN?"
-					})]
+					children: [
+						t("common.startProject", "READY TO"),
+						" ",
+						/* @__PURE__ */ jsx("span", {
+							style: { color: "var(--fw-website-primary)" },
+							children: t("common.startProjectAccent", "GET STARTED?")
+						})
+					]
 				}), /* @__PURE__ */ jsx("p", {
 					style: {
 						color: "#999",
@@ -8396,7 +6771,7 @@ function CtaSection() {
 						margin: 0,
 						lineHeight: 1.5
 					},
-					children: "Stuur uw tekening op of neem contact op â€” wij reageren binnen 24 uur."
+					children: t("common.startProjectText", "Send your drawing or contact us - we respond within 24 hours.")
 				})] }), /* @__PURE__ */ jsxs("div", {
 					className: "fw-cta-actions",
 					style: {
@@ -8405,7 +6780,7 @@ function CtaSection() {
 						flexWrap: "wrap"
 					},
 					children: [/* @__PURE__ */ jsx(Link, {
-						to: "/contact",
+						to: localizePath("/contact"),
 						style: {
 							fontFamily: "Arial Black, Arial, sans-serif",
 							fontWeight: 900,
@@ -8420,7 +6795,7 @@ function CtaSection() {
 						},
 						onMouseEnter: (e) => e.currentTarget.style.background = "var(--fw-website-primary-strong)",
 						onMouseLeave: (e) => e.currentTarget.style.background = "var(--fw-website-primary)",
-						children: "OFFERTE AANVRAGEN"
+						children: t("common.getQuote", "REQUEST A QUOTE")
 					}), /* @__PURE__ */ jsx("a", {
 						href: "tel:+31165205617",
 						style: {
@@ -8438,7 +6813,7 @@ function CtaSection() {
 						},
 						onMouseEnter: (e) => e.currentTarget.style.borderColor = "var(--fw-website-primary)",
 						onMouseLeave: (e) => e.currentTarget.style.borderColor = "#555",
-						children: "BEL ONS"
+						children: t("common.callUs", "CALL US")
 					})]
 				})]
 			})
@@ -8465,6 +6840,7 @@ function SectorenPage() {
 //#region src/pages/ManagedContentPage.jsx
 function ManagedContentPage() {
 	const { cms } = useCms();
+	const { t, localizePath } = useLanguage();
 	const location = useLocation();
 	const page = (cms.pages || []).find((item) => item.path === location.pathname);
 	if (!page) return null;
@@ -8508,7 +6884,7 @@ function ManagedContentPage() {
 							},
 							children: [
 								/* @__PURE__ */ jsx(Link, {
-									to: "/",
+									to: localizePath("/"),
 									style: {
 										color: "var(--fw-website-primary)",
 										fontSize: "13px",
@@ -8517,14 +6893,14 @@ function ManagedContentPage() {
 										letterSpacing: "0.5px",
 										textTransform: "uppercase"
 									},
-									children: "Home"
+									children: t("common.home", "Home")
 								}),
 								/* @__PURE__ */ jsx("span", {
 									style: {
 										color: "#666",
 										fontSize: "13px"
 									},
-									children: "â€º"
+									children: ">"
 								}),
 								/* @__PURE__ */ jsx("span", {
 									style: {
@@ -8581,7 +6957,7 @@ function ManagedContentPage() {
 						boxShadow: "0 10px 35px rgba(0,0,0,0.05)"
 					},
 					children: /* @__PURE__ */ jsx(RichTextContent, {
-						html: page.body || "<p>Geen inhoud ingesteld.</p>",
+						html: page.body || `<p>${t("managedPage.noContent", "No content configured yet.")}</p>`,
 						className: "managed-content-page"
 					})
 				})
@@ -8634,6 +7010,28 @@ function upsertCanonical(href) {
 	}
 	link.setAttribute("href", href);
 }
+function upsertAlternate(locale, href) {
+	const selector = `link[rel="alternate"][hreflang="${locale}"]`;
+	let link = document.head.querySelector(selector);
+	if (!link) {
+		link = document.createElement("link");
+		link.setAttribute("rel", "alternate");
+		link.setAttribute("hreflang", locale);
+		document.head.appendChild(link);
+	}
+	link.setAttribute("href", href);
+}
+function syncAlternateLinks(activeLocales, origin, canonicalPath) {
+	const allowed = new Set([...activeLocales, "x-default"]);
+	Array.from(document.head.querySelectorAll("link[rel=\"alternate\"][hreflang]")).forEach((link) => {
+		const locale = link.getAttribute("hreflang");
+		if (locale && !allowed.has(locale)) link.remove();
+	});
+	activeLocales.forEach((locale) => {
+		upsertAlternate(locale, `${origin}${localizePath(canonicalPath, locale)}`);
+	});
+	upsertAlternate("x-default", `${origin}${localizePath(canonicalPath, "nl")}`);
+}
 function RouteSeo() {
 	const { cms } = useCms();
 	const location = useLocation();
@@ -8641,31 +7039,32 @@ function RouteSeo() {
 	const path = location.pathname;
 	useEffect(() => {
 		const origin = window.location.origin;
+		const canonicalPath = getCanonicalPathname(path);
 		const pageConfig = (cms.pages || []).find((item) => item.path === path);
 		let title = site.metaTitle || site.naam || "FerroWorks";
 		let description = site.metaDesc || "";
 		if (pageConfig?.metaTitle) {
 			title = pageConfig.metaTitle;
 			description = pageConfig.metaDescription || description;
-		} else if (path === "/over-ons") {
+		} else if (canonicalPath === "/over-ons") {
 			title = `Over Ons | ${site.naam || "FerroWorks"}`;
 			description = cms.overOns?.verhaal?.tekst1 || description;
-		} else if (path === "/diensten") {
+		} else if (canonicalPath === "/diensten") {
 			title = `Diensten | ${site.naam || "FerroWorks"}`;
 			description = "Engineering, productie, coating, montage en onderhoud voor maatwerk metaalprojecten.";
-		} else if (path.startsWith("/diensten/")) {
-			const slug = path.split("/").pop();
+		} else if (canonicalPath.startsWith("/diensten/")) {
+			const slug = canonicalPath.split("/").pop();
 			const service = (cms.diensten || []).find((item) => item.id === slug);
 			title = service?.seoTitle || `${service?.title || "Dienst"} | ${site.naam || "FerroWorks"}`;
 			description = service?.seoDescription || service?.excerpt || description;
-		} else if (path === "/sectoren") {
+		} else if (canonicalPath === "/sectoren") {
 			title = `Sectoren | ${site.naam || "FerroWorks"}`;
 			description = "Metaalmaatwerk voor bouw, industrie, architectuur en maritieme toepassingen.";
-		} else if (path === "/blog") {
+		} else if (canonicalPath === "/blog") {
 			title = `Blog | ${site.naam || "FerroWorks"}`;
 			description = "Kennisartikelen, projectverhalen en technische inzichten van FerroWorks.";
-		} else if (path.startsWith("/blog/")) {
-			const slug = path.split("/").pop();
+		} else if (canonicalPath.startsWith("/blog/")) {
+			const slug = canonicalPath.split("/").pop();
 			const post = (cms.blog || []).find((item) => item.slug === slug || String(item.id) === slug);
 			title = post?.seoTitle || `${post?.title || "Artikel"} | ${site.naam || "FerroWorks"}`;
 			description = post?.seoDescription || post?.excerpt || description;
@@ -8676,6 +7075,7 @@ function RouteSeo() {
 		upsertMeta("og:description", description, true);
 		upsertMeta("og:url", `${origin}${path}`, true);
 		upsertCanonical(`${origin}${path}`);
+		syncAlternateLinks(getActiveLocales(cms.websiteSettings || {}), origin, canonicalPath);
 		const website = cms.websiteSettings || {};
 		if (website.googleAnalyticsId && typeof window.gtag === "function") window.gtag("config", website.googleAnalyticsId, {
 			page_path: path,
@@ -8845,7 +7245,7 @@ function ThemeStyles() {
 }
 //#endregion
 //#region src/App.jsx
-var AdminPage = lazy(() => import("./assets/admin-B18FhdYm.js").then((n) => n.t));
+var AdminPage = lazy(() => import("./assets/admin-Bp1cyg8M.js").then((n) => n.t));
 function AdminRoute() {
 	return /* @__PURE__ */ jsx(Suspense, {
 		fallback: /* @__PURE__ */ jsx("div", {
@@ -8879,6 +7279,12 @@ function HomePage() {
 	] });
 }
 function PublicLayout() {
+	const { cms } = useCms();
+	const location = useLocation();
+	if (!isLocalizationEnabled(cms.websiteSettings || {}) && getLocaleFromPathname(location.pathname) !== "nl") return /* @__PURE__ */ jsx(Navigate, {
+		to: localizePath(getCanonicalPathname(location.pathname), "nl"),
+		replace: true
+	});
 	return /* @__PURE__ */ jsxs(Fragment, { children: [
 		/* @__PURE__ */ jsx(RouteSeo, {}),
 		/* @__PURE__ */ jsx(Navbar, {}),
@@ -9056,7 +7462,15 @@ function AppRoutes() {
 				element: /* @__PURE__ */ jsx(HomePage, {})
 			}),
 			/* @__PURE__ */ jsx(Route, {
+				path: "/en",
+				element: /* @__PURE__ */ jsx(HomePage, {})
+			}),
+			/* @__PURE__ */ jsx(Route, {
 				path: "/over-ons",
+				element: /* @__PURE__ */ jsx(OverOnsPage, {})
+			}),
+			/* @__PURE__ */ jsx(Route, {
+				path: "/en/about",
 				element: /* @__PURE__ */ jsx(OverOnsPage, {})
 			}),
 			/* @__PURE__ */ jsx(Route, {
@@ -9068,7 +7482,19 @@ function AppRoutes() {
 				element: /* @__PURE__ */ jsx(DienstDetailPage, {})
 			}),
 			/* @__PURE__ */ jsx(Route, {
+				path: "/en/services",
+				element: /* @__PURE__ */ jsx(DienstenPage, {})
+			}),
+			/* @__PURE__ */ jsx(Route, {
+				path: "/en/services/:slug",
+				element: /* @__PURE__ */ jsx(DienstDetailPage, {})
+			}),
+			/* @__PURE__ */ jsx(Route, {
 				path: "/sectoren",
+				element: /* @__PURE__ */ jsx(SectorenPage, {})
+			}),
+			/* @__PURE__ */ jsx(Route, {
+				path: "/en/sectors",
 				element: /* @__PURE__ */ jsx(SectorenPage, {})
 			}),
 			/* @__PURE__ */ jsx(Route, {
@@ -9080,7 +7506,19 @@ function AppRoutes() {
 				element: /* @__PURE__ */ jsx(BlogDetailPage, {})
 			}),
 			/* @__PURE__ */ jsx(Route, {
+				path: "/en/blog",
+				element: /* @__PURE__ */ jsx(BlogPage, {})
+			}),
+			/* @__PURE__ */ jsx(Route, {
+				path: "/en/blog/:slug",
+				element: /* @__PURE__ */ jsx(BlogDetailPage, {})
+			}),
+			/* @__PURE__ */ jsx(Route, {
 				path: "/contact",
+				element: /* @__PURE__ */ jsx(ContactPage, {})
+			}),
+			/* @__PURE__ */ jsx(Route, {
+				path: "/en/contact",
 				element: /* @__PURE__ */ jsx(ContactPage, {})
 			}),
 			/* @__PURE__ */ jsx(Route, {
@@ -9088,7 +7526,15 @@ function AppRoutes() {
 				element: /* @__PURE__ */ jsx(ManagedContentPage, {})
 			}),
 			/* @__PURE__ */ jsx(Route, {
+				path: "/en/privacy-policy",
+				element: /* @__PURE__ */ jsx(ManagedContentPage, {})
+			}),
+			/* @__PURE__ */ jsx(Route, {
 				path: "/algemene-voorwaarden",
+				element: /* @__PURE__ */ jsx(ManagedContentPage, {})
+			}),
+			/* @__PURE__ */ jsx(Route, {
+				path: "/en/terms-and-conditions",
 				element: /* @__PURE__ */ jsx(ManagedContentPage, {})
 			})
 		]
@@ -9098,22 +7544,22 @@ function AppRoutes() {
 	})] });
 }
 function App({ RouterComponent = BrowserRouter, routerProps = {}, initialCms = null }) {
-	return /* @__PURE__ */ jsx(CmsProvider, {
-		initialCms,
-		children: /* @__PURE__ */ jsxs(RouterComponent, {
-			...routerProps,
+	return /* @__PURE__ */ jsx(RouterComponent, {
+		...routerProps,
+		children: /* @__PURE__ */ jsx(LanguageProvider, { children: /* @__PURE__ */ jsxs(CmsProvider, {
+			initialCms,
 			children: [/* @__PURE__ */ jsx(ThemeStyles, {}), /* @__PURE__ */ jsx(AppContent, {})]
-		})
+		}) })
 	});
 }
 //#endregion
 //#region src/entry-server.jsx
 function render(url, cms) {
-	return { html: renderToString(/* @__PURE__ */ jsx(AuthProvider, { children: /* @__PURE__ */ jsx(LanguageProvider, { children: /* @__PURE__ */ jsx(App, {
+	return { html: renderToString(/* @__PURE__ */ jsx(AuthProvider, { children: /* @__PURE__ */ jsx(App, {
 		RouterComponent: StaticRouter,
 		routerProps: { location: url },
 		initialCms: cms
-	}) }) })) };
+	}) })) };
 }
 //#endregion
 export { render };

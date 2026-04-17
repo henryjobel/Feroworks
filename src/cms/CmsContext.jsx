@@ -1,8 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { isLocalizationEnabled, localizeCmsContent } from "../../../shared/content-localization.js";
 import { api } from "../api/client";
+import { useLanguage } from "../i18n/LanguageContext";
 import { DEFAULT_CMS } from "./defaultContent";
 
-const CmsContext = createContext(null);
+export const CmsContext = createContext(null);
 
 function deepMerge(defaults, saved) {
   const result = { ...defaults };
@@ -25,7 +28,10 @@ function deepMerge(defaults, saved) {
 }
 
 export function CmsProvider({ children, initialCms = null }) {
-  const [cms, setCms] = useState(() => deepMerge(DEFAULT_CMS, initialCms || {}));
+  const { language } = useLanguage();
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith("/admin");
+  const [rawCms, setRawCms] = useState(() => deepMerge(DEFAULT_CMS, initialCms || {}));
   const [loading, setLoading] = useState(!initialCms);
   const [error, setError] = useState("");
 
@@ -33,10 +39,10 @@ export function CmsProvider({ children, initialCms = null }) {
     setLoading(true);
     try {
       const data = await api.getCms();
-      setCms(deepMerge(DEFAULT_CMS, data));
+      setRawCms(deepMerge(DEFAULT_CMS, data));
       setError("");
     } catch (err) {
-      setCms(DEFAULT_CMS);
+      setRawCms(DEFAULT_CMS);
       setError(err.message || "Kon CMS data niet laden.");
     } finally {
       setLoading(false);
@@ -52,7 +58,7 @@ export function CmsProvider({ children, initialCms = null }) {
   const updateCms = async (key, value) => {
     try {
       await api.updateSection(key, value);
-      setCms((prev) => ({ ...prev, [key]: value }));
+      setRawCms((prev) => ({ ...prev, [key]: value }));
       setError("");
       return true;
     } catch (err) {
@@ -65,9 +71,21 @@ export function CmsProvider({ children, initialCms = null }) {
     await refreshCms();
   };
 
+  const cms = useMemo(() => {
+    if (isAdminRoute) {
+      return rawCms;
+    }
+
+    if (!isLocalizationEnabled(rawCms.websiteSettings || {})) {
+      return rawCms;
+    }
+
+    return localizeCmsContent(rawCms, language);
+  }, [isAdminRoute, language, rawCms]);
+
   const value = useMemo(
-    () => ({ cms, updateCms, resetCms, refreshCms, loading, error }),
-    [cms, loading, error],
+    () => ({ cms, rawCms, updateCms, resetCms, refreshCms, loading, error }),
+    [cms, rawCms, loading, error],
   );
 
   return <CmsContext.Provider value={value}>{children}</CmsContext.Provider>;

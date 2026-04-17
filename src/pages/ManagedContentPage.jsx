@@ -1,10 +1,12 @@
-﻿import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useCms } from "../cms/CmsContext";
 import heroBg from "../assets/hero-background.jpeg";
 import RichTextContent from "../components/RichTextContent";
+import { useLanguage } from "../i18n/LanguageContext";
 
 export default function ManagedContentPage() {
   const { cms } = useCms();
+  const { t, localizePath } = useLanguage();
   const location = useLocation();
   const page = (cms.pages || []).find((item) => item.path === location.pathname);
 
@@ -19,8 +21,8 @@ export default function ManagedContentPage() {
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(20,22,22,0.93) 0%, rgba(20,22,22,0.75) 55%, rgba(20,22,22,0.4) 100%)" }} />
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8" style={{ paddingTop: "64px", paddingBottom: "64px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "24px" }}>
-            <Link to="/" style={{ color: "var(--fw-website-primary)", fontSize: "13px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Home</Link>
-            <span style={{ color: "#666", fontSize: "13px" }}>â€º</span>
+            <Link to={localizePath("/")} style={{ color: "var(--fw-website-primary)", fontSize: "13px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>{t("common.home", "Home")}</Link>
+            <span style={{ color: "#666", fontSize: "13px" }}>{">"}</span>
             <span style={{ color: "#aaa", fontSize: "13px", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>{page.name}</span>
           </div>
           <h1 style={{ margin: "0 0 16px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(28px, 4vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.5px", textTransform: "uppercase" }}>
@@ -35,7 +37,7 @@ export default function ManagedContentPage() {
       <section style={{ background: "#f4f4f4", padding: "80px 0" }}>
         <div className="max-w-5xl mx-auto px-6 md:px-8">
           <div style={{ background: "#fff", padding: "48px", boxShadow: "0 10px 35px rgba(0,0,0,0.05)" }}>
-            <RichTextContent html={page.body || "<p>Geen inhoud ingesteld.</p>"} className="managed-content-page" />
+            <RichTextContent html={page.body || `<p>${t("managedPage.noContent", "No content configured yet.")}</p>`} className="managed-content-page" />
           </div>
         </div>
       </section>
@@ -65,5 +67,3 @@ export default function ManagedContentPage() {
     </>
   );
 }
-
-

@@ -8,6 +8,7 @@ import imgMachine from "../assets/over-ons1.png";
 import imgLandscape from "../assets/over-ons2.png";
 import { useCms } from "../cms/CmsContext";
 import RichTextContent from "../components/RichTextContent";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const FALLBACK_IMAGES = [imgAbout1, imgMachine, imgLandscape, imgAbout2, imgAbout3];
 
@@ -33,21 +34,22 @@ function CheckIcon() {
 }
 
 function PageHero() {
+  const { t, localizePath } = useLanguage();
   return (
     <section style={{ position: "relative", width: "100%", minHeight: "380px", display: "flex", alignItems: "center", overflow: "hidden", background: "#141616" }}>
       <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${heroBg})`, backgroundSize: "cover", backgroundPosition: "center right" }} />
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg,rgba(20,22,22,0.94) 0%,rgba(20,22,22,0.76) 55%,rgba(20,22,22,0.4) 100%)" }} />
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8" style={{ paddingTop: "64px", paddingBottom: "64px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "24px" }}>
-          <Link to="/" style={{ color: "var(--fw-website-primary)", fontSize: "13px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Home</Link>
-          <span style={{ color: "#666", fontSize: "13px" }}>â€º</span>
-          <span style={{ color: "#aaa", fontSize: "13px", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Sectoren</span>
+          <Link to={localizePath("/")} style={{ color: "var(--fw-website-primary)", fontSize: "13px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>{t("common.home", "Home")}</Link>
+          <span style={{ color: "#666", fontSize: "13px" }}>{">"}</span>
+          <span style={{ color: "#aaa", fontSize: "13px", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>{t("sectorsPage.breadcrumb", "Sectors")}</span>
         </div>
         <h1 style={{ margin: "0 0 16px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(28px,4vw,56px)", lineHeight: 1.05, letterSpacing: "-0.5px", textTransform: "uppercase" }}>
-          <span style={{ color: "var(--fw-website-primary)" }}>STAAL, RVS & ALU </span><span style={{ color: "#fff" }}>IN ELKE SECTOR</span>
+          <span style={{ color: "var(--fw-website-primary)" }}>{t("sectorsPage.heroTitle", "STEEL, STAINLESS & ALU ")}</span><span style={{ color: "#fff" }}>{t("sectorsPage.heroAccent", "FOR EVERY SECTOR")}</span>
         </h1>
         <p style={{ margin: 0, color: "#bbb", fontSize: "clamp(14px,1.6vw,17px)", lineHeight: 1.6, maxWidth: "540px" }}>
-          FerroWorks levert maatwerk metaaloplossingen voor bouw, industrie, architectuur en maritieme toepassingen. Altijd vakkundig, altijd op maat.
+          {t("sectorsPage.heroText", "FerroWorks delivers custom metal solutions for construction, industry, architecture and maritime applications. Always skilled, always tailored.")}
         </p>
         <div style={{ width: "56px", height: "4px", background: "var(--fw-website-primary)", marginTop: "28px", borderRadius: "2px" }} />
       </div>
@@ -78,6 +80,7 @@ function IntroStrip() {
 
 function SectorBlock({ sector, index }) {
   const [ref, vis] = useInView();
+  const { t, localizePath } = useLanguage();
   const isEven = index % 2 === 0;
   const bg = isEven ? "#f4f4f4" : "#fff";
   const img = sector.image || FALLBACK_IMAGES[index % FALLBACK_IMAGES.length];
@@ -85,7 +88,7 @@ function SectorBlock({ sector, index }) {
 
   const textBlock = (
     <div>
-      <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", color: "var(--fw-website-primary)", textTransform: "uppercase", letterSpacing: "1.5px" }}>{sector.nr} â€” SECTOR</span>
+      <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", color: "var(--fw-website-primary)", textTransform: "uppercase", letterSpacing: "1.5px" }}>{sector.nr} - {t("sectorsPage.sectorLabel", "SECTOR")}</span>
       <h2 style={{ margin: "12px 0 16px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px,2.6vw,36px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px", color: "#1c1c1c" }}>
         {sector.naam}
       </h2>
@@ -100,11 +103,11 @@ function SectorBlock({ sector, index }) {
           </div>
         ))}
       </div>
-      <Link to="/contact"
+      <Link to={localizePath("/contact")}
         style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "var(--fw-website-primary)", padding: "14px 28px", textDecoration: "none" }}
         onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
         onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}>
-        OFFERTE AANVRAGEN
+        {t("common.getQuote", "REQUEST A QUOTE")}
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="#1c1c1c" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
       </Link>
     </div>
@@ -138,21 +141,22 @@ function SectorBlock({ sector, index }) {
 
 function DienstenBanner() {
   const [ref, vis] = useInView(0.15);
+  const { t, localizePath } = useLanguage();
   const items = [
-    { title: "Engineering & Ontwerp",   to: "/diensten/engineering" },
-    { title: "Productie in eigen beheer", to: "/diensten/productie" },
-    { title: "Coating & Afwerking",     to: "/diensten/coating" },
-    { title: "Montage op locatie",      to: "/diensten/montage" },
-    { title: "Reparatie & Onderhoud",   to: "/diensten/reparatie" },
+    { title: "Engineering & Ontwerp",   to: localizePath("/diensten/engineering") },
+    { title: "Productie in eigen beheer", to: localizePath("/diensten/productie") },
+    { title: "Coating & Afwerking",     to: localizePath("/diensten/coating") },
+    { title: "Montage op locatie",      to: localizePath("/diensten/montage") },
+    { title: "Reparatie & Onderhoud",   to: localizePath("/diensten/reparatie") },
   ];
   return (
     <section style={{ background: "#1c1c1c", padding: "72px 0" }}>
       <style>{`.db-card{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease}.db-on .db-card{opacity:1;transform:none}`}</style>
       <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 " + (vis ? "db-on" : "")}>
         <div style={{ marginBottom: "40px" }}>
-          <p style={{ margin: "0 0 10px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>OOK INTERESSANT</p>
+          <p style={{ margin: "0 0 10px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>{t("sectorsPage.relatedEyebrow", "ALSO INTERESTING")}</p>
           <h2 style={{ margin: 0, fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px,2.6vw,34px)", textTransform: "uppercase", color: "#fff", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-            ONZE <span style={{ color: "var(--fw-website-primary)" }}>DIENSTEN</span>
+            {t("sectorsPage.relatedTitle", "OUR ")}<span style={{ color: "var(--fw-website-primary)" }}>{t("sectorsPage.relatedAccent", "SERVICES")}</span>
           </h2>
         </div>
         <div className="fw-five-col-grid" style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: "16px" }}>
@@ -162,7 +166,7 @@ function DienstenBanner() {
               onMouseEnter={e => e.currentTarget.style.background = "#2e2e2e"}
               onMouseLeave={e => e.currentTarget.style.background = "#252525"}>
               <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12.5px", textTransform: "uppercase", color: "#fff", lineHeight: 1.3 }}>{item.title}</div>
-              <div style={{ marginTop: "10px", color: "var(--fw-website-primary)", fontSize: "12px" }}>â†’ Meer info</div>
+              <div style={{ marginTop: "10px", color: "var(--fw-website-primary)", fontSize: "12px" }}>{t("sectorsPage.moreInfo", "→ More info")}</div>
             </Link>
           ))}
         </div>
@@ -172,28 +176,29 @@ function DienstenBanner() {
 }
 
 function CtaSection() {
+  const { t, localizePath } = useLanguage();
   return (
     <section style={{ background: "#f4f4f4", padding: "80px 0" }}>
       <div className="max-w-7xl mx-auto px-6 md:px-8">
         <div className="fw-cta-box" style={{ background: "#1c1c1c", padding: "56px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "28px" }}>
           <div>
             <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(20px,2.4vw,30px)", textTransform: "uppercase", color: "#fff", margin: "0 0 10px 0", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-              KLAAR OM <span style={{ color: "var(--fw-website-primary)" }}>TE STARTEN?</span>
+              {t("common.startProject", "READY TO")} <span style={{ color: "var(--fw-website-primary)" }}>{t("common.startProjectAccent", "GET STARTED?")}</span>
             </h2>
-            <p style={{ color: "#999", fontSize: "15px", margin: 0, lineHeight: 1.5 }}>Stuur uw tekening op of neem contact op â€” wij reageren binnen 24 uur.</p>
+            <p style={{ color: "#999", fontSize: "15px", margin: 0, lineHeight: 1.5 }}>{t("common.startProjectText", "Send your drawing or contact us - we respond within 24 hours.")}</p>
           </div>
           <div className="fw-cta-actions" style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-            <Link to="/contact"
+            <Link to={localizePath("/contact")}
               style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "var(--fw-website-primary)", padding: "16px 32px", textDecoration: "none", display: "inline-block" }}
               onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
               onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}>
-              OFFERTE AANVRAGEN
+              {t("common.getQuote", "REQUEST A QUOTE")}
             </Link>
             <a href="tel:+31165205617"
               style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#fff", background: "transparent", border: "2px solid #555", padding: "14px 28px", textDecoration: "none", display: "inline-block" }}
               onMouseEnter={e => e.currentTarget.style.borderColor = "var(--fw-website-primary)"}
               onMouseLeave={e => e.currentTarget.style.borderColor = "#555"}>
-              BEL ONS
+              {t("common.callUs", "CALL US")}
             </a>
           </div>
         </div>

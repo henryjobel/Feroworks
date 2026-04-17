@@ -1,7 +1,8 @@
 import { lazy, Suspense } from 'react'
-import { BrowserRouter, Routes, Route, Outlet, useLocation } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Outlet, useLocation, Navigate } from 'react-router-dom'
 import { CmsProvider } from './cms/CmsContext'
 import { useCms } from './cms/CmsContext'
+import { LanguageProvider } from './i18n/LanguageContext'
 import Navbar from './components/Navbar'
 import HeroBanner from './components/HeroBanner'
 import WatFernaSection from './components/WatFernaSection'
@@ -23,6 +24,8 @@ import SectorenPage from './pages/SectorenPage'
 import ManagedContentPage from './pages/ManagedContentPage'
 import RouteSeo from './seo/RouteSeo'
 import ThemeStyles from './theme/ThemeStyles'
+import { getCanonicalPathname, getLocaleFromPathname, localizePath } from '../../shared/i18n.js'
+import { isLocalizationEnabled } from '../../shared/content-localization.js'
 
 const AdminPage = lazy(() => import('./pages/AdminPage'))
 
@@ -57,6 +60,14 @@ function HomePage() {
 }
 
 function PublicLayout() {
+  const { cms } = useCms()
+  const location = useLocation()
+  const localizationEnabled = isLocalizationEnabled(cms.websiteSettings || {})
+
+  if (!localizationEnabled && getLocaleFromPathname(location.pathname) !== 'nl') {
+    return <Navigate to={localizePath(getCanonicalPathname(location.pathname), 'nl')} replace />
+  }
+
   return (
     <>
       <RouteSeo />
@@ -148,15 +159,25 @@ export function AppRoutes() {
     <Routes>
       <Route element={<PublicLayout />}>
         <Route path="/" element={<HomePage />} />
+        <Route path="/en" element={<HomePage />} />
         <Route path="/over-ons" element={<OverOnsPage />} />
+        <Route path="/en/about" element={<OverOnsPage />} />
         <Route path="/diensten" element={<DienstenPage />} />
         <Route path="/diensten/:slug" element={<DienstDetailPage />} />
+        <Route path="/en/services" element={<DienstenPage />} />
+        <Route path="/en/services/:slug" element={<DienstDetailPage />} />
         <Route path="/sectoren" element={<SectorenPage />} />
+        <Route path="/en/sectors" element={<SectorenPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:slug" element={<BlogDetailPage />} />
+        <Route path="/en/blog" element={<BlogPage />} />
+        <Route path="/en/blog/:slug" element={<BlogDetailPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/en/contact" element={<ContactPage />} />
         <Route path="/privacy-policy" element={<ManagedContentPage />} />
+        <Route path="/en/privacy-policy" element={<ManagedContentPage />} />
         <Route path="/algemene-voorwaarden" element={<ManagedContentPage />} />
+        <Route path="/en/terms-and-conditions" element={<ManagedContentPage />} />
       </Route>
       <Route path="/admin/*" element={<AdminRoute />} />
     </Routes>
@@ -165,12 +186,14 @@ export function AppRoutes() {
 
 function App({ RouterComponent = BrowserRouter, routerProps = {}, initialCms = null }) {
   return (
-    <CmsProvider initialCms={initialCms}>
-      <RouterComponent {...routerProps}>
+    <RouterComponent {...routerProps}>
+      <LanguageProvider>
+        <CmsProvider initialCms={initialCms}>
         <ThemeStyles />
         <AppContent />
-      </RouterComponent>
-    </CmsProvider>
+        </CmsProvider>
+      </LanguageProvider>
+    </RouterComponent>
   )
 }
 

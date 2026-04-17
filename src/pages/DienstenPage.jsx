@@ -8,6 +8,7 @@ import imgPortrait from "../assets/over-ons3.png";
 import imgAbout2 from "../assets/about/about-us2.jpeg";
 import imgAbout3 from "../assets/about/about-us3.jpeg";
 import { useCms } from "../cms/CmsContext";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const FALLBACK_IMAGES = [imgAbout1, imgMachine, imgLandscape, imgPortrait, imgAbout2];
 
@@ -33,21 +34,22 @@ function CheckIcon() {
 }
 
 function PageHero() {
+  const { t, localizePath } = useLanguage();
   return (
     <section style={{ position: "relative", width: "100%", minHeight: "380px", display: "flex", alignItems: "center", overflow: "hidden", background: "#141616" }}>
       <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${heroBg})`, backgroundSize: "cover", backgroundPosition: "center right" }} />
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg,rgba(20,22,22,0.94) 0%,rgba(20,22,22,0.76) 55%,rgba(20,22,22,0.4) 100%)" }} />
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8" style={{ paddingTop: "64px", paddingBottom: "64px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "24px" }}>
-          <Link to="/" style={{ color: "var(--fw-website-primary)", fontSize: "13px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Home</Link>
-          <span style={{ color: "#666", fontSize: "13px" }}>â€º</span>
-          <span style={{ color: "#aaa", fontSize: "13px", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Diensten</span>
+          <Link to={localizePath("/")} style={{ color: "var(--fw-website-primary)", fontSize: "13px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>{t("common.home", "Home")}</Link>
+          <span style={{ color: "#666", fontSize: "13px" }}>{">"}</span>
+          <span style={{ color: "#aaa", fontSize: "13px", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>{t("servicesPage.breadcrumb", "Services")}</span>
         </div>
         <h1 style={{ margin: "0 0 16px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(28px,4vw,56px)", lineHeight: 1.05, letterSpacing: "-0.5px", textTransform: "uppercase" }}>
-          <span style={{ color: "var(--fw-website-primary)" }}>ONZE </span><span style={{ color: "#fff" }}>DIENSTEN</span>
+          <span style={{ color: "var(--fw-website-primary)" }}>{t("servicesPage.heroTitle", "OUR ")}</span><span style={{ color: "#fff" }}>{t("servicesPage.heroAccent", "SERVICES")}</span>
         </h1>
         <p style={{ margin: 0, color: "#bbb", fontSize: "clamp(14px,1.6vw,17px)", lineHeight: 1.6, maxWidth: "560px" }}>
-          Van ontwerp en engineering tot productie, coating en montage â€” FerroWorks ontzorgt u volledig in metaalmaatwerk van A tot Z.
+          {t("servicesPage.heroText", "From design and engineering to production, coating and installation - FerroWorks supports your custom metal project from A to Z.")}
         </p>
         <div style={{ width: "56px", height: "4px", background: "var(--fw-website-primary)", marginTop: "28px", borderRadius: "2px" }} />
       </div>
@@ -57,10 +59,11 @@ function PageHero() {
 
 function IntroStrip() {
   const [ref, vis] = useInView(0.2);
+  const { t } = useLanguage();
   const items = [
-    { num: "15+", label: "Jaar ervaring", sub: "in metaalmaatwerk" },
-    { num: "100%", label: "Eigen productie", sub: "zonder onderaannemers" },
-    { num: "A-Z", label: "Volledig ontzorgd", sub: "van ontwerp tot montage" },
+    { num: "15+", ...(t("servicesPage.stats.0.label") ? { label: t("servicesPage.stats.0.label"), sub: t("servicesPage.stats.0.sub") } : { label: "Years of experience", sub: "in custom metalwork" }) },
+    { num: "100%", ...(t("servicesPage.stats.1.label") ? { label: t("servicesPage.stats.1.label"), sub: t("servicesPage.stats.1.sub") } : { label: "In-house production", sub: "without subcontractors" }) },
+    { num: "A-Z", ...(t("servicesPage.stats.2.label") ? { label: t("servicesPage.stats.2.label"), sub: t("servicesPage.stats.2.sub") } : { label: "Complete support", sub: "from design to installation" }) },
   ];
   return (
     <section style={{ background: "#1c1c1c", padding: "48px 0" }}>
@@ -81,6 +84,7 @@ function IntroStrip() {
 
 function DienstBlock({ dienst, index }) {
   const [ref, vis] = useInView();
+  const { t, localizePath } = useLanguage();
   const isEven = index % 2 === 0;
   const bg = isEven ? "#f4f4f4" : "#fff";
   const img = dienst.image || FALLBACK_IMAGES[index % FALLBACK_IMAGES.length];
@@ -106,11 +110,11 @@ function DienstBlock({ dienst, index }) {
           </div>
         ))}
       </div>
-      <Link to={`/diensten/${dienst.id}`}
+      <Link to={localizePath(`/diensten/${dienst.id}`)}
         style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "var(--fw-website-primary)", padding: "14px 28px", textDecoration: "none" }}
         onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
         onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}>
-        MEER INFORMATIE
+        {t("servicesPage.moreInfo", "MORE INFORMATION")}
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="#1c1c1c" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
       </Link>
     </div>
@@ -143,28 +147,29 @@ function DienstBlock({ dienst, index }) {
 }
 
 function CtaSection() {
+  const { t, localizePath } = useLanguage();
   return (
     <section style={{ background: "#f4f4f4", padding: "80px 0" }}>
       <div className="max-w-7xl mx-auto px-6 md:px-8">
         <div className="fw-cta-box" style={{ background: "#1c1c1c", padding: "56px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "28px" }}>
           <div>
             <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(20px,2.4vw,30px)", textTransform: "uppercase", color: "#fff", margin: "0 0 10px 0", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-              KLAAR OM <span style={{ color: "var(--fw-website-primary)" }}>TE STARTEN?</span>
+              {t("common.startProject", "READY TO")} <span style={{ color: "var(--fw-website-primary)" }}>{t("common.startProjectAccent", "GET STARTED?")}</span>
             </h2>
-            <p style={{ color: "#999", fontSize: "15px", margin: 0, lineHeight: 1.5 }}>Stuur uw tekening op of neem contact op â€” wij reageren binnen 24 uur.</p>
+            <p style={{ color: "#999", fontSize: "15px", margin: 0, lineHeight: 1.5 }}>{t("common.startProjectText", "Send your drawing or contact us - we respond within 24 hours.")}</p>
           </div>
           <div className="fw-cta-actions" style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-            <Link to="/contact"
+            <Link to={localizePath("/contact")}
               style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "var(--fw-website-primary)", padding: "16px 32px", textDecoration: "none", display: "inline-block" }}
               onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
               onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}>
-              OFFERTE AANVRAGEN
+              {t("common.getQuote", "REQUEST A QUOTE")}
             </Link>
             <a href="tel:+31165205617"
               style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#fff", background: "transparent", border: "2px solid #555", padding: "14px 28px", textDecoration: "none", display: "inline-block" }}
               onMouseEnter={e => e.currentTarget.style.borderColor = "var(--fw-website-primary)"}
               onMouseLeave={e => e.currentTarget.style.borderColor = "#555"}>
-              BEL ONS
+              {t("common.callUs", "CALL US")}
             </a>
           </div>
         </div>

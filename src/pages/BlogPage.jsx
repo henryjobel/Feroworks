@@ -9,6 +9,7 @@ import imgPost4 from "../assets/past work/lascertificaat-verplicht-featured-300x
 import imgPost5 from "../assets/over-ons1.png";
 import imgPost6 from "../assets/over-ons2.png";
 import { useCms } from "../cms/CmsContext";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const BLOG_FALLBACK_IMAGES = [imgPost1, imgPost2, imgPost3, imgPost4, imgPost5, imgPost6];
 
@@ -90,10 +91,9 @@ const FALLBACK_POSTS = [
   },
 ];
 
-const categories = ["Alle", "Vakmanschap", "Offshore", "Afwerking", "Certificering", "Productie", "Industrie"];
-
 /* â”€â”€ HERO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function PageHero() {
+  const { t, localizePath } = useLanguage();
   return (
     <section style={{ position: "relative", width: "100%", minHeight: "340px", display: "flex", alignItems: "center", overflow: "hidden", background: "#141616" }}>
       <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${heroBg})`, backgroundSize: "cover", backgroundPosition: "center right" }} />
@@ -101,16 +101,16 @@ function PageHero() {
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8" style={{ paddingTop: "64px", paddingBottom: "64px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "24px" }}>
-          <Link to="/" style={{ color: "var(--fw-website-primary)", fontSize: "13px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Home</Link>
-          <span style={{ color: "#666", fontSize: "13px" }}>â€º</span>
+          <Link to={localizePath("/")} style={{ color: "var(--fw-website-primary)", fontSize: "13px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>{t("common.home", "Home")}</Link>
+          <span style={{ color: "#666", fontSize: "13px" }}>{">"}</span>
           <span style={{ color: "#aaa", fontSize: "13px", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Blog</span>
         </div>
 
         <h1 style={{ margin: "0 0 16px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(28px, 4vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.5px", textTransform: "uppercase" }}>
-          <span style={{ color: "var(--fw-website-primary)" }}>KENNIS & </span><span style={{ color: "#fff" }}>INZICHTEN</span>
+          <span style={{ color: "var(--fw-website-primary)" }}>{t("blogPage.heroTitle", "KNOWLEDGE & ")}</span><span style={{ color: "#fff" }}>{t("blogPage.heroAccent", "INSIGHTS")}</span>
         </h1>
         <p style={{ margin: 0, color: "#bbb", fontSize: "clamp(14px, 1.6vw, 17px)", lineHeight: 1.6, maxWidth: "520px" }}>
-          Vakartikelen, projectverhalen en technische inzichten vanuit de dagelijkse praktijk van FerroWorks.
+          {t("blogPage.heroText", "Industry articles, project stories and technical insights from FerroWorks' day-to-day practice.")}
         </p>
         <div style={{ width: "56px", height: "4px", background: "var(--fw-website-primary)", marginTop: "28px", borderRadius: "2px" }} />
       </div>
@@ -121,6 +121,7 @@ function PageHero() {
 /* â”€â”€ FEATURED POST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function FeaturedPost({ post, imgSrc }) {
   const [ref, vis] = useInView();
+  const { t, localizePath } = useLanguage();
   return (
     <section style={{ background: "#f4f4f4", padding: "72px 0" }}>
       <style>{`
@@ -143,7 +144,7 @@ function FeaturedPost({ post, imgSrc }) {
             style={{ position: "relative", zIndex: 1, width: "100%", height: "400px", objectFit: "cover", display: "block", boxShadow: "0 8px 32px rgba(0,0,0,0.14)" }}
           />
           <div style={{ position: "absolute", bottom: "20px", left: "20px", zIndex: 2, background: "var(--fw-website-primary)", padding: "6px 14px" }}>
-            <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", textTransform: "uppercase", letterSpacing: "1px", color: "#1c1c1c" }}>Uitgelicht</span>
+            <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", textTransform: "uppercase", letterSpacing: "1px", color: "#1c1c1c" }}>{t("blogPage.featured", "Featured")}</span>
           </div>
         </div>
 
@@ -152,7 +153,7 @@ function FeaturedPost({ post, imgSrc }) {
           <div className="fp-meta" style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
             <span style={{ background: "#1c1c1c", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "10px", letterSpacing: "1.5px", textTransform: "uppercase", padding: "4px 10px" }}>{post.category}</span>
             <span style={{ color: "#aaa", fontSize: "13px" }}>{post.date}</span>
-            <span style={{ color: "#aaa", fontSize: "13px" }}>Â· {post.readTime} leestijd</span>
+            <span style={{ color: "#aaa", fontSize: "13px" }}>· {post.readTime} {t("blogPage.readTime", "read time")}</span>
           </div>
 
           <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(20px, 2.4vw, 28px)", lineHeight: 1.15, letterSpacing: "-0.3px", color: "#1c1c1c", textTransform: "uppercase", margin: "0 0 20px 0" }}>
@@ -164,12 +165,12 @@ function FeaturedPost({ post, imgSrc }) {
           </p>
 
           <Link
-            to={`/blog/${post.slug || post.id}`}
+            to={localizePath(`/blog/${post.slug || post.id}`)}
             style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "var(--fw-website-primary)", padding: "16px 32px", textDecoration: "none", display: "inline-block", transition: "background .2s" }}
             onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
             onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}
           >
-            LEES ARTIKEL
+            {t("common.readArticle", "READ ARTICLE")}
           </Link>
         </div>
       </div>
@@ -179,6 +180,7 @@ function FeaturedPost({ post, imgSrc }) {
 
 /* â”€â”€ BLOG CARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function BlogCard({ post, imgSrc, delay = 0 }) {
+  const { t, localizePath } = useLanguage();
   return (
     <div
       className="blog-card"
@@ -217,7 +219,7 @@ function BlogCard({ post, imgSrc, delay = 0 }) {
       <div style={{ padding: "28px 24px", display: "flex", flexDirection: "column", flex: 1 }}>
         <div className="blog-meta" style={{ display: "flex", gap: "12px", marginBottom: "12px" }}>
           <span style={{ color: "#aaa", fontSize: "12px" }}>{post.date}</span>
-          <span style={{ color: "#aaa", fontSize: "12px" }}>Â· {post.readTime} leestijd</span>
+          <span style={{ color: "#aaa", fontSize: "12px" }}>· {post.readTime} {t("blogPage.readTime", "read time")}</span>
         </div>
 
         <h3 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "16px", lineHeight: 1.25, letterSpacing: "-0.2px", color: "#1c1c1c", textTransform: "uppercase", margin: "0 0 14px 0" }}>
@@ -229,12 +231,12 @@ function BlogCard({ post, imgSrc, delay = 0 }) {
         </p>
 
         <Link
-          to={`/blog/${post.slug || post.id}`}
+          to={localizePath(`/blog/${post.slug || post.id}`)}
           style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.5px", color: "var(--fw-website-primary)", textDecoration: "none", marginTop: "auto" }}
           onMouseEnter={e => e.currentTarget.style.gap = "10px"}
           onMouseLeave={e => e.currentTarget.style.gap = "6px"}
         >
-          LEES MEER
+          {t("common.readMore", "READ MORE")}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
             <path d="M5 12h14M12 5l7 7-7 7" stroke="var(--fw-website-primary)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
@@ -247,9 +249,19 @@ function BlogCard({ post, imgSrc, delay = 0 }) {
 /* â”€â”€ BLOG GRID â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function BlogGrid({ posts }) {
   const [ref, vis] = useInView(0.05);
-  const [activeCategory, setActiveCategory] = useState("Alle");
+  const { t } = useLanguage();
+  const categories = [
+    t("blogPage.categories.all", "All"),
+    t("blogPage.categories.craftsmanship", "Craftsmanship"),
+    t("blogPage.categories.offshore", "Offshore"),
+    t("blogPage.categories.finishing", "Finishing"),
+    t("blogPage.categories.certification", "Certification"),
+    t("blogPage.categories.production", "Production"),
+    t("blogPage.categories.industry", "Industry"),
+  ];
+  const [activeCategory, setActiveCategory] = useState(categories[0]);
 
-  const filtered = activeCategory === "Alle"
+  const filtered = activeCategory === categories[0]
     ? posts.filter(p => !p.featured)
     : posts.filter(p => !p.featured && p.category === activeCategory);
 
@@ -268,9 +280,9 @@ function BlogGrid({ posts }) {
         {/* Header + filter */}
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "20px", marginBottom: "48px" }}>
           <div>
-            <p style={{ margin: "0 0 10px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>ALLE ARTIKELEN</p>
+            <p style={{ margin: "0 0 10px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>{t("blogPage.allArticles", "ALL ARTICLES")}</p>
             <h2 style={{ margin: 0, fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px, 2.4vw, 30px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-              <span style={{ color: "#1c1c1c" }}>RECENTE </span><span style={{ color: "var(--fw-website-primary)" }}>PUBLICATIES</span>
+              <span style={{ color: "#1c1c1c" }}>{t("blogPage.recentTitle", "RECENT ")}</span><span style={{ color: "var(--fw-website-primary)" }}>{t("blogPage.recentAccent", "PUBLICATIONS")}</span>
             </h2>
           </div>
 
@@ -303,7 +315,7 @@ function BlogGrid({ posts }) {
             <BlogCard key={post.id} post={post} imgSrc={post.image || BLOG_FALLBACK_IMAGES[i % BLOG_FALLBACK_IMAGES.length]} delay={i * 0.1} />
           )) : (
             <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "60px 0", color: "#aaa", fontFamily: "Arial Black, Arial, sans-serif", fontSize: "14px", textTransform: "uppercase", letterSpacing: "1px" }}>
-              Geen artikelen gevonden in deze categorie.
+              {t("blogPage.noResults", "No articles found in this category.")}
             </div>
           )}
         </div>
@@ -315,6 +327,7 @@ function BlogGrid({ posts }) {
 /* â”€â”€ NIEUWSBRIEF CTA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function NewsletterCta() {
   const [ref, vis] = useInView(0.2);
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
@@ -326,7 +339,7 @@ function NewsletterCta() {
       setDone(true);
       setError("");
     } catch (err) {
-      setError(err.message || "Inschrijven mislukt.");
+      setError(err.message || t("blogPage.newsletterError", "Subscription failed."));
     }
   }
 
@@ -338,17 +351,17 @@ function NewsletterCta() {
       `}</style>
       <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 " + (vis ? "nl-on" : "")}>
         <div className="nl-inner" style={{ maxWidth: "600px", margin: "0 auto", textAlign: "center" }}>
-          <p style={{ margin: "0 0 12px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>BLIJF OP DE HOOGTE</p>
+          <p style={{ margin: "0 0 12px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>{t("blogPage.newsletterEyebrow", "STAY INFORMED")}</p>
           <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px, 2.4vw, 30px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px", color: "#fff", margin: "0 0 16px 0" }}>
-            ONTVANG ONZE <span style={{ color: "var(--fw-website-primary)" }}>NIEUWSBRIEF</span>
+            {t("blogPage.newsletterTitle", "RECEIVE OUR ")}<span style={{ color: "var(--fw-website-primary)" }}>{t("blogPage.newsletterAccent", "NEWSLETTER")}</span>
           </h2>
           <p style={{ color: "#888", fontSize: "15px", lineHeight: 1.6, margin: "0 0 32px 0" }}>
-            Nieuwe artikelen, projectupdates en technische tips â€” direct in uw inbox.
+            {t("blogPage.newsletterText", "New articles, project updates and technical tips - straight to your inbox.")}
           </p>
 
           {done ? (
             <div style={{ background: "#252525", borderLeft: "4px solid var(--fw-website-primary)", padding: "20px 24px", textAlign: "left" }}>
-              <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "14px", color: "#fff", textTransform: "uppercase" }}>Inschrijving gelukt! âœ“</span>
+              <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "14px", color: "#fff", textTransform: "uppercase" }}>{t("blogPage.newsletterSuccess", "Subscription successful! ✓")}</span>
             </div>
           ) : (
             <form className="nl-form" onSubmit={handleSubmit} style={{ display: "flex", gap: "0", maxWidth: "480px", margin: "0 auto" }}>
@@ -368,7 +381,7 @@ function NewsletterCta() {
                 onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
                 onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}
               >
-                INSCHRIJVEN
+                {t("blogPage.newsletterCta", "SUBSCRIBE")}
               </button>
             </form>
           )}
@@ -381,24 +394,25 @@ function NewsletterCta() {
 
 /* â”€â”€ CTA STRIP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function CtaStrip() {
+  const { t, localizePath } = useLanguage();
   return (
     <section style={{ background: "#f4f4f4", padding: "72px 0" }}>
       <div className="max-w-7xl mx-auto px-6 md:px-8">
         <div className="fw-cta-box" style={{ background: "#1c1c1c", padding: "48px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "24px" }}>
           <div>
             <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(18px, 2.2vw, 26px)", textTransform: "uppercase", color: "#fff", margin: "0 0 8px 0", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-              EEN PROJECT IN <span style={{ color: "var(--fw-website-primary)" }}>GEDACHTEN?</span>
+              {t("blogPage.ctaTitle", "HAVE A PROJECT ")}<span style={{ color: "var(--fw-website-primary)" }}>{t("blogPage.ctaAccent", "IN MIND?")}</span>
             </h2>
-            <p style={{ color: "#888", fontSize: "14px", margin: 0 }}>Neem contact op â€” wij denken graag met u mee.</p>
+            <p style={{ color: "#888", fontSize: "14px", margin: 0 }}>{t("blogPage.ctaText", "Get in touch - we would love to think along with you.")}</p>
           </div>
           <Link
-            to="/contact"
+            to={localizePath("/contact")}
             className="fw-primary-action"
             style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "var(--fw-website-primary)", padding: "16px 32px", textDecoration: "none", display: "inline-block", transition: "background .2s", flexShrink: 0 }}
             onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
             onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}
           >
-            NEEM CONTACT OP
+            {t("common.contactUs", "CONTACT US")}
           </Link>
         </div>
       </div>
