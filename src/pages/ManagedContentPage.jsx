@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+﻿import { Link, useLocation } from "react-router-dom";
 import { useCms } from "../cms/CmsContext";
 import heroBg from "../assets/hero-background.jpeg";
 import RichTextContent from "../components/RichTextContent";
@@ -19,12 +19,12 @@ export default function ManagedContentPage() {
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(20,22,22,0.93) 0%, rgba(20,22,22,0.75) 55%, rgba(20,22,22,0.4) 100%)" }} />
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8" style={{ paddingTop: "64px", paddingBottom: "64px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "24px" }}>
-            <Link to="/" style={{ color: "#c8d400", fontSize: "13px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Home</Link>
-            <span style={{ color: "#666", fontSize: "13px" }}>›</span>
+            <Link to="/" style={{ color: "var(--fw-website-primary)", fontSize: "13px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Home</Link>
+            <span style={{ color: "#666", fontSize: "13px" }}>â€º</span>
             <span style={{ color: "#aaa", fontSize: "13px", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>{page.name}</span>
           </div>
           <h1 style={{ margin: "0 0 16px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(28px, 4vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.5px", textTransform: "uppercase" }}>
-            <span style={{ color: "#c8d400" }}>{page.heroTitle || page.name}</span>
+            <span style={{ color: "var(--fw-website-primary)" }}>{page.heroTitle || page.name}</span>
           </h1>
           <p style={{ margin: 0, color: "#bbb", fontSize: "clamp(14px, 1.6vw, 17px)", lineHeight: 1.6, maxWidth: "680px" }}>
             {page.heroSubtitle || page.metaDescription}
@@ -65,3 +65,5 @@ export default function ManagedContentPage() {
     </>
   );
 }
+
+

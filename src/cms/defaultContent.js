@@ -381,5 +381,13 @@ export const DEFAULT_CMS = {
     googleTagManagerId: "",
     metaPixelId: "",
     linkedInInsightTagId: "",
+    theme: {
+      dashboardFont: "default",
+      websiteFont: "default",
+      dashboardPrimaryColor: "#c8d400",
+      dashboardSecondaryColor: "#1c1c1c",
+      websitePrimaryColor: "#c8d400",
+      websiteSecondaryColor: "#1c1c1c",
+    },
   },
 };

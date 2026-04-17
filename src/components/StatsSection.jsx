@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { useCms } from "../cms/CmsContext";
 
 function StatItem({ number, desc, delay }) {
@@ -18,15 +18,15 @@ function StatItem({ number, desc, delay }) {
         <span style={{
           position: "absolute", top: 0, left: 0,
           width: "12px", height: "12px",
-          borderTop: "2.5px solid #c8d400",
-          borderLeft: "2.5px solid #c8d400",
+          borderTop: "2.5px solid var(--fw-website-primary)",
+          borderLeft: "2.5px solid var(--fw-website-primary)",
         }} />
         {/* Bottom-right corner */}
         <span style={{
           position: "absolute", bottom: 0, right: 0,
           width: "12px", height: "12px",
-          borderBottom: "2.5px solid #c8d400",
-          borderRight: "2.5px solid #c8d400",
+          borderBottom: "2.5px solid var(--fw-website-primary)",
+          borderRight: "2.5px solid var(--fw-website-primary)",
         }} />
 
         <span style={{
@@ -109,3 +109,5 @@ function StatsSection() {
 }
 
 export default StatsSection;
+
+

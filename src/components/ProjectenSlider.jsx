@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+﻿import { useState, useEffect, useRef } from "react";
 import img1 from "../assets/past work/Afwerking-staalconstructie-met-natlak-300x225.webp";
 import img2 from "../assets/past work/kwaliteitscontrole-lassen-featured-300x225.webp";
 import img3 from "../assets/past work/lascertificaat-verplicht-featured-300x158.webp";
@@ -99,7 +99,7 @@ function ProjectenSlider() {
             textAlign: "center",
           }}
         >
-          <span style={{ color: "#c8d400" }}>PROJECTEN </span>
+          <span style={{ color: "var(--fw-website-primary)" }}>PROJECTEN </span>
           <span style={{ color: "#1c1c1c" }}>UIT HET VERLEDEN</span>
         </h2>
 
@@ -171,7 +171,7 @@ function ProjectenSlider() {
               className="ps-dot"
               onClick={() => goTo(i)}
               aria-label={`Slide ${i + 1}`}
-              style={{ background: i === current ? "#c8d400" : "#bbb" }}
+              style={{ background: i === current ? "var(--fw-website-primary)" : "#bbb" }}
             />
           ))}
         </div>
@@ -182,7 +182,7 @@ function ProjectenSlider() {
             href="/contact"
             style={{
               display: "inline-block",
-              background: "#8ab61e",
+              background: "var(--fw-website-primary-strong)",
               color: "#fff",
               fontFamily: "Arial Black, Arial, sans-serif",
               fontWeight: 900,
@@ -195,7 +195,7 @@ function ProjectenSlider() {
               transition: "background 0.2s",
             }}
             onMouseEnter={e => e.currentTarget.style.background = "#7aa318"}
-            onMouseLeave={e => e.currentTarget.style.background = "#8ab61e"}
+            onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
           >
             NEEM CONTACT OP
           </a>
@@ -213,3 +213,5 @@ function ProjectenSlider() {
 }
 
 export default ProjectenSlider;
+
+

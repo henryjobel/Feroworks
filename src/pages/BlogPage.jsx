@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { api } from "../api/client";
 import { Link } from "react-router-dom";
 import heroBg from "../assets/hero-background.jpeg";
@@ -26,7 +26,7 @@ function useInView(threshold = 0.1) {
   return [ref, vis];
 }
 
-/* ── STATIC DATA (fallback) ──────────────────────────────────────────── */
+/* â”€â”€ STATIC DATA (fallback) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const FALLBACK_POSTS = [
   {
     id: 1,
@@ -35,7 +35,7 @@ const FALLBACK_POSTS = [
     readTime: "4 min",
     title: "Waarom kwaliteitscontrole bij lassen het verschil maakt",
     excerpt:
-      "In de metaalbewerking is lassen een van de meest kritische processen. Een kleine fout in de las kan grote gevolgen hebben voor de veiligheid en levensduur van een constructie. Ontdek hoe FerroWorks kwaliteitscontrole inzet als standaard — niet als uitzondering.",
+      "In de metaalbewerking is lassen een van de meest kritische processen. Een kleine fout in de las kan grote gevolgen hebben voor de veiligheid en levensduur van een constructie. Ontdek hoe FerroWorks kwaliteitscontrole inzet als standaard â€” niet als uitzondering.",
   img: imgPost1, featured: true,
   },
   {
@@ -85,14 +85,14 @@ const FALLBACK_POSTS = [
     readTime: "5 min",
     title: "Maatwerk staal voor de industrie: 5 veelgemaakte fouten vermeden",
     excerpt:
-      "Bij industrieel staalmaatwerk gaat het soms mis — niet door slechte intenties, maar door gebrek aan kennis of slechte communicatie. We bespreken vijf veelgemaakte fouten en hoe u ze kunt voorkomen.",
+      "Bij industrieel staalmaatwerk gaat het soms mis â€” niet door slechte intenties, maar door gebrek aan kennis of slechte communicatie. We bespreken vijf veelgemaakte fouten en hoe u ze kunt voorkomen.",
   img: imgPost6, featured: false,
   },
 ];
 
 const categories = ["Alle", "Vakmanschap", "Offshore", "Afwerking", "Certificering", "Productie", "Industrie"];
 
-/* ── HERO ─────────────────────────────────────────────────────────────── */
+/* â”€â”€ HERO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function PageHero() {
   return (
     <section style={{ position: "relative", width: "100%", minHeight: "340px", display: "flex", alignItems: "center", overflow: "hidden", background: "#141616" }}>
@@ -101,24 +101,24 @@ function PageHero() {
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8" style={{ paddingTop: "64px", paddingBottom: "64px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "24px" }}>
-          <Link to="/" style={{ color: "#c8d400", fontSize: "13px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Home</Link>
-          <span style={{ color: "#666", fontSize: "13px" }}>›</span>
+          <Link to="/" style={{ color: "var(--fw-website-primary)", fontSize: "13px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Home</Link>
+          <span style={{ color: "#666", fontSize: "13px" }}>â€º</span>
           <span style={{ color: "#aaa", fontSize: "13px", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Blog</span>
         </div>
 
         <h1 style={{ margin: "0 0 16px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(28px, 4vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.5px", textTransform: "uppercase" }}>
-          <span style={{ color: "#c8d400" }}>KENNIS & </span><span style={{ color: "#fff" }}>INZICHTEN</span>
+          <span style={{ color: "var(--fw-website-primary)" }}>KENNIS & </span><span style={{ color: "#fff" }}>INZICHTEN</span>
         </h1>
         <p style={{ margin: 0, color: "#bbb", fontSize: "clamp(14px, 1.6vw, 17px)", lineHeight: 1.6, maxWidth: "520px" }}>
           Vakartikelen, projectverhalen en technische inzichten vanuit de dagelijkse praktijk van FerroWorks.
         </p>
-        <div style={{ width: "56px", height: "4px", background: "#c8d400", marginTop: "28px", borderRadius: "2px" }} />
+        <div style={{ width: "56px", height: "4px", background: "var(--fw-website-primary)", marginTop: "28px", borderRadius: "2px" }} />
       </div>
     </section>
   );
 }
 
-/* ── FEATURED POST ────────────────────────────────────────────────────── */
+/* â”€â”€ FEATURED POST â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function FeaturedPost({ post, imgSrc }) {
   const [ref, vis] = useInView();
   return (
@@ -135,14 +135,14 @@ function FeaturedPost({ post, imgSrc }) {
 
         {/* Image */}
         <div className="fp-left" style={{ position: "relative", overflow: "hidden" }}>
-          <div style={{ position: "absolute", top: "-12px", left: "-12px", width: "64px", height: "64px", background: "#c8d400", zIndex: 0 }} />
+          <div style={{ position: "absolute", top: "-12px", left: "-12px", width: "64px", height: "64px", background: "var(--fw-website-primary)", zIndex: 0 }} />
           <img
             className="fp-image"
             src={imgSrc}
             alt={post.title}
             style={{ position: "relative", zIndex: 1, width: "100%", height: "400px", objectFit: "cover", display: "block", boxShadow: "0 8px 32px rgba(0,0,0,0.14)" }}
           />
-          <div style={{ position: "absolute", bottom: "20px", left: "20px", zIndex: 2, background: "#c8d400", padding: "6px 14px" }}>
+          <div style={{ position: "absolute", bottom: "20px", left: "20px", zIndex: 2, background: "var(--fw-website-primary)", padding: "6px 14px" }}>
             <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", textTransform: "uppercase", letterSpacing: "1px", color: "#1c1c1c" }}>Uitgelicht</span>
           </div>
         </div>
@@ -150,9 +150,9 @@ function FeaturedPost({ post, imgSrc }) {
         {/* Text */}
         <div className="fp-right">
           <div className="fp-meta" style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
-            <span style={{ background: "#1c1c1c", color: "#c8d400", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "10px", letterSpacing: "1.5px", textTransform: "uppercase", padding: "4px 10px" }}>{post.category}</span>
+            <span style={{ background: "#1c1c1c", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "10px", letterSpacing: "1.5px", textTransform: "uppercase", padding: "4px 10px" }}>{post.category}</span>
             <span style={{ color: "#aaa", fontSize: "13px" }}>{post.date}</span>
-            <span style={{ color: "#aaa", fontSize: "13px" }}>· {post.readTime} leestijd</span>
+            <span style={{ color: "#aaa", fontSize: "13px" }}>Â· {post.readTime} leestijd</span>
           </div>
 
           <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(20px, 2.4vw, 28px)", lineHeight: 1.15, letterSpacing: "-0.3px", color: "#1c1c1c", textTransform: "uppercase", margin: "0 0 20px 0" }}>
@@ -165,9 +165,9 @@ function FeaturedPost({ post, imgSrc }) {
 
           <Link
             to={`/blog/${post.slug || post.id}`}
-            style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "#c8d400", padding: "16px 32px", textDecoration: "none", display: "inline-block", transition: "background .2s" }}
-            onMouseEnter={e => e.currentTarget.style.background = "#b3be00"}
-            onMouseLeave={e => e.currentTarget.style.background = "#c8d400"}
+            style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "var(--fw-website-primary)", padding: "16px 32px", textDecoration: "none", display: "inline-block", transition: "background .2s" }}
+            onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
+            onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}
           >
             LEES ARTIKEL
           </Link>
@@ -177,7 +177,7 @@ function FeaturedPost({ post, imgSrc }) {
   );
 }
 
-/* ── BLOG CARD ────────────────────────────────────────────────────────── */
+/* â”€â”€ BLOG CARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function BlogCard({ post, imgSrc, delay = 0 }) {
   return (
     <div
@@ -208,7 +208,7 @@ function BlogCard({ post, imgSrc, delay = 0 }) {
           onMouseEnter={e => e.currentTarget.style.transform = "scale(1.04)"}
           onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
         />
-        <div style={{ position: "absolute", top: "14px", left: "14px", background: "#c8d400", padding: "4px 10px" }}>
+        <div style={{ position: "absolute", top: "14px", left: "14px", background: "var(--fw-website-primary)", padding: "4px 10px" }}>
           <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "10px", textTransform: "uppercase", letterSpacing: "1px", color: "#1c1c1c" }}>{post.category}</span>
         </div>
       </div>
@@ -217,7 +217,7 @@ function BlogCard({ post, imgSrc, delay = 0 }) {
       <div style={{ padding: "28px 24px", display: "flex", flexDirection: "column", flex: 1 }}>
         <div className="blog-meta" style={{ display: "flex", gap: "12px", marginBottom: "12px" }}>
           <span style={{ color: "#aaa", fontSize: "12px" }}>{post.date}</span>
-          <span style={{ color: "#aaa", fontSize: "12px" }}>· {post.readTime} leestijd</span>
+          <span style={{ color: "#aaa", fontSize: "12px" }}>Â· {post.readTime} leestijd</span>
         </div>
 
         <h3 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "16px", lineHeight: 1.25, letterSpacing: "-0.2px", color: "#1c1c1c", textTransform: "uppercase", margin: "0 0 14px 0" }}>
@@ -230,13 +230,13 @@ function BlogCard({ post, imgSrc, delay = 0 }) {
 
         <Link
           to={`/blog/${post.slug || post.id}`}
-          style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#c8d400", textDecoration: "none", marginTop: "auto" }}
+          style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.5px", color: "var(--fw-website-primary)", textDecoration: "none", marginTop: "auto" }}
           onMouseEnter={e => e.currentTarget.style.gap = "10px"}
           onMouseLeave={e => e.currentTarget.style.gap = "6px"}
         >
           LEES MEER
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12h14M12 5l7 7-7 7" stroke="#c8d400" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M5 12h14M12 5l7 7-7 7" stroke="var(--fw-website-primary)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </Link>
       </div>
@@ -244,7 +244,7 @@ function BlogCard({ post, imgSrc, delay = 0 }) {
   );
 }
 
-/* ── BLOG GRID ────────────────────────────────────────────────────────── */
+/* â”€â”€ BLOG GRID â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function BlogGrid({ posts }) {
   const [ref, vis] = useInView(0.05);
   const [activeCategory, setActiveCategory] = useState("Alle");
@@ -259,8 +259,8 @@ function BlogGrid({ posts }) {
         .bg-grid { opacity:0; transform:translateY(24px); transition: opacity .6s ease, transform .6s ease; }
         .bg-on .bg-grid { opacity:1; transform:none; }
         .cat-btn { background: transparent; border: 1.5px solid #ddd; cursor: pointer; transition: all .2s; }
-        .cat-btn:hover { border-color: #c8d400; color: #1c1c1c !important; }
-        .cat-btn.active { background: #c8d400 !important; border-color: #c8d400 !important; color: #1c1c1c !important; }
+        .cat-btn:hover { border-color: var(--fw-website-primary); color: #1c1c1c !important; }
+        .cat-btn.active { background: var(--fw-website-primary) !important; border-color: var(--fw-website-primary) !important; color: #1c1c1c !important; }
       `}</style>
 
       <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 " + (vis ? "bg-on" : "")}>
@@ -268,9 +268,9 @@ function BlogGrid({ posts }) {
         {/* Header + filter */}
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "20px", marginBottom: "48px" }}>
           <div>
-            <p style={{ margin: "0 0 10px 0", color: "#c8d400", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>ALLE ARTIKELEN</p>
+            <p style={{ margin: "0 0 10px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>ALLE ARTIKELEN</p>
             <h2 style={{ margin: 0, fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px, 2.4vw, 30px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-              <span style={{ color: "#1c1c1c" }}>RECENTE </span><span style={{ color: "#c8d400" }}>PUBLICATIES</span>
+              <span style={{ color: "#1c1c1c" }}>RECENTE </span><span style={{ color: "var(--fw-website-primary)" }}>PUBLICATIES</span>
             </h2>
           </div>
 
@@ -312,7 +312,7 @@ function BlogGrid({ posts }) {
   );
 }
 
-/* ── NIEUWSBRIEF CTA ──────────────────────────────────────────────────── */
+/* â”€â”€ NIEUWSBRIEF CTA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function NewsletterCta() {
   const [ref, vis] = useInView(0.2);
   const [email, setEmail] = useState("");
@@ -338,17 +338,17 @@ function NewsletterCta() {
       `}</style>
       <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 " + (vis ? "nl-on" : "")}>
         <div className="nl-inner" style={{ maxWidth: "600px", margin: "0 auto", textAlign: "center" }}>
-          <p style={{ margin: "0 0 12px 0", color: "#c8d400", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>BLIJF OP DE HOOGTE</p>
+          <p style={{ margin: "0 0 12px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>BLIJF OP DE HOOGTE</p>
           <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px, 2.4vw, 30px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px", color: "#fff", margin: "0 0 16px 0" }}>
-            ONTVANG ONZE <span style={{ color: "#c8d400" }}>NIEUWSBRIEF</span>
+            ONTVANG ONZE <span style={{ color: "var(--fw-website-primary)" }}>NIEUWSBRIEF</span>
           </h2>
           <p style={{ color: "#888", fontSize: "15px", lineHeight: 1.6, margin: "0 0 32px 0" }}>
-            Nieuwe artikelen, projectupdates en technische tips — direct in uw inbox.
+            Nieuwe artikelen, projectupdates en technische tips â€” direct in uw inbox.
           </p>
 
           {done ? (
-            <div style={{ background: "#252525", borderLeft: "4px solid #c8d400", padding: "20px 24px", textAlign: "left" }}>
-              <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "14px", color: "#fff", textTransform: "uppercase" }}>Inschrijving gelukt! ✓</span>
+            <div style={{ background: "#252525", borderLeft: "4px solid var(--fw-website-primary)", padding: "20px 24px", textAlign: "left" }}>
+              <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "14px", color: "#fff", textTransform: "uppercase" }}>Inschrijving gelukt! âœ“</span>
             </div>
           ) : (
             <form className="nl-form" onSubmit={handleSubmit} style={{ display: "flex", gap: "0", maxWidth: "480px", margin: "0 auto" }}>
@@ -359,14 +359,14 @@ function NewsletterCta() {
                 placeholder="uw@email.nl"
                 required
                 style={{ flex: 1, background: "#2a2a2a", border: "1.5px solid #444", borderRight: "none", padding: "16px 18px", fontSize: "14px", color: "#fff", fontFamily: "Arial, sans-serif", outline: "none" }}
-                onFocus={e => e.currentTarget.style.borderColor = "#c8d400"}
+                onFocus={e => e.currentTarget.style.borderColor = "var(--fw-website-primary)"}
                 onBlur={e => e.currentTarget.style.borderColor = "#444"}
               />
               <button
                 type="submit"
-                style={{ background: "#c8d400", border: "none", padding: "16px 28px", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.8px", color: "#1c1c1c", cursor: "pointer", transition: "background .2s", flexShrink: 0 }}
-                onMouseEnter={e => e.currentTarget.style.background = "#b3be00"}
-                onMouseLeave={e => e.currentTarget.style.background = "#c8d400"}
+                style={{ background: "var(--fw-website-primary)", border: "none", padding: "16px 28px", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.8px", color: "#1c1c1c", cursor: "pointer", transition: "background .2s", flexShrink: 0 }}
+                onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
+                onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}
               >
                 INSCHRIJVEN
               </button>
@@ -379,7 +379,7 @@ function NewsletterCta() {
   );
 }
 
-/* ── CTA STRIP ────────────────────────────────────────────────────────── */
+/* â”€â”€ CTA STRIP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function CtaStrip() {
   return (
     <section style={{ background: "#f4f4f4", padding: "72px 0" }}>
@@ -387,16 +387,16 @@ function CtaStrip() {
         <div className="fw-cta-box" style={{ background: "#1c1c1c", padding: "48px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "24px" }}>
           <div>
             <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(18px, 2.2vw, 26px)", textTransform: "uppercase", color: "#fff", margin: "0 0 8px 0", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-              EEN PROJECT IN <span style={{ color: "#c8d400" }}>GEDACHTEN?</span>
+              EEN PROJECT IN <span style={{ color: "var(--fw-website-primary)" }}>GEDACHTEN?</span>
             </h2>
-            <p style={{ color: "#888", fontSize: "14px", margin: 0 }}>Neem contact op — wij denken graag met u mee.</p>
+            <p style={{ color: "#888", fontSize: "14px", margin: 0 }}>Neem contact op â€” wij denken graag met u mee.</p>
           </div>
           <Link
             to="/contact"
             className="fw-primary-action"
-            style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "#c8d400", padding: "16px 32px", textDecoration: "none", display: "inline-block", transition: "background .2s", flexShrink: 0 }}
-            onMouseEnter={e => e.currentTarget.style.background = "#b3be00"}
-            onMouseLeave={e => e.currentTarget.style.background = "#c8d400"}
+            style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "var(--fw-website-primary)", padding: "16px 32px", textDecoration: "none", display: "inline-block", transition: "background .2s", flexShrink: 0 }}
+            onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
+            onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}
           >
             NEEM CONTACT OP
           </Link>
@@ -406,7 +406,7 @@ function CtaStrip() {
   );
 }
 
-/* ── PAGE EXPORT ──────────────────────────────────────────────────────── */
+/* â”€â”€ PAGE EXPORT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export default function BlogPage() {
   const { cms } = useCms();
   const posts = (cms.blog && cms.blog.length) ? cms.blog : FALLBACK_POSTS;
@@ -423,3 +423,5 @@ export default function BlogPage() {
     </>
   );
 }
+
+

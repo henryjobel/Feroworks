@@ -540,7 +540,15 @@ var DEFAULT_CMS = {
 		googleAnalyticsId: "",
 		googleTagManagerId: "",
 		metaPixelId: "",
-		linkedInInsightTagId: ""
+		linkedInInsightTagId: "",
+		theme: {
+			dashboardFont: "default",
+			websiteFont: "default",
+			dashboardPrimaryColor: "#c8d400",
+			dashboardSecondaryColor: "#1c1c1c",
+			websitePrimaryColor: "#c8d400",
+			websiteSecondaryColor: "#1c1c1c"
+		}
 	}
 };
 //#endregion
@@ -624,6 +632,57 @@ function RichTextContent({ html, className = "", style }) {
 		style,
 		dangerouslySetInnerHTML: { __html: sanitizeRichText(html) }
 	});
+}
+//#endregion
+//#region src/theme/themeConfig.js
+var FONT_OPTIONS = [
+	{
+		value: "default",
+		label: "Default",
+		stack: "\"Arial Black\", Arial, sans-serif",
+		bodyStack: "system-ui, -apple-system, sans-serif"
+	},
+	{
+		value: "inter",
+		label: "Inter",
+		stack: "\"Inter\", \"Segoe UI\", Arial, sans-serif",
+		bodyStack: "\"Inter\", \"Segoe UI\", Arial, sans-serif"
+	},
+	{
+		value: "poppins",
+		label: "Poppins",
+		stack: "\"Poppins\", \"Segoe UI\", Arial, sans-serif",
+		bodyStack: "\"Poppins\", \"Segoe UI\", Arial, sans-serif"
+	},
+	{
+		value: "montserrat",
+		label: "Montserrat",
+		stack: "\"Montserrat\", \"Segoe UI\", Arial, sans-serif",
+		bodyStack: "\"Montserrat\", \"Segoe UI\", Arial, sans-serif"
+	},
+	{
+		value: "oswald",
+		label: "Oswald",
+		stack: "\"Oswald\", \"Arial Narrow\", sans-serif",
+		bodyStack: "\"Inter\", \"Segoe UI\", Arial, sans-serif"
+	},
+	{
+		value: "playfair",
+		label: "Playfair Display",
+		stack: "\"Playfair Display\", Georgia, serif",
+		bodyStack: "\"Source Sans 3\", \"Segoe UI\", Arial, sans-serif"
+	}
+];
+var DEFAULT_THEME_SETTINGS = {
+	dashboardFont: "default",
+	websiteFont: "default",
+	dashboardPrimaryColor: "#c8d400",
+	dashboardSecondaryColor: "#1c1c1c",
+	websitePrimaryColor: "#c8d400",
+	websiteSecondaryColor: "#1c1c1c"
+};
+function getFontOption(value) {
+	return FONT_OPTIONS.find((item) => item.value === value) || FONT_OPTIONS[0];
 }
 //#endregion
 //#region src/auth/AuthContext.jsx
@@ -868,9 +927,9 @@ function baseInputStyle() {
 		color: "#333",
 		outline: "none",
 		boxSizing: "border-box",
-		fontFamily: "inherit",
 		transition: "border-color .15s",
-		background: "#fff"
+		background: "#fff",
+		fontFamily: "var(--fw-dashboard-body-font)"
 	};
 }
 function FieldLabel({ children }) {
@@ -878,7 +937,7 @@ function FieldLabel({ children }) {
 		style: {
 			display: "block",
 			fontSize: "11px",
-			fontFamily: "Arial Black, Arial, sans-serif",
+			fontFamily: "var(--fw-dashboard-heading-font)",
 			fontWeight: 900,
 			textTransform: "uppercase",
 			color: "#999",
@@ -900,7 +959,7 @@ function FormField({ label, value, onChange, placeholder, multiline, rows = 3, t
 			resize: "vertical"
 		},
 		onFocus: (e) => {
-			e.target.style.borderColor = "#c8d400";
+			e.target.style.borderColor = "var(--fw-dashboard-primary)";
 		},
 		onBlur: (e) => {
 			e.target.style.borderColor = "#e0e0e0";
@@ -910,9 +969,15 @@ function FormField({ label, value, onChange, placeholder, multiline, rows = 3, t
 		value: value || "",
 		onChange: (e) => onChange(e.target.value),
 		placeholder,
-		style: shared,
+		style: type === "color" ? {
+			...shared,
+			padding: "6px",
+			height: "44px",
+			cursor: "pointer",
+			background: "#fff"
+		} : shared,
 		onFocus: (e) => {
-			e.target.style.borderColor = "#c8d400";
+			e.target.style.borderColor = "var(--fw-dashboard-primary)";
 		},
 		onBlur: (e) => {
 			e.target.style.borderColor = "#e0e0e0";
@@ -925,7 +990,7 @@ function SelectField({ label, value, onChange, options }) {
 		onChange: (e) => onChange(e.target.value),
 		style: baseInputStyle(),
 		onFocus: (e) => {
-			e.target.style.borderColor = "#c8d400";
+			e.target.style.borderColor = "var(--fw-dashboard-primary)";
 		},
 		onBlur: (e) => {
 			e.target.style.borderColor = "#e0e0e0";
@@ -977,11 +1042,11 @@ function SectionHeader({ title, sub, action }) {
 		},
 		children: [/* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx("h2", {
 			style: {
-				fontFamily: "Arial Black, Arial, sans-serif",
+				fontFamily: "var(--fw-dashboard-heading-font)",
 				fontWeight: 900,
 				fontSize: "16px",
 				textTransform: "uppercase",
-				color: "#1c1c1c",
+				color: "var(--fw-dashboard-secondary)",
 				margin: "0 0 4px 0",
 				letterSpacing: "-0.2px"
 			},
@@ -1001,12 +1066,12 @@ function PrimaryButton({ children, ...props }) {
 		...props,
 		style: {
 			padding: "12px 24px",
-			background: "#c8d400",
-			color: "#1c1c1c",
+			background: "var(--fw-dashboard-primary)",
+			color: "var(--fw-dashboard-secondary)",
 			border: "none",
 			borderRadius: "6px",
 			cursor: "pointer",
-			fontFamily: "Arial Black, Arial, sans-serif",
+			fontFamily: "var(--fw-dashboard-heading-font)",
 			fontWeight: 900,
 			fontSize: "12px",
 			textTransform: "uppercase",
@@ -1025,7 +1090,7 @@ function SecondaryButton({ children, ...props }) {
 			border: "none",
 			borderRadius: "6px",
 			cursor: "pointer",
-			fontFamily: "Arial Black, Arial, sans-serif",
+			fontFamily: "var(--fw-dashboard-heading-font)",
 			fontWeight: 900,
 			fontSize: "12px",
 			textTransform: "uppercase",
@@ -1080,7 +1145,7 @@ function ImageUpload({ label = "Afbeelding", value, onChange }) {
 				/* @__PURE__ */ jsx(SvgIcon, {
 					d: "M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4 M17 8l-5-5-5 5 M12 3v12",
 					size: 28,
-					stroke: "#c8d400",
+					stroke: "var(--fw-dashboard-primary)",
 					strokeWidth: 1.8
 				}),
 				/* @__PURE__ */ jsx("span", {
@@ -1391,7 +1456,7 @@ function Sidebar({ collapsed, setCollapsed }) {
 					style: {
 						width: "38px",
 						height: "38px",
-						background: "#c8d400",
+						background: "var(--fw-dashboard-primary)",
 						borderRadius: "6px",
 						display: "flex",
 						alignItems: "center",
@@ -1413,7 +1478,7 @@ function Sidebar({ collapsed, setCollapsed }) {
 					})
 				}), !collapsed ? /* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsxs("div", {
 					style: {
-						fontFamily: "Arial Black, Arial, sans-serif",
+						fontFamily: "var(--fw-dashboard-heading-font)",
 						fontWeight: 900,
 						fontSize: "15px",
 						lineHeight: 1.1,
@@ -1423,7 +1488,7 @@ function Sidebar({ collapsed, setCollapsed }) {
 						style: { color: "#fff" },
 						children: "FERRO"
 					}), /* @__PURE__ */ jsx("span", {
-						style: { color: "#c8d400" },
+						style: { color: "var(--fw-dashboard-primary)" },
 						children: "WORKS"
 					})]
 				}), /* @__PURE__ */ jsx("div", {
@@ -1458,7 +1523,7 @@ function Sidebar({ collapsed, setCollapsed }) {
 							display: "flex",
 							alignItems: "center",
 							justifyContent: "space-between",
-							fontFamily: "Arial Black, Arial, sans-serif",
+							fontFamily: "var(--fw-dashboard-heading-font)",
 							fontSize: "10px",
 							textTransform: "uppercase",
 							letterSpacing: "1px",
@@ -1481,9 +1546,9 @@ function Sidebar({ collapsed, setCollapsed }) {
 								padding: collapsed ? "13px 0" : "13px 20px",
 								justifyContent: collapsed ? "center" : "flex-start",
 								background: isActive ? "rgba(200,212,0,0.1)" : "transparent",
-								borderLeft: isActive ? "3px solid #c8d400" : "3px solid transparent",
-								color: isActive ? "#c8d400" : "#666",
-								fontFamily: "Arial Black, Arial, sans-serif",
+								borderLeft: isActive ? "3px solid var(--fw-dashboard-primary)" : "3px solid transparent",
+								color: isActive ? "var(--fw-dashboard-primary)" : "#666",
+								fontFamily: "var(--fw-dashboard-heading-font)",
 								fontWeight: 900,
 								fontSize: "12px",
 								letterSpacing: "0.4px",
@@ -1516,7 +1581,7 @@ function Sidebar({ collapsed, setCollapsed }) {
 						color: "#555",
 						fontSize: "11px",
 						textDecoration: "none",
-						fontFamily: "Arial Black, Arial, sans-serif",
+						fontFamily: "var(--fw-dashboard-heading-font)",
 						fontWeight: 900,
 						textTransform: "uppercase",
 						letterSpacing: "0.4px"
@@ -1558,11 +1623,11 @@ function TopBar({ onLogout }) {
 		},
 		children: [/* @__PURE__ */ jsxs("div", { children: [/* @__PURE__ */ jsx("h1", {
 			style: {
-				fontFamily: "Arial Black, Arial, sans-serif",
+				fontFamily: "var(--fw-dashboard-heading-font)",
 				fontWeight: 900,
 				fontSize: "17px",
 				textTransform: "uppercase",
-				color: "#1c1c1c",
+				color: "var(--fw-dashboard-secondary)",
 				margin: 0,
 				letterSpacing: "-0.2px"
 			},
@@ -1606,10 +1671,10 @@ function TopBar({ onLogout }) {
 							},
 							children: [/* @__PURE__ */ jsx("div", {
 								style: {
-									fontFamily: "Arial Black, Arial, sans-serif",
+									fontFamily: "var(--fw-dashboard-heading-font)",
 									fontSize: "11px",
 									textTransform: "uppercase",
-									color: "#1c1c1c",
+									color: "var(--fw-dashboard-secondary)",
 									whiteSpace: "nowrap"
 								},
 								children: user?.name || "Admin"
@@ -1626,7 +1691,7 @@ function TopBar({ onLogout }) {
 								width: "32px",
 								height: "32px",
 								borderRadius: "50%",
-								background: "#c8d400",
+								background: "var(--fw-dashboard-primary)",
 								display: "flex",
 								alignItems: "center",
 								justifyContent: "center",
@@ -1635,7 +1700,7 @@ function TopBar({ onLogout }) {
 							children: /* @__PURE__ */ jsx(SvgIcon, {
 								d: "M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2 M12 11a4 4 0 100-8 4 4 0 000 8z",
 								size: 15,
-								stroke: "#1c1c1c",
+								stroke: "var(--fw-dashboard-secondary)",
 								strokeWidth: 2.4
 							})
 						}),
@@ -4661,7 +4726,13 @@ function SettingsPage() {
 	const { cms, updateCms } = useCms();
 	const [tab, setTab] = useState("general");
 	const [site, setSite] = useState(cms.site || {});
-	const [websiteSettings, setWebsiteSettings] = useState(cms.websiteSettings || {});
+	const [websiteSettings, setWebsiteSettings] = useState({
+		...cms.websiteSettings || {},
+		theme: {
+			...DEFAULT_THEME_SETTINGS,
+			...cms.websiteSettings?.theme || {}
+		}
+	});
 	const [emailSettings, setEmailSettings] = useState({
 		host: "",
 		port: 587,
@@ -4679,7 +4750,13 @@ function SettingsPage() {
 	const [emailBusy, setEmailBusy] = useState(false);
 	useEffect(() => {
 		setSite(cms.site || {});
-		setWebsiteSettings(cms.websiteSettings || {});
+		setWebsiteSettings({
+			...cms.websiteSettings || {},
+			theme: {
+				...DEFAULT_THEME_SETTINGS,
+				...cms.websiteSettings?.theme || {}
+			}
+		});
 	}, [cms]);
 	useEffect(() => {
 		api.getEmailSettings().then((data) => setEmailSettings(data)).catch(() => {});
@@ -4692,6 +4769,14 @@ function SettingsPage() {
 		...prev,
 		[key]: value
 	}));
+	const setThemeField = (key) => (value) => setWebsiteSettings((prev) => ({
+		...prev,
+		theme: {
+			...DEFAULT_THEME_SETTINGS,
+			...prev.theme || {},
+			[key]: value
+		}
+	}));
 	const saveGeneral = async () => {
 		if (await updateCms("site", site)) {
 			setSaved("Algemene instellingen opgeslagen.");
@@ -4703,6 +4788,14 @@ function SettingsPage() {
 			setSaved("Website-instellingen opgeslagen.");
 			window.setTimeout(() => setSaved(""), 1600);
 		}
+	};
+	const resetThemeDefaults = () => {
+		setWebsiteSettings((prev) => ({
+			...prev,
+			theme: { ...DEFAULT_THEME_SETTINGS }
+		}));
+		setSaved("Thema hersteld naar standaard. Klik nog op opslaan om dit te bewaren.");
+		window.setTimeout(() => setSaved(""), 2200);
 	};
 	const saveEmail = async () => {
 		try {
@@ -4753,6 +4846,10 @@ function SettingsPage() {
 				{
 					id: "website",
 					label: "Website"
+				},
+				{
+					id: "theme",
+					label: "Theme"
 				},
 				{
 					id: "email",
@@ -5058,6 +5155,121 @@ function SettingsPage() {
 							onSave: saveWebsite
 						})
 					]
+				}) : null,
+				tab === "theme" ? /* @__PURE__ */ jsxs("div", {
+					style: {
+						display: "grid",
+						gap: "18px"
+					},
+					children: [/* @__PURE__ */ jsxs(Card, {
+						style: {
+							padding: "18px",
+							background: "#fafafa",
+							boxShadow: "none"
+						},
+						children: [
+							/* @__PURE__ */ jsxs("div", {
+								style: {
+									display: "flex",
+									alignItems: "center",
+									justifyContent: "space-between",
+									gap: "12px",
+									flexWrap: "wrap",
+									marginBottom: "16px"
+								},
+								children: [/* @__PURE__ */ jsx("div", {
+									style: {
+										fontFamily: "var(--fw-dashboard-heading-font)",
+										fontWeight: 900,
+										fontSize: "12px",
+										textTransform: "uppercase",
+										color: "#1c1c1c"
+									},
+									children: "Theme settings"
+								}), /* @__PURE__ */ jsx(SecondaryButton, {
+									type: "button",
+									onClick: resetThemeDefaults,
+									style: { padding: "9px 14px" },
+									children: "Reset to default"
+								})]
+							}),
+							/* @__PURE__ */ jsx("div", {
+								style: {
+									color: "#666",
+									fontSize: "13px",
+									lineHeight: 1.6,
+									marginBottom: "16px"
+								},
+								children: "Kies aparte fonts en kleuren voor het dashboard en de website. Reset zet alleen deze themavelden terug naar het standaard FerroWorks-thema."
+							}),
+							/* @__PURE__ */ jsxs("div", {
+								style: {
+									display: "grid",
+									gap: "18px"
+								},
+								children: [/* @__PURE__ */ jsxs("div", {
+									style: {
+										display: "grid",
+										gridTemplateColumns: "1fr 1fr",
+										gap: "16px"
+									},
+									children: [/* @__PURE__ */ jsx(SelectField, {
+										label: "Dashboard font",
+										value: websiteSettings.theme?.dashboardFont || DEFAULT_THEME_SETTINGS.dashboardFont,
+										onChange: setThemeField("dashboardFont"),
+										options: FONT_OPTIONS.map((font) => ({
+											value: font.value,
+											label: font.label
+										}))
+									}), /* @__PURE__ */ jsx(SelectField, {
+										label: "Website font",
+										value: websiteSettings.theme?.websiteFont || DEFAULT_THEME_SETTINGS.websiteFont,
+										onChange: setThemeField("websiteFont"),
+										options: FONT_OPTIONS.map((font) => ({
+											value: font.value,
+											label: font.label
+										}))
+									})]
+								}), /* @__PURE__ */ jsxs("div", {
+									style: {
+										display: "grid",
+										gridTemplateColumns: "1fr 1fr 1fr 1fr",
+										gap: "16px"
+									},
+									children: [
+										/* @__PURE__ */ jsx(FormField, {
+											label: "Dashboard primary",
+											value: websiteSettings.theme?.dashboardPrimaryColor || "",
+											onChange: setThemeField("dashboardPrimaryColor"),
+											type: "color"
+										}),
+										/* @__PURE__ */ jsx(FormField, {
+											label: "Dashboard secondary",
+											value: websiteSettings.theme?.dashboardSecondaryColor || "",
+											onChange: setThemeField("dashboardSecondaryColor"),
+											type: "color"
+										}),
+										/* @__PURE__ */ jsx(FormField, {
+											label: "Website primary",
+											value: websiteSettings.theme?.websitePrimaryColor || "",
+											onChange: setThemeField("websitePrimaryColor"),
+											type: "color"
+										}),
+										/* @__PURE__ */ jsx(FormField, {
+											label: "Website secondary",
+											value: websiteSettings.theme?.websiteSecondaryColor || "",
+											onChange: setThemeField("websiteSecondaryColor"),
+											type: "color"
+										})
+									]
+								})]
+							})
+						]
+					}), /* @__PURE__ */ jsx(SaveBar, {
+						saving: false,
+						message: saved,
+						onSave: saveWebsite
+					})]
 				}) : null,
 				tab === "email" ? /* @__PURE__ */ jsxs("div", {
 					style: {
@@ -5403,4 +5615,4 @@ function AdminPage() {
 	}) });
 }
 //#endregion
-export { useCms as a, CmsProvider as i, AuthProvider as n, api as o, RichTextContent as r, AdminPage_exports as t };
+export { RichTextContent as a, api as c, getFontOption as i, AuthProvider as n, CmsProvider as o, DEFAULT_THEME_SETTINGS as r, useCms as s, AdminPage_exports as t };

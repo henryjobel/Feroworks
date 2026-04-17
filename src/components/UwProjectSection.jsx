@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import img1 from "../assets/about/about-us1.jpeg";
 import img2 from "../assets/about/about-us2.jpeg";
 import img3 from "../assets/about/about-us3.jpeg";
@@ -46,12 +46,12 @@ function UwProjectSection() {
           alignItems: "center",
         }}
       >
-        {/* LEFT — overlapping photos */}
+        {/* LEFT â€” overlapping photos */}
         <div
           className="up-photos"
           style={{ position: "relative", height: "500px" }}
         >
-          {/* Lime square — bottom left, behind all images */}
+          {/* Lime square â€” bottom left, behind all images */}
           <div
             className="up-sq"
             style={{
@@ -60,7 +60,7 @@ function UwProjectSection() {
               left: "8%",
               width: "88px",
               height: "88px",
-              background: "#c8d400",
+              background: "var(--fw-website-primary)",
               zIndex: 1,
             }}
           />
@@ -129,7 +129,7 @@ function UwProjectSection() {
           </div>
         </div>
 
-        {/* RIGHT — text */}
+        {/* RIGHT â€” text */}
         <div className="up-right">
           <h2
             style={{
@@ -141,12 +141,12 @@ function UwProjectSection() {
               letterSpacing: "-0.3px",
             }}
           >
-            <span style={{ color: "#c8d400" }}>UW PROJECT IN </span>
+            <span style={{ color: "var(--fw-website-primary)" }}>UW PROJECT IN </span>
             <span style={{ color: "#1c1c1c" }}>GOEDE HANDEN</span>
           </h2>
 
           <p style={{ fontSize: "15px", color: "#555", lineHeight: 1.7, margin: "0 0 20px 0" }}>
-            FerroWorks is opgericht als familiebedrijf en werkt nog steeds zo. Korte lijnen, persoonlijke betrokkenheid, één partner voor het volledige traject.
+            FerroWorks is opgericht als familiebedrijf en werkt nog steeds zo. Korte lijnen, persoonlijke betrokkenheid, Ã©Ã©n partner voor het volledige traject.
           </p>
 
           <p style={{ fontSize: "15px", color: "#555", lineHeight: 1.7, margin: "0 0 36px 0" }}>
@@ -157,7 +157,7 @@ function UwProjectSection() {
             href="/contact"
             style={{
               display: "inline-block",
-              background: "#8ab61e",
+              background: "var(--fw-website-primary-strong)",
               color: "#fff",
               fontFamily: "Arial Black, Arial, sans-serif",
               fontWeight: 900,
@@ -170,7 +170,7 @@ function UwProjectSection() {
               transition: "background 0.2s",
             }}
             onMouseEnter={e => e.currentTarget.style.background = "#7aa318"}
-            onMouseLeave={e => e.currentTarget.style.background = "#8ab61e"}
+            onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
           >
             NEEM CONTACT OP
           </a>
@@ -181,3 +181,5 @@ function UwProjectSection() {
 }
 
 export default UwProjectSection;
+
+

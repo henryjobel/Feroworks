@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { api } from "../api/client";
 import { Link } from "react-router-dom";
 import heroBg from "../assets/hero-background.jpeg";
@@ -18,7 +18,7 @@ function useInView(threshold = 0.12) {
   return [ref, vis];
 }
 
-/* ── 1. HERO ─────────────────────────────────────────────────────────── */
+/* â”€â”€ 1. HERO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function PageHero() {
   const { cms } = useCms();
   const contact = cms.contact || {};
@@ -31,24 +31,24 @@ function PageHero() {
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8" style={{ paddingTop: "64px", paddingBottom: "64px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "24px" }}>
-          <Link to="/" style={{ color: "#c8d400", fontSize: "13px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Home</Link>
-          <span style={{ color: "#666", fontSize: "13px" }}>›</span>
+          <Link to="/" style={{ color: "var(--fw-website-primary)", fontSize: "13px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Home</Link>
+          <span style={{ color: "#666", fontSize: "13px" }}>â€º</span>
           <span style={{ color: "#aaa", fontSize: "13px", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Contact</span>
         </div>
 
         <h1 style={{ margin: "0 0 16px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(28px, 4vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.5px", textTransform: "uppercase" }}>
-          <span style={{ color: "#c8d400" }}>{hero.title1 || "NEEM"} </span><span style={{ color: "#fff" }}>{hero.title2 || "CONTACT OP"}</span>
+          <span style={{ color: "var(--fw-website-primary)" }}>{hero.title1 || "NEEM"} </span><span style={{ color: "#fff" }}>{hero.title2 || "CONTACT OP"}</span>
         </h1>
         <p style={{ margin: 0, color: "#bbb", fontSize: "clamp(14px, 1.6vw, 17px)", lineHeight: 1.6, maxWidth: "520px" }}>
           {hero.subtitle || "Stuur uw tekening op of stel uw vraag. Wij reageren binnen 24 uur."}
         </p>
-        <div style={{ width: "56px", height: "4px", background: "#c8d400", marginTop: "28px", borderRadius: "2px" }} />
+        <div style={{ width: "56px", height: "4px", background: "var(--fw-website-primary)", marginTop: "28px", borderRadius: "2px" }} />
       </div>
     </section>
   );
 }
 
-/* ── 2. CONTACT FORMULIER + INFO ──────────────────────────────────────── */
+/* â”€â”€ 2. CONTACT FORMULIER + INFO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function ContactMain() {
   const [ref, vis] = useInView(0.08);
   const { cms } = useCms();
@@ -124,22 +124,22 @@ function ContactMain() {
         .cm-form  { opacity:0; transform:translateX(-32px); transition: opacity .65s ease, transform .65s ease; }
         .cm-info  { opacity:0; transform:translateX(32px);  transition: opacity .65s .15s ease, transform .65s .15s ease; }
         .cm-on .cm-form, .cm-on .cm-info { opacity:1; transform:none; }
-        .fw-input:focus { border-color: #c8d400 !important; }
+        .fw-input:focus { border-color: var(--fw-website-primary) !important; }
         @media (max-width: 768px) { .cm-grid { grid-template-columns: 1fr !important; } }
       `}</style>
 
       <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 cm-grid " + (vis ? "cm-on" : "")}
         style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: "72px", alignItems: "start" }}>
 
-        {/* LEFT — form */}
+        {/* LEFT â€” form */}
         <div className="cm-form">
-          <p style={{ margin: "0 0 12px 0", color: "#c8d400", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>STUUR EEN BERICHT</p>
+          <p style={{ margin: "0 0 12px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>STUUR EEN BERICHT</p>
           <h2 style={{ margin: "0 0 36px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px, 2.4vw, 30px)", lineHeight: 1.1, textTransform: "uppercase", letterSpacing: "-0.3px" }}>
-            <span style={{ color: "#1c1c1c" }}>WIJ REAGEREN </span><span style={{ color: "#c8d400" }}>BINNEN 24 UUR</span>
+            <span style={{ color: "#1c1c1c" }}>WIJ REAGEREN </span><span style={{ color: "var(--fw-website-primary)" }}>BINNEN 24 UUR</span>
           </h2>
 
           {submitted ? (
-            <div style={{ background: "#f4f4f4", borderLeft: "4px solid #c8d400", padding: "32px 28px" }}>
+            <div style={{ background: "#f4f4f4", borderLeft: "4px solid var(--fw-website-primary)", padding: "32px 28px" }}>
               <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "18px", color: "#1c1c1c", textTransform: "uppercase", marginBottom: "10px" }}>
                 Bericht ontvangen!
               </div>
@@ -232,11 +232,11 @@ function ContactMain() {
                     style={{ position: "absolute", inset: 0, opacity: 0, cursor: "pointer", width: "100%", height: "100%" }}
                   />
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" style={{ margin: "0 auto 8px" }}>
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    <polyline points="17 8 12 3 7 8" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    <line x1="12" y1="3" x2="12" y2="15" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="var(--fw-website-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <polyline points="17 8 12 3 7 8" stroke="var(--fw-website-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <line x1="12" y1="3" x2="12" y2="15" stroke="var(--fw-website-primary)" strokeWidth="2" strokeLinecap="round" />
                   </svg>
-                  <p style={{ fontSize: "13px", color: "#888", margin: 0 }}>Sleep een bestand of <span style={{ color: "#c8d400", fontWeight: 700 }}>klik om te uploaden</span></p>
+                  <p style={{ fontSize: "13px", color: "#888", margin: 0 }}>Sleep een bestand of <span style={{ color: "var(--fw-website-primary)", fontWeight: 700 }}>klik om te uploaden</span></p>
                   <p style={{ fontSize: "11px", color: "#bbb", margin: "4px 0 0" }}>{attachment ? attachment.name : "PDF, DWG, DXF, JPG, PNG"}</p>
                 </div>
               </div>
@@ -253,15 +253,15 @@ function ContactMain() {
                   textTransform: "uppercase",
                   letterSpacing: "0.8px",
                   color: "#1c1c1c",
-                  background: sending ? "#b3be00" : "#c8d400",
+                  background: sending ? "var(--fw-website-primary-strong)" : "var(--fw-website-primary)",
                   border: "none",
                   padding: "18px 40px",
                   cursor: sending ? "default" : "pointer",
                   transition: "background .2s",
                   alignSelf: "flex-start",
                 }}
-                onMouseEnter={e => { if (!sending) e.currentTarget.style.background = "#b3be00"; }}
-                onMouseLeave={e => { if (!sending) e.currentTarget.style.background = "#c8d400"; }}
+                onMouseEnter={e => { if (!sending) e.currentTarget.style.background = "var(--fw-website-primary-strong)"; }}
+                onMouseLeave={e => { if (!sending) e.currentTarget.style.background = "var(--fw-website-primary)"; }}
               >
                 {sending ? "VERZENDEN..." : "VERSTUUR BERICHT"}
               </button>
@@ -269,11 +269,11 @@ function ContactMain() {
           )}
         </div>
 
-        {/* RIGHT — contact info */}
+        {/* RIGHT â€” contact info */}
         <div className="cm-info" style={{ display: "flex", flexDirection: "column", gap: "0" }}>
-          <p style={{ margin: "0 0 12px 0", color: "#c8d400", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>CONTACTGEGEVENS</p>
+          <p style={{ margin: "0 0 12px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>CONTACTGEGEVENS</p>
           <h2 style={{ margin: "0 0 36px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px, 2.4vw, 30px)", lineHeight: 1.1, textTransform: "uppercase", letterSpacing: "-0.3px" }}>
-            <span style={{ color: "#1c1c1c" }}>DIRECT </span><span style={{ color: "#c8d400" }}>BEREIKBAAR</span>
+            <span style={{ color: "#1c1c1c" }}>DIRECT </span><span style={{ color: "var(--fw-website-primary)" }}>BEREIKBAAR</span>
           </h2>
 
           {/* Cards */}
@@ -281,7 +281,7 @@ function ContactMain() {
             {
               icon: (
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.1 11.9a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.1 11.9a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" stroke="var(--fw-website-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               ),
               label: "Telefoon",
@@ -291,8 +291,8 @@ function ContactMain() {
             {
               icon: (
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  <polyline points="22,6 12,13 2,6" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="var(--fw-website-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <polyline points="22,6 12,13 2,6" stroke="var(--fw-website-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               ),
               label: "E-mail",
@@ -302,8 +302,8 @@ function ContactMain() {
             {
               icon: (
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  <circle cx="12" cy="10" r="3" stroke="#c8d400" strokeWidth="2" />
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="var(--fw-website-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  <circle cx="12" cy="10" r="3" stroke="var(--fw-website-primary)" strokeWidth="2" />
                 </svg>
               ),
               label: "Adres",
@@ -332,7 +332,7 @@ function ContactMain() {
 
           {/* Opening hours */}
           <div style={{ marginTop: "32px", background: "#f4f4f4", padding: "24px 24px" }}>
-            <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase", color: "#c8d400", marginBottom: "16px" }}>OPENINGSTIJDEN</div>
+            <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase", color: "var(--fw-website-primary)", marginBottom: "16px" }}>OPENINGSTIJDEN</div>
             {openingstijden.map(([dag, tijd], i) => (
               <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 0", borderBottom: i < openingstijden.length - 1 ? "1px solid #e4e4e4" : "none" }}>
                 <span style={{ fontSize: "13px", color: "#555" }}>{dag}</span>
@@ -346,7 +346,7 @@ function ContactMain() {
   );
 }
 
-/* ── 3. KAART ────────────────────────────────────────────────────────── */
+/* â”€â”€ 3. KAART â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function MapSection() {
   const { cms } = useCms();
   const c = cms.contact || {};
@@ -367,7 +367,7 @@ function MapSection() {
           referrerPolicy="no-referrer-when-downgrade"
         />
         <div className="map-badge" style={{ position: "absolute", top: "24px", left: "24px", background: "#1c1c1c", padding: "14px 20px", display: "flex", alignItems: "center", gap: "10px" }}>
-          <div style={{ width: "8px", height: "8px", background: "#c8d400", flexShrink: 0 }} />
+          <div style={{ width: "8px", height: "8px", background: "var(--fw-website-primary)", flexShrink: 0 }} />
           <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", color: "#fff", letterSpacing: "0.5px" }}>{adres.replace("\n", " \xB7 ")}</span>
         </div>
       </div>
@@ -375,7 +375,7 @@ function MapSection() {
   );
 }
 
-/* ── 4. SNELLE CONTACTINFO STRIP ─────────────────────────────────────── */
+/* â”€â”€ 4. SNELLE CONTACTINFO STRIP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function ContactStrip() {
   const [ref, vis] = useInView(0.2);
   const { cms } = useCms();
@@ -386,15 +386,15 @@ function ContactStrip() {
   const adres = site.adres || c.adres || "Westelijke Havendijk 31\nRoosendaal";
   const items = [
     {
-      icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.1 11.9a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+      icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.1 11.9a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" stroke="var(--fw-website-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
       title: "BELLEN", value: tel, href: `tel:${tel.replace(/[\s()]/g, "")}`,
     },
     {
-      icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><polyline points="22,6 12,13 2,6" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+      icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="var(--fw-website-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><polyline points="22,6 12,13 2,6" stroke="var(--fw-website-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
       title: "MAILEN", value: email, href: `mailto:${email}`,
     },
     {
-      icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="12" cy="10" r="3" stroke="#c8d400" strokeWidth="2"/></svg>,
+      icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="var(--fw-website-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><circle cx="12" cy="10" r="3" stroke="var(--fw-website-primary)" strokeWidth="2"/></svg>,
       title: "BEZOEKEN", value: adres, href: `https://maps.google.com/?q=${encodeURIComponent(adres.replace(/\n/g, " "))}`,
     },
   ];
@@ -429,7 +429,7 @@ function ContactStrip() {
   );
 }
 
-/* ── PAGE EXPORT ──────────────────────────────────────────────────────── */
+/* â”€â”€ PAGE EXPORT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export default function ContactPage() {
   return (
     <>
@@ -440,3 +440,5 @@ export default function ContactPage() {
     </>
   );
 }
+
+

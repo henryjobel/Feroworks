@@ -52,9 +52,9 @@ function HeroBanner() {
         {/* Ferna icon - hidden on mobile */}
         <div className="hidden md:block" style={{ position: "absolute", top: "0px", right: "32px" }}>
           <svg width="96" height="108" viewBox="0 0 102 115" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M13 13H56V28H28V87H13V13Z" stroke="#C8D400" strokeWidth="7" />
-            <path d="M89 102H46V87H74V28H89V102Z" stroke="#C8D400" strokeWidth="7" />
-            <path d="M28 28H46V68H56V28H74" stroke="#C8D400" strokeWidth="7" fill="none" />
+            <path d="M13 13H56V28H28V87H13V13Z" stroke="var(--fw-website-primary)" strokeWidth="7" />
+            <path d="M89 102H46V87H74V28H89V102Z" stroke="var(--fw-website-primary)" strokeWidth="7" />
+            <path d="M28 28H46V68H56V28H74" stroke="var(--fw-website-primary)" strokeWidth="7" fill="none" />
           </svg>
         </div>
 
@@ -63,8 +63,8 @@ function HeroBanner() {
           style={{
             margin: 0,
             padding: 0,
-            color: "#C8D400",
-            fontFamily: "Arial Black, Arial, sans-serif",
+            color: "var(--fw-website-primary)",
+            fontFamily: "var(--fw-website-heading-font)",
             fontSize: "clamp(30px, 3.2vw, 52px)",
             lineHeight: 1.05,
             letterSpacing: "-0.5px",
@@ -80,7 +80,7 @@ function HeroBanner() {
             margin: 0,
             padding: 0,
             color: "#F3F3F3",
-            fontFamily: "Arial Black, Arial, sans-serif",
+            fontFamily: "var(--fw-website-heading-font)",
             fontSize: "clamp(30px, 3.2vw, 52px)",
             lineHeight: 1.05,
             letterSpacing: "-0.5px",
@@ -124,7 +124,7 @@ function HeroBanner() {
           {(hero.checkItems || []).map((text, i) => (
             <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
               <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0, marginTop: "2px" }}>
-                <path d="M2 8.5L6 12.5L14 4.5" stroke="#C8D400" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M2 8.5L6 12.5L14 4.5" stroke="var(--fw-website-primary)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               <span style={{ color: "#D8D8D8", fontSize: "13px", lineHeight: 1.45, fontWeight: 400 }}>
                 {text}
@@ -139,19 +139,19 @@ function HeroBanner() {
           style={{
             display: "inline-block",
             textDecoration: "none",
-            backgroundColor: "#C8D400",
-            color: "#1a1a1a",
+            backgroundColor: "var(--fw-website-primary)",
+            color: "var(--fw-website-secondary)",
             borderRadius: "999px",
             padding: "15px 32px",
             fontSize: "13px",
             fontWeight: 900,
             textTransform: "uppercase",
-            fontFamily: "Arial Black, Arial, sans-serif",
+            fontFamily: "var(--fw-website-heading-font)",
             letterSpacing: "1px",
             transition: "background-color 0.2s",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#b3be00")}
-          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#C8D400")}
+          onMouseEnter={(e) => (e.currentTarget.style.filter = "brightness(0.94)")}
+          onMouseLeave={(e) => (e.currentTarget.style.filter = "none")}
         >
           {hero.cta}
         </Link>

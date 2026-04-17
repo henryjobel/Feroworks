@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import heroBg from "../assets/hero-background.jpeg";
 import imgAbout1 from "../assets/about/about-us1.jpeg";
@@ -25,7 +25,7 @@ function useInView(threshold = 0.1) {
   return [ref, vis];
 }
 
-/* ── LEGACY DATA (fallback only, CMS takes precedence) ──────────────── */
+/* â”€â”€ LEGACY DATA (fallback only, CMS takes precedence) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 const diensten_fallback = [
   {
     id: "engineering",
@@ -37,14 +37,14 @@ const diensten_fallback = [
     body: [
       {
         type: "intro",
-        text: "Een goed metaalproject begint niet in de werkplaats — het begint op de tekentafel. Bij FerroWorks beschikken we over een eigen engineeringsafdeling die uw idee of specificatie omzet naar een volledig uitgewerkte, maakbare productietekening. We denken actief mee over de beste constructieve oplossing, de juiste materiaalkeuze en eventuele kostenbesparingen.",
+        text: "Een goed metaalproject begint niet in de werkplaats â€” het begint op de tekentafel. Bij FerroWorks beschikken we over een eigen engineeringsafdeling die uw idee of specificatie omzet naar een volledig uitgewerkte, maakbare productietekening. We denken actief mee over de beste constructieve oplossing, de juiste materiaalkeuze en eventuele kostenbesparingen.",
       },
       {
         type: "h2",
         text: "Van schets tot goedgekeurde tekening",
       },
       {
-        text: "Of u nu aankomt met een gedetailleerde constructietekening, een ruwe schets op papier of enkel een idee — wij werken het uit. We stellen gerichte vragen om uw toepassing, belasting, omgeving en eindgebruik goed te begrijpen. Vervolgens werken onze engineers de productietekeningen uit in 2D of 3D, afhankelijk van de complexiteit.",
+        text: "Of u nu aankomt met een gedetailleerde constructietekening, een ruwe schets op papier of enkel een idee â€” wij werken het uit. We stellen gerichte vragen om uw toepassing, belasting, omgeving en eindgebruik goed te begrijpen. Vervolgens werken onze engineers de productietekeningen uit in 2D of 3D, afhankelijk van de complexiteit.",
       },
       {
         type: "h2",
@@ -57,7 +57,7 @@ const diensten_fallback = [
           "Constructieve berekeningen en toetsing",
           "Materiaalkeuze: staal, RVS of aluminium",
           "Kostenadvies en optimalisatie in het ontwerp",
-          "Toetsing op maakbaarheid vóór productie",
+          "Toetsing op maakbaarheid vÃ³Ã³r productie",
           "Goedkeuringsproces met de opdrachtgever",
           "Revisietekeningen na wijzigingen",
         ],
@@ -67,7 +67,7 @@ const diensten_fallback = [
         text: "Heeft u al een tekening?",
       },
       {
-        text: "Geen probleem — we reviewen uw bestaande tekeningen op maakbaarheid, normconformiteit (EN-1090) en eventuele verbeterpunten. We passen tekeningen aan waar nodig en zorgen dat de uiteindelijke productietekening overeenkomt met wat u wilt en wat wij kunnen maken.",
+        text: "Geen probleem â€” we reviewen uw bestaande tekeningen op maakbaarheid, normconformiteit (EN-1090) en eventuele verbeterpunten. We passen tekeningen aan waar nodig en zorgen dat de uiteindelijke productietekening overeenkomt met wat u wilt en wat wij kunnen maken.",
       },
       {
         type: "quote",
@@ -78,7 +78,7 @@ const diensten_fallback = [
         text: "Samenwerking met uw constructeur",
       },
       {
-        text: "Werkt u met een extern constructiebedrijf of architect? Dan stemmen wij direct met hen af. We brengen de uitvoerbaarheid in vanuit de fabrikant — zodat wat op papier staat ook echt te maken is.",
+        text: "Werkt u met een extern constructiebedrijf of architect? Dan stemmen wij direct met hen af. We brengen de uitvoerbaarheid in vanuit de fabrikant â€” zodat wat op papier staat ook echt te maken is.",
       },
     ],
     checkitems: ["2D- en 3D-tekeningen (CAD/CAM)", "Constructieve berekeningen", "Materiaalkeuze en kostenadvies", "Toetsing op maakbaarheid", "Goedkeuringsproces met de opdrachtgever"],
@@ -90,18 +90,18 @@ const diensten_fallback = [
     title: "Productie in eigen beheer",
     subtitle: "Volledig machinepark, gecertificeerde lassers, volledige controle",
     img: imgMachine,
-    excerpt: "In onze moderne werkplaats in Roosendaal produceren we alles in eigen beheer — staal, RVS en aluminium — zonder uitbesteding, met volledige kwaliteitscontrole.",
+    excerpt: "In onze moderne werkplaats in Roosendaal produceren we alles in eigen beheer â€” staal, RVS en aluminium â€” zonder uitbesteding, met volledige kwaliteitscontrole.",
     body: [
       {
         type: "intro",
-        text: "In de werkplaats van FerroWorks in Roosendaal ziet u vakmanschap in actie. Onze eigen machinisten, lassers en metaalbewerkers verwerken staal, RVS en aluminium tot producten die nauwkeurig aansluiten op uw specificaties. Geen uitbesteding, geen kwaliteitsverlies — volledige controle van begin tot eind.",
+        text: "In de werkplaats van FerroWorks in Roosendaal ziet u vakmanschap in actie. Onze eigen machinisten, lassers en metaalbewerkers verwerken staal, RVS en aluminium tot producten die nauwkeurig aansluiten op uw specificaties. Geen uitbesteding, geen kwaliteitsverlies â€” volledige controle van begin tot eind.",
       },
       {
         type: "h2",
         text: "Ons machinepark",
       },
       {
-        text: "We beschikken over moderne machines voor het gehele bewerkingstraject: van zaag en lasersnijder tot knipmachine, buigpers en lasapparatuur. Dit stelt ons in staat om zowel enkelstuks als series efficiënt en nauwkeurig te produceren.",
+        text: "We beschikken over moderne machines voor het gehele bewerkingstraject: van zaag en lasersnijder tot knipmachine, buigpers en lasapparatuur. Dit stelt ons in staat om zowel enkelstuks als series efficiÃ«nt en nauwkeurig te produceren.",
       },
       {
         type: "bullets",
@@ -118,7 +118,7 @@ const diensten_fallback = [
         text: "Gecertificeerd laswerk",
       },
       {
-        text: "Al onze lassers zijn gecertificeerd en werken conform de Europese norm EN-1090. We gebruiken MIG/MAG-, TIG- en WIG-lassen, afhankelijk van het materiaal en de toepassing. Elk laswerk wordt tijdens en na productie visueel geïnspecteerd. Waar vereist passen we niet-destructief onderzoek (NDO) toe.",
+        text: "Al onze lassers zijn gecertificeerd en werken conform de Europese norm EN-1090. We gebruiken MIG/MAG-, TIG- en WIG-lassen, afhankelijk van het materiaal en de toepassing. Elk laswerk wordt tijdens en na productie visueel geÃ¯nspecteerd. Waar vereist passen we niet-destructief onderzoek (NDO) toe.",
       },
       {
         type: "h2",
@@ -129,7 +129,7 @@ const diensten_fallback = [
       },
       {
         type: "quote",
-        text: "Eigen productie betekent geen verrassingen — wij zijn verantwoordelijk van eerste zaagsnede tot laatste las.",
+        text: "Eigen productie betekent geen verrassingen â€” wij zijn verantwoordelijk van eerste zaagsnede tot laatste las.",
       },
       {
         type: "h2",
@@ -152,7 +152,7 @@ const diensten_fallback = [
     body: [
       {
         type: "intro",
-        text: "De coating is het laatste — en een van de belangrijkste — onderdelen van het productieproces. Het beschermt de constructie tegen corrosie, slijtage en weersinvloeden, en bepaalt mede de uitstraling. FerroWorks adviseert u over de meest geschikte coatingmethode en -systeem, en verzorgt de uitvoering conform de geldende normen.",
+        text: "De coating is het laatste â€” en een van de belangrijkste â€” onderdelen van het productieproces. Het beschermt de constructie tegen corrosie, slijtage en weersinvloeden, en bepaalt mede de uitstraling. FerroWorks adviseert u over de meest geschikte coatingmethode en -systeem, en verzorgt de uitvoering conform de geldende normen.",
       },
       {
         type: "h2",
@@ -170,10 +170,10 @@ const diensten_fallback = [
         items: [
           "Stralen tot Sa2,5 voor optimale hechting van de coating",
           "Zinkrijke of epoxy grondlaag (corrosiewerende basislaag)",
-          "Natlak — geschikt voor grote constructies, complexe geometrieën en C4/C5",
-          "Poedercoating — egaal, krasbestendig, ideaal voor seriematige productie",
-          "RVS-polijsten — decoratief of hygiënisch finish (spiegel, geborsteld)",
-          "Galvaniseren — langdurige zinkbescherming voor buitenapplicaties",
+          "Natlak â€” geschikt voor grote constructies, complexe geometrieÃ«n en C4/C5",
+          "Poedercoating â€” egaal, krasbestendig, ideaal voor seriematige productie",
+          "RVS-polijsten â€” decoratief of hygiÃ«nisch finish (spiegel, geborsteld)",
+          "Galvaniseren â€” langdurige zinkbescherming voor buitenapplicaties",
         ],
       },
       {
@@ -192,7 +192,7 @@ const diensten_fallback = [
         text: "Natlak vs. Poedercoating",
       },
       {
-        text: "Poedercoating is snel, egaal en milieuvriendelijk — ideaal voor seriematige, kleinere constructies die in een oven passen. Natlak is flexibeler en noodzakelijk voor grote of complexe constructies die niet verplaatst of verhit kunnen worden. We adviseren altijd de beste oplossing voor uw situatie.",
+        text: "Poedercoating is snel, egaal en milieuvriendelijk â€” ideaal voor seriematige, kleinere constructies die in een oven passen. Natlak is flexibeler en noodzakelijk voor grote of complexe constructies die niet verplaatst of verhit kunnen worden. We adviseren altijd de beste oplossing voor uw situatie.",
       },
     ],
     checkitems: ["Stralen tot Sa2,5", "Grondlagen (zinkrijk/epoxy)", "Natlak voor complexe constructies", "Poedercoating seriematig", "RVS-polijsten en galvaniseren"],
@@ -202,26 +202,26 @@ const diensten_fallback = [
     id: "montage",
     nr: "04",
     title: "Montage op locatie",
-    subtitle: "Eigen montageploeg — van prefab tot oplevering",
+    subtitle: "Eigen montageploeg â€” van prefab tot oplevering",
     img: imgAbout2,
-    excerpt: "Onze montageploeg plaatst uw constructie op locatie, coördineert het kraanwerk en levert op met volledig documentatiepakket inclusief CE-verklaring.",
+    excerpt: "Onze montageploeg plaatst uw constructie op locatie, coÃ¶rdineert het kraanwerk en levert op met volledig documentatiepakket inclusief CE-verklaring.",
     body: [
       {
         type: "intro",
-        text: "Een ijzersterke constructie verdient ook een professionele montage. FerroWorks beschikt over een eigen montageploeg die uw project op locatie plaatst — veilig, nauwkeurig en conform de geldende bouwnormen. Van eenvoudige hekplaatsing tot complexe staalconstructies op hoogte: wij coördineren het gehele montageproces.",
+        text: "Een ijzersterke constructie verdient ook een professionele montage. FerroWorks beschikt over een eigen montageploeg die uw project op locatie plaatst â€” veilig, nauwkeurig en conform de geldende bouwnormen. Van eenvoudige hekplaatsing tot complexe staalconstructies op hoogte: wij coÃ¶rdineren het gehele montageproces.",
       },
       {
         type: "h2",
         text: "Wat doet onze montageploeg?",
       },
       {
-        text: "Onze monteurs zijn VCA-gecertificeerd en hebben jarenlange ervaring met montage op industriële locaties, bouwplaatsen en offshore-toepassingen. Ze brengen de benodigde gereedschappen, hef- en hijsmiddelen mee en werken nauw samen met de hoofdaannemer of projectleider ter plaatse.",
+        text: "Onze monteurs zijn VCA-gecertificeerd en hebben jarenlange ervaring met montage op industriÃ«le locaties, bouwplaatsen en offshore-toepassingen. Ze brengen de benodigde gereedschappen, hef- en hijsmiddelen mee en werken nauw samen met de hoofdaannemer of projectleider ter plaatse.",
       },
       {
         type: "bullets",
         items: [
           "Montage van staal-, RVS- en aluminiumconstructies",
-          "Kraanbegeleiding en coördinatie hef- en hijswerk",
+          "Kraanbegeleiding en coÃ¶rdinatie hef- en hijswerk",
           "Aansluitlassen en correcties op locatie",
           "Werken op hoogte (gecertificeerd)",
           "Afstemming met bouwplaatsleiding en hoofdaannemer",
@@ -237,14 +237,14 @@ const diensten_fallback = [
       },
       {
         type: "quote",
-        text: "Wij leveren niet aan de poort — wij leveren op locatie, gemonteerd en goedgekeurd.",
+        text: "Wij leveren niet aan de poort â€” wij leveren op locatie, gemonteerd en goedgekeurd.",
       },
       {
         type: "h2",
         text: "Opleverdossier",
       },
       {
-        text: "Bij oplevering ontvangt u een volledig documentatiepakket: as-built tekeningen, materiaalcertificaten (EN 10204 3.1 of 3.2), lasrapporten en — indien van toepassing — een CE-verklaring van prestatie (DoP) conform EN-1090-1. Zo heeft u alles wat u nodig heeft voor uw eigen dossier en eventuele keuring door derden.",
+        text: "Bij oplevering ontvangt u een volledig documentatiepakket: as-built tekeningen, materiaalcertificaten (EN 10204 3.1 of 3.2), lasrapporten en â€” indien van toepassing â€” een CE-verklaring van prestatie (DoP) conform EN-1090-1. Zo heeft u alles wat u nodig heeft voor uw eigen dossier en eventuele keuring door derden.",
       },
     ],
     checkitems: ["Eigen montageploeg, VCA gecertificeerd", "Montage van staal, RVS en aluminium", "Kraanbegeleiding en veiligheidsbeheer", "Aansluitlassen en correcties op locatie", "Eindinspectie en opleverdossier"],
@@ -254,13 +254,13 @@ const diensten_fallback = [
     id: "reparatie",
     nr: "05",
     title: "Reparatie & Onderhoud",
-    subtitle: "Snel ter plaatse — ook voor spoedreparaties",
+    subtitle: "Snel ter plaatse â€” ook voor spoedreparaties",
     img: imgAbout3,
     excerpt: "FerroWorks voert reparaties en onderhoud uit op staalconstructies, zowel in de werkplaats als direct op uw locatie. Snel, vakkundig, conform de normen.",
     body: [
       {
         type: "intro",
-        text: "Staalconstructies zijn duurzaam — maar niet onverwoestbaar. Door mechanische schade, corrosie, vermoeiing of onvoorziene belastingen kunnen reparaties noodzakelijk zijn. FerroWorks voert deze reparaties snel en vakkundig uit, zowel in onze eigen werkplaats als bij u op locatie.",
+        text: "Staalconstructies zijn duurzaam â€” maar niet onverwoestbaar. Door mechanische schade, corrosie, vermoeiing of onvoorziene belastingen kunnen reparaties noodzakelijk zijn. FerroWorks voert deze reparaties snel en vakkundig uit, zowel in onze eigen werkplaats als bij u op locatie.",
       },
       {
         type: "h2",
@@ -285,7 +285,7 @@ const diensten_fallback = [
         text: "Reparatie op locatie",
       },
       {
-        text: "Niet alles kan naar onze werkplaats worden gebracht. Daarom beschikken we over een mobiele reparatieploeg die bij u op locatie aan de slag gaat — of het nu gaat om een industrieel platform, een hekwerk op een bouwplaats of een maritieme constructie. We brengen alles mee wat nodig is.",
+        text: "Niet alles kan naar onze werkplaats worden gebracht. Daarom beschikken we over een mobiele reparatieploeg die bij u op locatie aan de slag gaat â€” of het nu gaat om een industrieel platform, een hekwerk op een bouwplaats of een maritieme constructie. We brengen alles mee wat nodig is.",
       },
       {
         type: "quote",
@@ -311,7 +311,7 @@ const diensten_fallback = [
   },
 ];
 
-/* ── HERO ─────────────────────────────────────────────────────────────── */
+/* â”€â”€ HERO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function DienstHero({ dienst }) {
   return (
     <section style={{ position: "relative", width: "100%", minHeight: "400px", display: "flex", alignItems: "flex-end", overflow: "hidden", background: "#141616" }}>
@@ -321,16 +321,16 @@ function DienstHero({ dienst }) {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8" style={{ paddingBottom: "56px", paddingTop: "96px" }}>
         {/* Breadcrumb */}
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "20px", flexWrap: "wrap" }}>
-          <Link to="/" style={{ color: "#c8d400", fontSize: "12px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Home</Link>
-          <span style={{ color: "#555", fontSize: "12px" }}>›</span>
-          <Link to="/diensten" style={{ color: "#c8d400", fontSize: "12px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Diensten</Link>
-          <span style={{ color: "#555", fontSize: "12px" }}>›</span>
+          <Link to="/" style={{ color: "var(--fw-website-primary)", fontSize: "12px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Home</Link>
+          <span style={{ color: "#555", fontSize: "12px" }}>â€º</span>
+          <Link to="/diensten" style={{ color: "var(--fw-website-primary)", fontSize: "12px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Diensten</Link>
+          <span style={{ color: "#555", fontSize: "12px" }}>â€º</span>
           <span style={{ color: "#888", fontSize: "12px", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>{dienst.title}</span>
         </div>
 
         {/* Number badge */}
         <div style={{ marginBottom: "16px" }}>
-          <span style={{ background: "#c8d400", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "10px", letterSpacing: "1.5px", textTransform: "uppercase", color: "#1c1c1c", padding: "5px 12px" }}>{dienst.nr} — DIENST</span>
+          <span style={{ background: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "10px", letterSpacing: "1.5px", textTransform: "uppercase", color: "#1c1c1c", padding: "5px 12px" }}>{dienst.nr} â€” DIENST</span>
         </div>
 
         {/* Title */}
@@ -340,13 +340,13 @@ function DienstHero({ dienst }) {
 
         <p style={{ margin: "0 0 28px 0", color: "#aaa", fontSize: "clamp(13px, 1.4vw, 16px)", lineHeight: 1.6, maxWidth: "520px" }}>{dienst.subtitle}</p>
 
-        <div style={{ width: "56px", height: "4px", background: "#c8d400", borderRadius: "2px" }} />
+        <div style={{ width: "56px", height: "4px", background: "var(--fw-website-primary)", borderRadius: "2px" }} />
       </div>
     </section>
   );
 }
 
-/* ── ARTICLE BODY ─────────────────────────────────────────────────────── */
+/* â”€â”€ ARTICLE BODY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function DienstBody({ dienst, allDiensten = [] }) {
   const [ref, vis] = useInView(0.05);
 
@@ -374,14 +374,14 @@ function DienstBody({ dienst, allDiensten = [] }) {
         .db-article .intro-p {
           font-size: 17px;
           color: #444;
-          border-left: 4px solid #c8d400;
+          border-left: 4px solid var(--fw-website-primary);
           padding-left: 20px;
           margin-bottom: 32px;
           line-height: 1.8;
         }
         .db-article blockquote {
           background: #1c1c1c;
-          border-left: 5px solid #c8d400;
+          border-left: 5px solid var(--fw-website-primary);
           margin: 36px 0;
           padding: 28px 32px;
           font-family: "Arial Black", Arial, sans-serif;
@@ -414,7 +414,7 @@ function DienstBody({ dienst, allDiensten = [] }) {
           display: block;
           width: 8px;
           height: 8px;
-          background: #c8d400;
+          background: var(--fw-website-primary);
           flex-shrink: 0;
           margin-top: 6px;
         }
@@ -463,7 +463,7 @@ function DienstBody({ dienst, allDiensten = [] }) {
   );
 }
 
-/* ── SIDEBAR ──────────────────────────────────────────────────────────── */
+/* â”€â”€ SIDEBAR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function Sidebar({ dienst, allDiensten = [] }) {
   const others = allDiensten.filter(d => d.id !== dienst.id);
 
@@ -472,13 +472,13 @@ function Sidebar({ dienst, allDiensten = [] }) {
       {/* Checklist card */}
       <div style={{ background: "#1c1c1c", padding: "28px 24px" }}>
         <h3 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", letterSpacing: "1px", color: "#fff", margin: "0 0 20px 0" }}>
-          WAT WIJ <span style={{ color: "#c8d400" }}>LEVEREN</span>
+          WAT WIJ <span style={{ color: "var(--fw-website-primary)" }}>LEVEREN</span>
         </h3>
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           {(typeof dienst.checklist === "string" ? dienst.checklist.split("\n").filter(Boolean) : (dienst.checkitems || [])).map((item, i) => (
             <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
               <svg width="16" height="16" viewBox="0 0 22 22" fill="none" style={{ flexShrink: 0, marginTop: "2px" }}>
-                <polyline points="3,11 9,17 20,5" stroke="#c8d400" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
+                <polyline points="3,11 9,17 20,5" stroke="var(--fw-website-primary)" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               <span style={{ color: "#ccc", fontSize: "13px", lineHeight: 1.55 }}>{item}</span>
             </div>
@@ -487,18 +487,18 @@ function Sidebar({ dienst, allDiensten = [] }) {
       </div>
 
       {/* Contact card */}
-      <div style={{ background: "#fff", padding: "24px", borderTop: "4px solid #c8d400" }}>
+      <div style={{ background: "#fff", padding: "24px", borderTop: "4px solid var(--fw-website-primary)" }}>
         <h4 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", letterSpacing: "1px", color: "#1c1c1c", margin: "0 0 10px 0" }}>
           OFFERTE AANVRAGEN
         </h4>
         <p style={{ color: "#888", fontSize: "13px", lineHeight: 1.6, margin: "0 0 16px 0" }}>
-          Interesse in {dienst.title.toLowerCase()}? Neem contact op — we reageren binnen 24 uur.
+          Interesse in {dienst.title.toLowerCase()}? Neem contact op â€” we reageren binnen 24 uur.
         </p>
         <Link
           to="/contact"
-          style={{ display: "block", textAlign: "center", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "#c8d400", padding: "14px 20px", textDecoration: "none", transition: "background .2s", marginBottom: "10px" }}
-          onMouseEnter={e => e.currentTarget.style.background = "#b3be00"}
-          onMouseLeave={e => e.currentTarget.style.background = "#c8d400"}
+          style={{ display: "block", textAlign: "center", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "var(--fw-website-primary)", padding: "14px 20px", textDecoration: "none", transition: "background .2s", marginBottom: "10px" }}
+          onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
+          onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}
         >
           NEEM CONTACT OP
         </Link>
@@ -512,7 +512,7 @@ function Sidebar({ dienst, allDiensten = [] }) {
 
       {/* Other services */}
       <div>
-        <h4 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", letterSpacing: "1.5px", color: "#1c1c1c", margin: "0 0 20px 0", paddingBottom: "12px", borderBottom: "2px solid #c8d400" }}>
+        <h4 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", letterSpacing: "1.5px", color: "#1c1c1c", margin: "0 0 20px 0", paddingBottom: "12px", borderBottom: "2px solid var(--fw-website-primary)" }}>
           ANDERE DIENSTEN
         </h4>
         <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
@@ -521,10 +521,10 @@ function Sidebar({ dienst, allDiensten = [] }) {
               key={d.id}
               to={`/diensten/${d.id}`}
               style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 0", borderBottom: "1px solid #eee", textDecoration: "none" }}
-              onMouseEnter={e => { e.currentTarget.querySelector(".od-nr").style.background = "#c8d400"; e.currentTarget.querySelector(".od-title").style.color = "#c8d400"; }}
+              onMouseEnter={e => { e.currentTarget.querySelector(".od-nr").style.background = "var(--fw-website-primary)"; e.currentTarget.querySelector(".od-title").style.color = "var(--fw-website-primary)"; }}
               onMouseLeave={e => { e.currentTarget.querySelector(".od-nr").style.background = "#1c1c1c"; e.currentTarget.querySelector(".od-title").style.color = "#1c1c1c"; }}
             >
-              <span className="od-nr" style={{ background: "#1c1c1c", color: "#c8d400", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "10px", padding: "3px 7px", flexShrink: 0, transition: "background .2s" }}>{d.nr}</span>
+              <span className="od-nr" style={{ background: "#1c1c1c", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "10px", padding: "3px 7px", flexShrink: 0, transition: "background .2s" }}>{d.nr}</span>
               <span className="od-title" style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", color: "#1c1c1c", lineHeight: 1.3, transition: "color .2s" }}>{d.title}</span>
             </Link>
           ))}
@@ -534,7 +534,7 @@ function Sidebar({ dienst, allDiensten = [] }) {
   );
 }
 
-/* ── MORE DIENSTEN ────────────────────────────────────────────────────── */
+/* â”€â”€ MORE DIENSTEN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function MeerDiensten({ currentId, allDiensten }) {
   const [ref, vis] = useInView(0.1);
   const related = allDiensten.filter(d => d.id !== currentId).slice(0, 3);
@@ -552,17 +552,17 @@ function MeerDiensten({ currentId, allDiensten }) {
       <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 " + (vis ? "md-on" : "")}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "40px", flexWrap: "wrap", gap: "16px" }}>
           <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(18px, 2vw, 24px)", textTransform: "uppercase", letterSpacing: "-0.3px", margin: 0 }}>
-            <span style={{ color: "#fff" }}>ANDERE </span><span style={{ color: "#c8d400" }}>DIENSTEN</span>
+            <span style={{ color: "#fff" }}>ANDERE </span><span style={{ color: "var(--fw-website-primary)" }}>DIENSTEN</span>
           </h2>
           <Link
             to="/diensten"
-            style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#c8d400", textDecoration: "none", display: "flex", alignItems: "center", gap: "6px", transition: "gap .2s" }}
+            style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.5px", color: "var(--fw-website-primary)", textDecoration: "none", display: "flex", alignItems: "center", gap: "6px", transition: "gap .2s" }}
             onMouseEnter={e => e.currentTarget.style.gap = "10px"}
             onMouseLeave={e => e.currentTarget.style.gap = "6px"}
           >
             ALLE DIENSTEN
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-              <path d="M5 12h14M12 5l7 7-7 7" stroke="#c8d400" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M5 12h14M12 5l7 7-7 7" stroke="var(--fw-website-primary)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </Link>
         </div>
@@ -585,11 +585,11 @@ function MeerDiensten({ currentId, allDiensten }) {
               </div>
               <div style={{ padding: "22px 20px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
-                  <span style={{ background: "#c8d400", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "9px", letterSpacing: "1px", textTransform: "uppercase", color: "#1c1c1c", padding: "3px 8px" }}>{d.nr}</span>
+                  <span style={{ background: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "9px", letterSpacing: "1px", textTransform: "uppercase", color: "#1c1c1c", padding: "3px 8px" }}>{d.nr}</span>
                 </div>
                 <h3 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "14px", textTransform: "uppercase", color: "#fff", margin: "0 0 10px 0", lineHeight: 1.3, letterSpacing: "-0.1px" }}>{d.title}</h3>
                 <p style={{ color: "#777", fontSize: "12.5px", lineHeight: 1.6, margin: "0 0 14px 0" }}>{d.excerpt.substring(0, 90)}...</p>
-                <span style={{ color: "#c8d400", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.5px" }}>MEER INFORMATIE →</span>
+                <span style={{ color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.5px" }}>MEER INFORMATIE â†’</span>
               </div>
             </Link>
           ))}
@@ -599,7 +599,7 @@ function MeerDiensten({ currentId, allDiensten }) {
   );
 }
 
-/* ── CTA STRIP ────────────────────────────────────────────────────────── */
+/* â”€â”€ CTA STRIP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function CtaStrip() {
   return (
     <section style={{ background: "#f4f4f4", padding: "72px 0" }}>
@@ -607,23 +607,23 @@ function CtaStrip() {
         <div className="fw-cta-box" style={{ background: "#1c1c1c", padding: "48px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "24px" }}>
           <div>
             <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(18px, 2.2vw, 26px)", textTransform: "uppercase", color: "#fff", margin: "0 0 8px 0", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-              KLAAR VOOR UW <span style={{ color: "#c8d400" }}>PROJECT?</span>
+              KLAAR VOOR UW <span style={{ color: "var(--fw-website-primary)" }}>PROJECT?</span>
             </h2>
-            <p style={{ color: "#888", fontSize: "14px", margin: 0 }}>Stuur uw tekening op of bel ons direct — wij reageren binnen 24 uur.</p>
+            <p style={{ color: "#888", fontSize: "14px", margin: 0 }}>Stuur uw tekening op of bel ons direct â€” wij reageren binnen 24 uur.</p>
           </div>
           <div className="fw-cta-actions" style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
             <Link
               to="/contact"
-              style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "#c8d400", padding: "16px 32px", textDecoration: "none", display: "inline-block", transition: "background .2s", flexShrink: 0 }}
-              onMouseEnter={e => e.currentTarget.style.background = "#b3be00"}
-              onMouseLeave={e => e.currentTarget.style.background = "#c8d400"}
+              style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "var(--fw-website-primary)", padding: "16px 32px", textDecoration: "none", display: "inline-block", transition: "background .2s", flexShrink: 0 }}
+              onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
+              onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}
             >
               NEEM CONTACT OP
             </Link>
             <a
               href="tel:+31165205601"
               style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#fff", background: "transparent", border: "2px solid #555", padding: "14px 28px", textDecoration: "none", display: "inline-block", transition: "border-color .2s", flexShrink: 0 }}
-              onMouseEnter={e => e.currentTarget.style.borderColor = "#c8d400"}
+              onMouseEnter={e => e.currentTarget.style.borderColor = "var(--fw-website-primary)"}
               onMouseLeave={e => e.currentTarget.style.borderColor = "#555"}
             >
               BEL ONS
@@ -635,7 +635,7 @@ function CtaStrip() {
   );
 }
 
-/* ── PAGE EXPORT ──────────────────────────────────────────────────────── */
+/* â”€â”€ PAGE EXPORT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export default function DienstDetailPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -660,3 +660,5 @@ export default function DienstDetailPage() {
     </>
   );
 }
+
+

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import imgMachine from "../assets/over-ons1.png";
 import { useCms } from "../cms/CmsContext";
 
@@ -19,7 +19,7 @@ function CheckIcon() {
     >
       <polyline
         points="3,11 9,17 20,5"
-        stroke="#c8d400"
+        stroke="var(--fw-website-primary)"
         strokeWidth="2.8"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -65,7 +65,7 @@ function WatOnsAndersMaakt() {
           alignItems: "center",
         }}
       >
-        {/* LEFT — heading + items */}
+        {/* LEFT â€” heading + items */}
         <div className="woa-left">
           <h2
             style={{
@@ -117,7 +117,7 @@ function WatOnsAndersMaakt() {
           </div>
         </div>
 
-        {/* RIGHT — image + lime square */}
+        {/* RIGHT â€” image + lime square */}
         <div className="woa-right" style={{ position: "relative" }}>
           {/* Image */}
           <div
@@ -141,7 +141,7 @@ function WatOnsAndersMaakt() {
             />
           </div>
 
-          {/* Lime square — bottom right, slightly outside image */}
+          {/* Lime square â€” bottom right, slightly outside image */}
           <div
             className="woa-sq"
             style={{
@@ -150,7 +150,7 @@ function WatOnsAndersMaakt() {
               right: "-24px",
               width: "80px",
               height: "80px",
-              background: "#c8d400",
+              background: "var(--fw-website-primary)",
               zIndex: 1,
             }}
           />
@@ -168,3 +168,5 @@ function WatOnsAndersMaakt() {
 }
 
 export default WatOnsAndersMaakt;
+
+

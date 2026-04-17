@@ -10,7 +10,7 @@ function Footer() {
   const instagram = site.instagram ? `https://${site.instagram.replace(/^https?:\/\//, "")}` : "#";
 
   return (
-    <footer style={{ background: "#3a3a3a" }}>
+    <footer style={{ background: "var(--fw-website-secondary)" }}>
       <div
         className="max-w-7xl mx-auto px-6 md:px-8"
         style={{
@@ -24,16 +24,16 @@ function Footer() {
       >
         <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
           <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-            <rect width="36" height="36" fill="#c8d400" />
+            <rect width="36" height="36" fill="var(--fw-website-primary)" />
             <rect x="7" y="7" width="10" height="22" fill="#1c1c1c" />
             <rect x="19" y="7" width="10" height="10" fill="#1c1c1c" />
           </svg>
           <div style={{ lineHeight: 1 }}>
             <div style={{ display: "flex", alignItems: "baseline", gap: "1px" }}>
-              <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "22px", color: "#fff", letterSpacing: "-0.5px" }}>FERRO</span>
-              <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "22px", color: "#c8d400", letterSpacing: "-0.5px" }}>WORKS</span>
+              <span className="site-title" style={{ fontWeight: 900, fontSize: "22px", color: "#fff", letterSpacing: "-0.5px" }}>FERRO</span>
+              <span className="site-title theme-primary-text" style={{ fontWeight: 900, fontSize: "22px", letterSpacing: "-0.5px" }}>WORKS</span>
             </div>
-            <div style={{ fontFamily: "Georgia, serif", fontStyle: "italic", fontSize: "11px", color: "#c8d400", marginTop: "1px", letterSpacing: "0.5px" }}>
+            <div className="theme-primary-text" style={{ fontStyle: "italic", fontSize: "11px", marginTop: "1px", letterSpacing: "0.5px" }}>
               {site.tagline || "metaalwerk"}
             </div>
           </div>
@@ -47,7 +47,7 @@ function Footer() {
 
         <div style={{ fontSize: "13px", lineHeight: 1.8 }}>
           <div style={{ color: "#ccc", fontWeight: 700, letterSpacing: "0.2px" }}>{phone}</div>
-          <a href={`mailto:${email}`} style={{ color: "#c8d400", fontWeight: 700, letterSpacing: "0.2px", textDecoration: "none" }}>
+          <a href={`mailto:${email}`} className="theme-primary-text no-theme-link" style={{ fontWeight: 700, letterSpacing: "0.2px", textDecoration: "none" }}>
             {email.toUpperCase()}
           </a>
         </div>
@@ -110,9 +110,9 @@ function Footer() {
                 fontWeight: 700,
                 letterSpacing: "0.5px",
                 textDecoration: "none",
-                fontFamily: "Arial Black, Arial, sans-serif",
+                fontFamily: "var(--fw-website-heading-font)",
               }}
-              onMouseEnter={(e) => e.currentTarget.style.color = "#c8d400"}
+              onMouseEnter={(e) => e.currentTarget.style.color = "var(--fw-website-primary)"}
               onMouseLeave={(e) => e.currentTarget.style.color = "#ccc"}
             >
               {link.label}

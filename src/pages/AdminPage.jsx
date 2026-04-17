@@ -15,6 +15,7 @@ import { useAuth } from "../auth/AuthContext";
 import { useCms } from "../cms/CmsContext";
 import RichTextEditor from "../components/RichTextEditor";
 import { stripHtml } from "../components/RichTextContent";
+import { DEFAULT_THEME_SETTINGS, FONT_OPTIONS } from "../theme/themeConfig";
 
 function SvgIcon({ d, size = 18, stroke = "currentColor", strokeWidth = 2 }) {
   return (
@@ -66,15 +67,15 @@ function baseInputStyle() {
     color: "#333",
     outline: "none",
     boxSizing: "border-box",
-    fontFamily: "inherit",
     transition: "border-color .15s",
     background: "#fff",
+    fontFamily: "var(--fw-dashboard-body-font)",
   };
 }
 
 function FieldLabel({ children }) {
   return (
-    <label style={{ display: "block", fontSize: "11px", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, textTransform: "uppercase", color: "#999", letterSpacing: "0.5px", marginBottom: "8px" }}>
+    <label style={{ display: "block", fontSize: "11px", fontFamily: "var(--fw-dashboard-heading-font)", fontWeight: 900, textTransform: "uppercase", color: "#999", letterSpacing: "0.5px", marginBottom: "8px" }}>
       {children}
     </label>
   );
@@ -82,6 +83,7 @@ function FieldLabel({ children }) {
 
 function FormField({ label, value, onChange, placeholder, multiline, rows = 3, type = "text" }) {
   const shared = baseInputStyle();
+  const isColor = type === "color";
 
   return (
     <div>
@@ -93,7 +95,7 @@ function FormField({ label, value, onChange, placeholder, multiline, rows = 3, t
           rows={rows}
           placeholder={placeholder}
           style={{ ...shared, resize: "vertical" }}
-          onFocus={(e) => { e.target.style.borderColor = "#c8d400"; }}
+          onFocus={(e) => { e.target.style.borderColor = "var(--fw-dashboard-primary)"; }}
           onBlur={(e) => { e.target.style.borderColor = "#e0e0e0"; }}
         />
       ) : (
@@ -102,8 +104,14 @@ function FormField({ label, value, onChange, placeholder, multiline, rows = 3, t
           value={value || ""}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          style={shared}
-          onFocus={(e) => { e.target.style.borderColor = "#c8d400"; }}
+          style={isColor ? {
+            ...shared,
+            padding: "6px",
+            height: "44px",
+            cursor: "pointer",
+            background: "#fff",
+          } : shared}
+          onFocus={(e) => { e.target.style.borderColor = "var(--fw-dashboard-primary)"; }}
           onBlur={(e) => { e.target.style.borderColor = "#e0e0e0"; }}
         />
       )}
@@ -119,7 +127,7 @@ function SelectField({ label, value, onChange, options }) {
         value={value || ""}
         onChange={(e) => onChange(e.target.value)}
         style={baseInputStyle()}
-        onFocus={(e) => { e.target.style.borderColor = "#c8d400"; }}
+        onFocus={(e) => { e.target.style.borderColor = "var(--fw-dashboard-primary)"; }}
         onBlur={(e) => { e.target.style.borderColor = "#e0e0e0"; }}
       >
         {options.map((option) => (
@@ -149,7 +157,7 @@ function SectionHeader({ title, sub, action }) {
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px", marginBottom: "24px", flexWrap: "wrap" }}>
       <div>
-        <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "16px", textTransform: "uppercase", color: "#1c1c1c", margin: "0 0 4px 0", letterSpacing: "-0.2px" }}>{title}</h2>
+        <h2 style={{ fontFamily: "var(--fw-dashboard-heading-font)", fontWeight: 900, fontSize: "16px", textTransform: "uppercase", color: "var(--fw-dashboard-secondary)", margin: "0 0 4px 0", letterSpacing: "-0.2px" }}>{title}</h2>
         {sub ? <p style={{ fontSize: "13px", color: "#999", margin: 0 }}>{sub}</p> : null}
       </div>
       {action}
@@ -163,12 +171,12 @@ function PrimaryButton({ children, ...props }) {
       {...props}
       style={{
         padding: "12px 24px",
-        background: "#c8d400",
-        color: "#1c1c1c",
+        background: "var(--fw-dashboard-primary)",
+        color: "var(--fw-dashboard-secondary)",
         border: "none",
         borderRadius: "6px",
         cursor: "pointer",
-        fontFamily: "Arial Black, Arial, sans-serif",
+        fontFamily: "var(--fw-dashboard-heading-font)",
         fontWeight: 900,
         fontSize: "12px",
         textTransform: "uppercase",
@@ -191,7 +199,7 @@ function SecondaryButton({ children, ...props }) {
         border: "none",
         borderRadius: "6px",
         cursor: "pointer",
-        fontFamily: "Arial Black, Arial, sans-serif",
+        fontFamily: "var(--fw-dashboard-heading-font)",
         fontWeight: 900,
         fontSize: "12px",
         textTransform: "uppercase",
@@ -231,7 +239,7 @@ function ImageUpload({ label = "Afbeelding", value, onChange }) {
           <img src={value} alt="preview" style={{ maxHeight: "160px", maxWidth: "100%", objectFit: "contain", borderRadius: "4px" }} />
         ) : (
           <>
-            <SvgIcon d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4 M17 8l-5-5-5 5 M12 3v12" size={28} stroke="#c8d400" strokeWidth={1.8} />
+            <SvgIcon d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4 M17 8l-5-5-5 5 M12 3v12" size={28} stroke="var(--fw-dashboard-primary)" strokeWidth={1.8} />
             <span style={{ fontSize: "13px", color: "#aaa" }}>{uploading ? "Uploaden..." : "Klik om afbeelding te uploaden"}</span>
             <span style={{ fontSize: "11px", color: "#ccc" }}>PNG, JPG, WEBP</span>
           </>
@@ -336,13 +344,13 @@ function Sidebar({ collapsed, setCollapsed }) {
   return (
     <aside style={{ width: collapsed ? 72 : 240, background: "#141616", minHeight: "100vh", display: "flex", flexDirection: "column", position: "fixed", top: 0, left: 0, zIndex: 200, height: "100vh", overflowY: "auto", transition: "width .2s ease", flexShrink: 0 }}>
       <div onClick={() => setCollapsed(!collapsed)} style={{ padding: "18px 16px", borderBottom: "1px solid #252525", display: "flex", alignItems: "center", gap: "12px", cursor: "pointer", userSelect: "none" }}>
-        <div style={{ width: "38px", height: "38px", background: "#c8d400", borderRadius: "6px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+        <div style={{ width: "38px", height: "38px", background: "var(--fw-dashboard-primary)", borderRadius: "6px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
           <svg width="22" height="22" viewBox="0 0 36 36" fill="none"><path d="M7 28 L11 14 L16 22 L21 14 L25 28" stroke="#1a1a1a" strokeWidth="2.8" fill="none" strokeLinejoin="round" /></svg>
         </div>
         {!collapsed ? (
           <div>
-            <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "15px", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-              <span style={{ color: "#fff" }}>FERRO</span><span style={{ color: "#c8d400" }}>WORKS</span>
+            <div style={{ fontFamily: "var(--fw-dashboard-heading-font)", fontWeight: 900, fontSize: "15px", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
+              <span style={{ color: "#fff" }}>FERRO</span><span style={{ color: "var(--fw-dashboard-primary)" }}>WORKS</span>
             </div>
             <div style={{ fontSize: "10px", color: "#555", fontStyle: "italic", marginTop: "2px" }}>Admin Panel</div>
           </div>
@@ -356,7 +364,7 @@ function Sidebar({ collapsed, setCollapsed }) {
               <button
                 type="button"
                 onClick={() => setOpenGroups((prev) => ({ ...prev, [group.label]: !prev[group.label] }))}
-                style={{ width: "100%", padding: "10px 20px", background: "transparent", border: "none", color: "#8a8a8a", display: "flex", alignItems: "center", justifyContent: "space-between", fontFamily: "Arial Black, Arial, sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "1px", cursor: "pointer" }}
+                style={{ width: "100%", padding: "10px 20px", background: "transparent", border: "none", color: "#8a8a8a", display: "flex", alignItems: "center", justifyContent: "space-between", fontFamily: "var(--fw-dashboard-heading-font)", fontSize: "10px", textTransform: "uppercase", letterSpacing: "1px", cursor: "pointer" }}
               >
                 <span>{group.label}</span>
                 <ChevronIcon open={openGroups[group.label]} size={14} color="#8a8a8a" />
@@ -376,9 +384,9 @@ function Sidebar({ collapsed, setCollapsed }) {
                     padding: collapsed ? "13px 0" : "13px 20px",
                     justifyContent: collapsed ? "center" : "flex-start",
                     background: isActive ? "rgba(200,212,0,0.1)" : "transparent",
-                    borderLeft: isActive ? "3px solid #c8d400" : "3px solid transparent",
-                    color: isActive ? "#c8d400" : "#666",
-                    fontFamily: "Arial Black, Arial, sans-serif",
+                    borderLeft: isActive ? "3px solid var(--fw-dashboard-primary)" : "3px solid transparent",
+                    color: isActive ? "var(--fw-dashboard-primary)" : "#666",
+                    fontFamily: "var(--fw-dashboard-heading-font)",
                     fontWeight: 900,
                     fontSize: "12px",
                     letterSpacing: "0.4px",
@@ -397,7 +405,7 @@ function Sidebar({ collapsed, setCollapsed }) {
       </nav>
 
       <div style={{ padding: "14px 16px", borderTop: "1px solid #252525" }}>
-        <Link to="/" target="_blank" style={{ display: "flex", alignItems: "center", gap: "9px", justifyContent: collapsed ? "center" : "flex-start", color: "#555", fontSize: "11px", textDecoration: "none", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.4px" }}>
+        <Link to="/" target="_blank" style={{ display: "flex", alignItems: "center", gap: "9px", justifyContent: collapsed ? "center" : "flex-start", color: "#555", fontSize: "11px", textDecoration: "none", fontFamily: "var(--fw-dashboard-heading-font)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.4px" }}>
           <SvgIcon d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6 M15 3h6v6 M10 14L21 3" size={16} />
           {!collapsed ? "Bekijk site" : null}
         </Link>
@@ -428,7 +436,7 @@ function TopBar({ onLogout }) {
   return (
     <header style={{ background: "#fff", borderBottom: "1px solid #ebebeb", padding: "0 28px", minHeight: "72px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "20px", flexShrink: 0 }}>
       <div>
-        <h1 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "17px", textTransform: "uppercase", color: "#1c1c1c", margin: 0, letterSpacing: "-0.2px" }}>{meta.title}</h1>
+        <h1 style={{ fontFamily: "var(--fw-dashboard-heading-font)", fontWeight: 900, fontSize: "17px", textTransform: "uppercase", color: "var(--fw-dashboard-secondary)", margin: 0, letterSpacing: "-0.2px" }}>{meta.title}</h1>
         <p style={{ fontSize: "12px", color: "#aaa", margin: 0 }}>{meta.sub}</p>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap", justifyContent: "flex-end" }}>
@@ -439,11 +447,11 @@ function TopBar({ onLogout }) {
             style={{ display: "flex", alignItems: "center", gap: "10px", padding: "8px 10px", border: "1px solid #ececec", borderRadius: "999px", background: "#fafafa", cursor: "pointer" }}
           >
             <div style={{ textAlign: "right", minWidth: "74px" }}>
-              <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "11px", textTransform: "uppercase", color: "#1c1c1c", whiteSpace: "nowrap" }}>{user?.name || "Admin"}</div>
+              <div style={{ fontFamily: "var(--fw-dashboard-heading-font)", fontSize: "11px", textTransform: "uppercase", color: "var(--fw-dashboard-secondary)", whiteSpace: "nowrap" }}>{user?.name || "Admin"}</div>
               <div style={{ fontSize: "11px", color: "#888" }}>{roleLabel}</div>
             </div>
-            <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#c8d400", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <SvgIcon d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2 M12 11a4 4 0 100-8 4 4 0 000 8z" size={15} stroke="#1c1c1c" strokeWidth={2.4} />
+            <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "var(--fw-dashboard-primary)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <SvgIcon d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2 M12 11a4 4 0 100-8 4 4 0 000 8z" size={15} stroke="var(--fw-dashboard-secondary)" strokeWidth={2.4} />
             </div>
             <ChevronIcon open={menuOpen} size={14} color="#666" />
           </button>
@@ -1716,7 +1724,7 @@ function SettingsPage() {
   const { cms, updateCms } = useCms();
   const [tab, setTab] = useState("general");
   const [site, setSite] = useState(cms.site || {});
-  const [websiteSettings, setWebsiteSettings] = useState(cms.websiteSettings || {});
+  const [websiteSettings, setWebsiteSettings] = useState({ ...(cms.websiteSettings || {}), theme: { ...DEFAULT_THEME_SETTINGS, ...(cms.websiteSettings?.theme || {}) } });
   const [emailSettings, setEmailSettings] = useState({ host: "", port: 587, secure: false, user: "", pass: "", hasPassword: false, from: "", replyTo: "", templates: [], mailConfigured: false });
   const [testEmail, setTestEmail] = useState("");
   const [saved, setSaved] = useState("");
@@ -1724,7 +1732,7 @@ function SettingsPage() {
 
   useEffect(() => {
     setSite(cms.site || {});
-    setWebsiteSettings(cms.websiteSettings || {});
+    setWebsiteSettings({ ...(cms.websiteSettings || {}), theme: { ...DEFAULT_THEME_SETTINGS, ...(cms.websiteSettings?.theme || {}) } });
   }, [cms]);
 
   useEffect(() => {
@@ -1735,6 +1743,7 @@ function SettingsPage() {
 
   const setField = (key) => (value) => setSite((prev) => ({ ...prev, [key]: value }));
   const setEmailField = (key) => (value) => setEmailSettings((prev) => ({ ...prev, [key]: value }));
+  const setThemeField = (key) => (value) => setWebsiteSettings((prev) => ({ ...prev, theme: { ...DEFAULT_THEME_SETTINGS, ...(prev.theme || {}), [key]: value } }));
 
   const saveGeneral = async () => {
     const ok = await updateCms("site", site);
@@ -1750,6 +1759,15 @@ function SettingsPage() {
       setSaved("Website-instellingen opgeslagen.");
       window.setTimeout(() => setSaved(""), 1600);
     }
+  };
+
+  const resetThemeDefaults = () => {
+    setWebsiteSettings((prev) => ({
+      ...prev,
+      theme: { ...DEFAULT_THEME_SETTINGS },
+    }));
+    setSaved("Thema hersteld naar standaard. Klik nog op opslaan om dit te bewaren.");
+    window.setTimeout(() => setSaved(""), 2200);
   };
 
   const saveEmail = async () => {
@@ -1782,6 +1800,7 @@ function SettingsPage() {
   const tabs = [
     { id: "general", label: "General" },
     { id: "website", label: "Website" },
+    { id: "theme", label: "Theme" },
     { id: "email", label: "Email" },
   ];
 
@@ -1857,6 +1876,43 @@ function SettingsPage() {
             </Card>
             <FormField label="robots.txt configuratie" value={websiteSettings.robotsText || ""} onChange={(value) => setWebsiteSettings((prev) => ({ ...prev, robotsText: value }))} multiline rows={8} />
             <FormField label="Extra head HTML" value={websiteSettings.extraHeadHtml || ""} onChange={(value) => setWebsiteSettings((prev) => ({ ...prev, extraHeadHtml: value }))} multiline rows={8} />
+            <SaveBar saving={false} message={saved} onSave={saveWebsite} />
+          </div>
+        ) : null}
+
+        {tab === "theme" ? (
+          <div style={{ display: "grid", gap: "18px" }}>
+            <Card style={{ padding: "18px", background: "#fafafa", boxShadow: "none" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", flexWrap: "wrap", marginBottom: "16px" }}>
+                <div style={{ fontFamily: "var(--fw-dashboard-heading-font)", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", color: "#1c1c1c" }}>Theme settings</div>
+                <SecondaryButton type="button" onClick={resetThemeDefaults} style={{ padding: "9px 14px" }}>Reset to default</SecondaryButton>
+              </div>
+              <div style={{ color: "#666", fontSize: "13px", lineHeight: 1.6, marginBottom: "16px" }}>
+                Kies aparte fonts en kleuren voor het dashboard en de website. Reset zet alleen deze themavelden terug naar het standaard FerroWorks-thema.
+              </div>
+              <div style={{ display: "grid", gap: "18px" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+                  <SelectField
+                    label="Dashboard font"
+                    value={websiteSettings.theme?.dashboardFont || DEFAULT_THEME_SETTINGS.dashboardFont}
+                    onChange={setThemeField("dashboardFont")}
+                    options={FONT_OPTIONS.map((font) => ({ value: font.value, label: font.label }))}
+                  />
+                  <SelectField
+                    label="Website font"
+                    value={websiteSettings.theme?.websiteFont || DEFAULT_THEME_SETTINGS.websiteFont}
+                    onChange={setThemeField("websiteFont")}
+                    options={FONT_OPTIONS.map((font) => ({ value: font.value, label: font.label }))}
+                  />
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "16px" }}>
+                  <FormField label="Dashboard primary" value={websiteSettings.theme?.dashboardPrimaryColor || ""} onChange={setThemeField("dashboardPrimaryColor")} type="color" />
+                  <FormField label="Dashboard secondary" value={websiteSettings.theme?.dashboardSecondaryColor || ""} onChange={setThemeField("dashboardSecondaryColor")} type="color" />
+                  <FormField label="Website primary" value={websiteSettings.theme?.websitePrimaryColor || ""} onChange={setThemeField("websitePrimaryColor")} type="color" />
+                  <FormField label="Website secondary" value={websiteSettings.theme?.websiteSecondaryColor || ""} onChange={setThemeField("websiteSecondaryColor")} type="color" />
+                </div>
+              </div>
+            </Card>
             <SaveBar saving={false} message={saved} onSave={saveWebsite} />
           </div>
         ) : null}

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
 import { useCms } from "../cms/CmsContext";
 
 const sectorItems = [
@@ -19,7 +19,7 @@ const sectorItems = [
   {
     title: "INDUSTRIE",
     description:
-      "Machinebouw, maatwerk staalconstructies, industriële installaties en laswerkzaamheden op locatie.",
+      "Machinebouw, maatwerk staalconstructies, industriÃ«le installaties en laswerkzaamheden op locatie.",
     icon: (
       <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-[#2f2f2f]">
         <circle cx="27" cy="27" r="7" stroke="currentColor" strokeWidth="2.2" />
@@ -72,8 +72,8 @@ function SectorCard({ item }) {
 
       <Link
         to="/contact"
-        className="home-sector-link mt-auto inline-block text-[#9ca600] font-black uppercase tracking-[-0.2px]"
-        style={{ fontFamily: "Arial Black, Arial, sans-serif" }}
+        className="home-sector-link mt-auto inline-block font-black uppercase tracking-[-0.2px]"
+        style={{ fontFamily: "var(--fw-website-heading-font)", color: "var(--fw-website-primary-strong)" }}
       >
         LEES MEER
       </Link>
@@ -115,14 +115,14 @@ function OnzeSectoren() {
           right: 0;
           width: 46px;
           height: 46px;
-          background: #c8d400;
+          background: var(--fw-website-primary);
           opacity: .14;
           transform: translate(16px, -16px);
         }
 
         .home-sector-card:hover {
           transform: translateY(-4px);
-          border-color: #c8d400;
+          border-color: var(--fw-website-primary);
           box-shadow: 0 18px 38px rgba(0,0,0,.1);
         }
 
@@ -142,9 +142,13 @@ function OnzeSectoren() {
           margin-bottom: 26px;
         }
 
-        .home-sector-link {
-          font-size: 15px;
-        }
+          .home-sector-link {
+            font-size: 15px;
+          }
+
+          .home-sector-link:hover {
+            color: var(--fw-website-primary);
+          }
 
         @media (max-width: 1024px) {
           .home-sector-grid {
@@ -163,7 +167,7 @@ function OnzeSectoren() {
           .home-sector-card {
             min-height: 258px;
             padding: 18px 14px 16px;
-            border-top-color: #c8d400;
+            border-top-color: var(--fw-website-primary);
           }
 
           .home-sector-card::after {
@@ -196,7 +200,7 @@ function OnzeSectoren() {
 
           .home-sector-link {
             font-size: 11px;
-            color: #7f8900;
+            color: var(--fw-website-primary-strong);
           }
         }
 
@@ -222,15 +226,15 @@ function OnzeSectoren() {
       <div className="max-w-[1200px] mx-auto px-6">
         <div className="text-center mb-[44px]">
           <h2
-            className="text-[#333333] uppercase font-black text-[34px] leading-none tracking-[-0.8px] mb-[16px]"
-            style={{ fontFamily: "Arial Black, Arial, sans-serif" }}
+            className="site-heading text-[#333333] uppercase font-black text-[34px] leading-none tracking-[-0.8px] mb-[16px]"
+            style={{ fontFamily: "var(--fw-website-heading-font)" }}
           >
             ONZE SECTOREN
           </h2>
 
           <p
-            className="text-[#6f6f6f] uppercase font-black text-[16px] tracking-[-0.2px]"
-            style={{ fontFamily: "Arial Black, Arial, sans-serif" }}
+            className="site-heading text-[#6f6f6f] uppercase font-black text-[16px] tracking-[-0.2px]"
+            style={{ fontFamily: "var(--fw-website-heading-font)" }}
           >
             MAATWERK VOOR ELKE SECTOR
           </p>
@@ -245,8 +249,8 @@ function OnzeSectoren() {
         <div className="flex justify-center">
           <Link
             to="/contact"
-            className="inline-flex items-center justify-center min-w-[188px] h-[52px] rounded-full bg-[#b4bf00] text-white uppercase font-black text-[14px] px-8 hover:opacity-95 transition"
-            style={{ fontFamily: "Arial Black, Arial, sans-serif" }}
+            className="site-heading inline-flex items-center justify-center min-w-[188px] h-[52px] rounded-full uppercase font-black text-[14px] px-8 hover:opacity-95 transition"
+            style={{ fontFamily: "var(--fw-website-heading-font)", background: "var(--fw-website-primary-strong)", color: "var(--fw-website-secondary)" }}
           >
             NEEM CONTACT OP
           </Link>
@@ -257,3 +261,5 @@ function OnzeSectoren() {
 }
 
 export default OnzeSectoren;
+
+

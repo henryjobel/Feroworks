@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+﻿import { useState, useRef, useEffect } from "react";
 import { useCms } from "../cms/CmsContext";
 
 function FaqItem({ q, a }) {
@@ -22,7 +22,7 @@ function FaqItem({ q, a }) {
         justifyContent: "space-between",
         alignItems: "center",
         padding: "22px 28px",
-        background: open ? "#c8d400" : "none",
+        background: open ? "var(--fw-website-primary)" : "none",
         border: "none",
         cursor: "pointer",
         textAlign: "left",
@@ -127,7 +127,7 @@ function FaqSection() {
           VRAGEN DIE INKOPERS ONS STELLEN
         </h2>
 
-        {/* FAQ items — centered column */}
+        {/* FAQ items â€” centered column */}
         <div style={{ maxWidth: "720px", margin: "0 auto" }}>
           {faqs.map((item, i) => (
             <FaqItem key={item.q + i} q={item.q} a={item.a} />
@@ -139,3 +139,5 @@ function FaqSection() {
 }
 
 export default FaqSection;
+
+

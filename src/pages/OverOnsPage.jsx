@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import heroBg from "../assets/hero-background.jpeg";
 import imgLandscape from "../assets/over-ons2.png";
@@ -26,7 +26,7 @@ function useInView(threshold = 0.12) {
 function CheckIcon() {
   return (
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style={{ flexShrink: 0, marginTop: "3px" }}>
-      <polyline points="3,11 9,17 20,5" stroke="#c8d400" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
+      <polyline points="3,11 9,17 20,5" stroke="var(--fw-website-primary)" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -40,18 +40,18 @@ function PageHero() {
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8" style={{ paddingTop: "64px", paddingBottom: "64px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "24px" }}>
-          <Link to="/" style={{ color: "#c8d400", fontSize: "13px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Home</Link>
-          <span style={{ color: "#666", fontSize: "13px" }}>›</span>
+          <Link to="/" style={{ color: "var(--fw-website-primary)", fontSize: "13px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Home</Link>
+          <span style={{ color: "#666", fontSize: "13px" }}>â€º</span>
           <span style={{ color: "#aaa", fontSize: "13px", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Over Ons</span>
         </div>
 
         <h1 style={{ margin: "0 0 16px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(28px, 4vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.5px", textTransform: "uppercase" }}>
-          <span style={{ color: "#c8d400" }}>VORMGEVERS </span><span style={{ color: "#fff" }}>IN METAAL</span>
+          <span style={{ color: "var(--fw-website-primary)" }}>VORMGEVERS </span><span style={{ color: "#fff" }}>IN METAAL</span>
         </h1>
         <p style={{ margin: 0, color: "#bbb", fontSize: "clamp(14px, 1.6vw, 17px)", lineHeight: 1.6, maxWidth: "520px" }}>
           FerroWorks begeleidt metaalprojecten van ontwerp en engineering tot productie en montage. Specialist in maatwerk Staal, RVS en Aluminium.
         </p>
-        <div style={{ width: "56px", height: "4px", background: "#c8d400", marginTop: "28px", borderRadius: "2px" }} />
+        <div style={{ width: "56px", height: "4px", background: "var(--fw-website-primary)", marginTop: "28px", borderRadius: "2px" }} />
       </div>
     </section>
   );
@@ -77,24 +77,24 @@ function OnsVerhaal() {
         style={{ display: "grid", gridTemplateColumns: "1fr 1.3fr", gap: "72px", alignItems: "start" }}>
 
         <div className="ov-left">
-          <p style={{ margin: "0 0 12px 0", color: "#c8d400", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>ONS VERHAAL</p>
+          <p style={{ margin: "0 0 12px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>ONS VERHAAL</p>
           <h2 style={{ margin: "0 0 24px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(20px, 2.4vw, 30px)", lineHeight: 1.1, textTransform: "uppercase", letterSpacing: "-0.3px" }}>
-            <span style={{ color: "#c8d400" }}>{v.title1 || "GEBOUWD OP"}</span><br />
+            <span style={{ color: "var(--fw-website-primary)" }}>{v.title1 || "GEBOUWD OP"}</span><br />
             <span style={{ color: "#1c1c1c" }}>{v.title2 || "VAKMANSCHAP"}</span>
           </h2>
           <p style={{ color: "#555", fontSize: "15px", lineHeight: 1.75, margin: "0 0 18px 0" }}>
-            {v.tekst1 || "FerroWorks is een familiebedrijf met meer dan 15 jaar ervaring in metaalmaatwerk. We begeleiden projecten van A tot Z — van ontwerp en engineering tot productie, coating en montage op locatie."}
+            {v.tekst1 || "FerroWorks is een familiebedrijf met meer dan 15 jaar ervaring in metaalmaatwerk. We begeleiden projecten van A tot Z â€” van ontwerp en engineering tot productie, coating en montage op locatie."}
           </p>
           <p style={{ color: "#555", fontSize: "15px", lineHeight: 1.75, margin: "0 0 18px 0" }}>
             {v.tekst2 || "Specialist in maatwerk staal, RVS en aluminium voor industrie, bouw & utiliteit, architectuur & design en maritieme toepassingen."}
           </p>
           <p style={{ color: "#555", fontSize: "15px", lineHeight: 1.75, margin: 0 }}>
-            {v.tekst3 || "Heldere afspraken, transparante kosten en één aanspreekpunt van begin tot eind. Dat is hoe wij werken."}
+            {v.tekst3 || "Heldere afspraken, transparante kosten en Ã©Ã©n aanspreekpunt van begin tot eind. Dat is hoe wij werken."}
           </p>
         </div>
 
         <div className="ov-photos" style={{ position: "relative", height: "380px" }}>
-          <div className="ov-sq" style={{ position: "absolute", top: 0, right: 0, width: "80px", height: "80px", background: "#c8d400", zIndex: 1 }} />
+          <div className="ov-sq" style={{ position: "absolute", top: 0, right: 0, width: "80px", height: "80px", background: "var(--fw-website-primary)", zIndex: 1 }} />
           <div className="ov-img1" style={{ position: "absolute", top: "40px", left: 0, width: "56%", height: "65%", overflow: "hidden", zIndex: 2, boxShadow: "0 4px 18px rgba(0,0,0,0.13)" }}>
             <img src={v.image1 || imgLandscape} alt="FerroWorks productie" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }} />
           </div>
@@ -124,8 +124,8 @@ function StatsRow() {
       <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 st2-grid " + (vis ? "st2-on" : "")}
         style={{ display: "grid", gridTemplateColumns: `repeat(${stats.length || 4}, 1fr)`, gap: "32px" }}>
         {stats.map((s, i) => (
-          <div key={i} className="st2-item" style={{ borderLeft: "3px solid #c8d400", paddingLeft: "20px" }}>
-            <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(28px, 3vw, 40px)", color: "#c8d400", lineHeight: 1, letterSpacing: "-0.5px" }}>{s.number}</div>
+          <div key={i} className="st2-item" style={{ borderLeft: "3px solid var(--fw-website-primary)", paddingLeft: "20px" }}>
+            <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(28px, 3vw, 40px)", color: "var(--fw-website-primary)", lineHeight: 1, letterSpacing: "-0.5px" }}>{s.number}</div>
             <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", color: "#fff", textTransform: "uppercase", letterSpacing: "0.3px", marginTop: "6px" }}>{s.desc}</div>
           </div>
         ))}
@@ -140,7 +140,7 @@ const FALLBACK_SERVICES = [
   "Totaal ontzorgen van ontwerp tot montage.",
   "Reparatie en onderhoud op locatie.",
   "Advies en ondersteuning bij ontwerp en uitvoerbaarheid.",
-  "Één partner voor het volledige traject.",
+  "Ã‰Ã©n partner voor het volledige traject.",
   "Maakbaar, praktisch en doordacht.",
   "Transparant in kosten en planning.",
 ];
@@ -165,9 +165,9 @@ function WatWeDoen() {
         style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "center" }}>
 
         <div className="wwd-left">
-          <p style={{ margin: "0 0 12px 0", color: "#c8d400", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>ONZE DIENSTEN</p>
+          <p style={{ margin: "0 0 12px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>ONZE DIENSTEN</p>
           <h2 style={{ margin: "0 0 32px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px, 2.6vw, 34px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-            <span style={{ color: "#c8d400" }}>WAT FERROWORKS</span><br />
+            <span style={{ color: "var(--fw-website-primary)" }}>WAT FERROWORKS</span><br />
             <span style={{ color: "#1c1c1c" }}>VOOR JE DOET</span>
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
@@ -181,7 +181,7 @@ function WatWeDoen() {
         </div>
 
         <div className="wwd-right" style={{ position: "relative" }}>
-          <div className="wwd-accent" style={{ position: "absolute", bottom: "-16px", right: "-16px", width: "64px", height: "64px", background: "#c8d400", zIndex: 0 }} />
+          <div className="wwd-accent" style={{ position: "absolute", bottom: "-16px", right: "-16px", width: "64px", height: "64px", background: "var(--fw-website-primary)", zIndex: 0 }} />
           <div style={{ position: "relative", zIndex: 1, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.12)" }}>
             <img className="wwd-image" src={wwd.image || imgMachine} alt="FerroWorks productie" style={{ width: "100%", height: "340px", objectFit: "cover", objectPosition: "center", display: "block" }} />
           </div>
@@ -217,16 +217,16 @@ function WatOnsAnders() {
 
       <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 " + (vis ? "woa2-on" : "")}>
         <div className="woa2-head" style={{ marginBottom: "48px" }}>
-          <p style={{ margin: "0 0 10px 0", color: "#c8d400", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>WAAROM FERROWORKS</p>
+          <p style={{ margin: "0 0 10px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>WAAROM FERROWORKS</p>
           <h2 style={{ margin: 0, fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px, 2.6vw, 34px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-            <span style={{ color: "#1c1c1c" }}>WAT ONS </span><span style={{ color: "#c8d400" }}>ANDERS MAAKT</span>
+            <span style={{ color: "#1c1c1c" }}>WAT ONS </span><span style={{ color: "var(--fw-website-primary)" }}>ANDERS MAAKT</span>
           </h2>
         </div>
 
         <div className="fw-three-col-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "32px" }}>
           {differentiators.map((d, i) => (
-            <div key={i} className="woa2-card" style={{ background: "#fff", padding: "36px 28px", borderBottom: "4px solid #c8d400" }}>
-              <div style={{ width: "40px", height: "40px", background: "#c8d400", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "20px" }}>
+            <div key={i} className="woa2-card" style={{ background: "#fff", padding: "36px 28px", borderBottom: "4px solid var(--fw-website-primary)" }}>
+              <div style={{ width: "40px", height: "40px", background: "var(--fw-website-primary)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "20px" }}>
                 <CheckIcon />
               </div>
               <h3 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "14px", textTransform: "uppercase", letterSpacing: "0.2px", color: "#1c1c1c", margin: "0 0 12px 0", lineHeight: 1.25 }}>{d.title}</h3>
@@ -263,7 +263,7 @@ function TeamSection() {
         style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "center" }}>
 
         <div className="tm2-photos" style={{ position: "relative", height: "480px" }}>
-          <div className="tm2-sq" style={{ position: "absolute", bottom: 0, left: "6%", width: "84px", height: "84px", background: "#c8d400", zIndex: 1 }} />
+          <div className="tm2-sq" style={{ position: "absolute", bottom: 0, left: "6%", width: "84px", height: "84px", background: "var(--fw-website-primary)", zIndex: 1 }} />
           <div className="tm2-img1" style={{ position: "absolute", top: "60px", left: 0, width: "44%", height: "66%", overflow: "hidden", zIndex: 2, boxShadow: "0 4px 18px rgba(0,0,0,0.13)" }}>
             <img src={team.image1 || imgAbout2} alt="FerroWorks medewerker" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }} />
           </div>
@@ -276,15 +276,15 @@ function TeamSection() {
         </div>
 
         <div className="tm2-right">
-          <p style={{ margin: "0 0 12px 0", color: "#c8d400", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>ONS TEAM</p>
+          <p style={{ margin: "0 0 12px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>ONS TEAM</p>
           <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px, 2.6vw, 34px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px", margin: "0 0 24px 0" }}>
-            <span style={{ color: "#1c1c1c" }}>{team.title1 || "VAKMANNEN MET "}</span><span style={{ color: "#c8d400" }}>{team.title2 || "EÉN DOEL"}</span>
+            <span style={{ color: "#1c1c1c" }}>{team.title1 || "VAKMANNEN MET "}</span><span style={{ color: "var(--fw-website-primary)" }}>{team.title2 || "EÃ‰N DOEL"}</span>
           </h2>
           <p style={{ color: "#555", fontSize: "15px", lineHeight: 1.75, margin: "0 0 18px 0" }}>
             {team.tekst1 || "Ons team bestaat uit gespecialiseerde metaalbewerkers, lassers, engineers en projectleiders. Elk met diepgaande kennis van staal, RVS en aluminium."}
           </p>
           <p style={{ color: "#555", fontSize: "15px", lineHeight: 1.75, margin: "0 0 32px 0" }}>
-            {team.tekst2 || "Wij werken nauw samen met onze klanten: van de eerste tekening tot de laatste bout op locatie. Altijd één aanspreekpunt, altijd persoonlijk."}
+            {team.tekst2 || "Wij werken nauw samen met onze klanten: van de eerste tekening tot de laatste bout op locatie. Altijd Ã©Ã©n aanspreekpunt, altijd persoonlijk."}
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
             {teamItems.map((item, i) => (
@@ -303,7 +303,7 @@ function TeamSection() {
 /* 7. SECTOREN */
 const sectoren = [
   { naam: "Bouw & Utiliteit",    diensten: ["Staalconstructies", "Standaard hekwerken", "Prefab balkons"] },
-  { naam: "Industrie",           diensten: ["Machinebouw", "Maatwerk staalconstructies", "Industriële installaties", "Laswerkzaamheden op locatie"] },
+  { naam: "Industrie",           diensten: ["Machinebouw", "Maatwerk staalconstructies", "IndustriÃ«le installaties", "Laswerkzaamheden op locatie"] },
   { naam: "Architectuur & Design", diensten: ["Design trappen", "Interieur- en exterieur maatwerk"] },
   { naam: "Maritiem",            diensten: ["Jachtbouw"] },
 ];
@@ -324,20 +324,20 @@ function SectorenOverzicht() {
 
       <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 " + (vis ? "so-on" : "")}>
         <div className="so-head" style={{ marginBottom: "48px" }}>
-          <p style={{ margin: "0 0 10px 0", color: "#c8d400", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>WAT WE BOUWEN</p>
+          <p style={{ margin: "0 0 10px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>WAT WE BOUWEN</p>
           <h2 style={{ margin: 0, fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px, 2.6vw, 34px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px", color: "#fff" }}>
-            ONZE <span style={{ color: "#c8d400" }}>SECTOREN</span>
+            ONZE <span style={{ color: "var(--fw-website-primary)" }}>SECTOREN</span>
           </h2>
         </div>
 
         <div className="fw-four-col-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "24px" }}>
           {sectoren.map((s, i) => (
-            <div key={i} className="so-card" style={{ background: "#2a2a2a", padding: "32px 24px", borderTop: "4px solid #c8d400" }}>
+            <div key={i} className="so-card" style={{ background: "#2a2a2a", padding: "32px 24px", borderTop: "4px solid var(--fw-website-primary)" }}>
               <h3 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "16px", textTransform: "uppercase", color: "#fff", margin: "0 0 20px 0", letterSpacing: "-0.2px", lineHeight: 1.2 }}>{s.naam}</h3>
               <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "8px" }}>
                 {s.diensten.map((d, j) => (
                   <li key={j} style={{ display: "flex", alignItems: "flex-start", gap: "8px" }}>
-                    <div style={{ width: "6px", height: "6px", background: "#c8d400", flexShrink: 0, marginTop: "6px" }} />
+                    <div style={{ width: "6px", height: "6px", background: "var(--fw-website-primary)", flexShrink: 0, marginTop: "6px" }} />
                     <span style={{ color: "#bbb", fontSize: "13px", lineHeight: 1.5 }}>{d}</span>
                   </li>
                 ))}
@@ -372,19 +372,19 @@ function Certificeringen() {
 
       <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 " + (vis ? "ce2-on" : "")}>
         <div className="ce2-head" style={{ marginBottom: "48px" }}>
-          <p style={{ margin: "0 0 10px 0", color: "#c8d400", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>ONZE CERTIFICERINGEN</p>
+          <p style={{ margin: "0 0 10px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>ONZE CERTIFICERINGEN</p>
           <h2 style={{ margin: 0, fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px, 2.6vw, 34px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-            <span style={{ color: "#1c1c1c" }}>GECERTIFICEERD </span><span style={{ color: "#c8d400" }}>VCA, EN-1090 & CE</span>
+            <span style={{ color: "#1c1c1c" }}>GECERTIFICEERD </span><span style={{ color: "var(--fw-website-primary)" }}>VCA, EN-1090 & CE</span>
           </h2>
         </div>
 
         <div className="fw-three-col-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }}>
           {certs.map((c, i) => (
             <div key={i} className="ce2-card" style={{ border: "1.5px solid #e0e0e0", padding: "36px 28px", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "10px", position: "relative", overflow: "hidden" }}>
-              <div style={{ position: "absolute", top: 0, left: 0, width: "4px", height: "100%", background: "#c8d400" }} />
+              <div style={{ position: "absolute", top: 0, left: 0, width: "4px", height: "100%", background: "var(--fw-website-primary)" }} />
               <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "26px", color: "#1c1c1c", letterSpacing: "-0.3px" }}>{c.code}</span>
               <span style={{ fontSize: "13px", color: "#777", lineHeight: 1.4 }}>{c.label}</span>
-              <div style={{ width: "32px", height: "3px", background: "#c8d400", marginTop: "4px" }} />
+              <div style={{ width: "32px", height: "3px", background: "var(--fw-website-primary)", marginTop: "4px" }} />
             </div>
           ))}
         </div>
@@ -401,25 +401,25 @@ function CtaSection() {
         <div className="fw-cta-box" style={{ background: "#1c1c1c", padding: "56px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "28px" }}>
           <div>
             <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(20px, 2.4vw, 30px)", textTransform: "uppercase", color: "#fff", margin: "0 0 10px 0", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-              KLAAR OM <span style={{ color: "#c8d400" }}>TE STARTEN?</span>
+              KLAAR OM <span style={{ color: "var(--fw-website-primary)" }}>TE STARTEN?</span>
             </h2>
             <p style={{ color: "#999", fontSize: "15px", margin: 0, lineHeight: 1.5 }}>
-              Stuur uw tekening op of neem contact op — wij reageren binnen 24 uur.
+              Stuur uw tekening op of neem contact op â€” wij reageren binnen 24 uur.
             </p>
           </div>
           <div className="fw-cta-actions" style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
             <Link
               to="/contact"
-              style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "#c8d400", padding: "16px 32px", textDecoration: "none", display: "inline-block" }}
-              onMouseEnter={e => e.currentTarget.style.background = "#b3be00"}
-              onMouseLeave={e => e.currentTarget.style.background = "#c8d400"}
+              style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "var(--fw-website-primary)", padding: "16px 32px", textDecoration: "none", display: "inline-block" }}
+              onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
+              onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}
             >
               NEEM CONTACT OP
             </Link>
             <a
               href="tel:+31165205617"
               style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#fff", background: "transparent", border: "2px solid #555", padding: "14px 28px", textDecoration: "none", display: "inline-block" }}
-              onMouseEnter={e => e.currentTarget.style.borderColor = "#c8d400"}
+              onMouseEnter={e => e.currentTarget.style.borderColor = "var(--fw-website-primary)"}
               onMouseLeave={e => e.currentTarget.style.borderColor = "#555"}
             >
               BEL ONS
@@ -446,3 +446,5 @@ export default function OverOnsPage() {
     </>
   );
 }
+
+

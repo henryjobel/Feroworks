@@ -62,7 +62,7 @@ function WatFernaSection() {
               letterSpacing:"-0.2px",
             }}
           >
-            <span style={{ color:"#c8d400" }}>{wf.title1}</span>
+            <span style={{ color:"var(--fw-website-primary)" }}>{wf.title1}</span>
             <br />
             <span style={{ color:"#1c1c1c" }}>{wf.title2}</span>
           </h2>
@@ -92,7 +92,7 @@ function WatFernaSection() {
               right:0,
               width:"90px",
               height:"90px",
-              background:"#c8d400",
+              background:"var(--fw-website-primary)",
               zIndex:1,
             }}
           />
@@ -153,3 +153,5 @@ function WatFernaSection() {
 }
 
 export default WatFernaSection;
+
+
