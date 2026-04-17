@@ -1,5 +1,6 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useCms } from "../cms/CmsContext";
 import { useLanguage } from "../i18n/LanguageContext";
 
 const navLinks = [
@@ -13,12 +14,12 @@ const navLinks = [
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { t } = useLanguage();
+  const { cms } = useCms();
+  const phone = cms.site?.tel || "+31 (0)165 205 617";
 
   return (
     <nav className="w-full bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
       <div className="w-full max-w-7xl mx-auto px-6 md:px-8 flex items-center justify-between" style={{ height: "78px" }}>
-
-        {/* Logo */}
         <Link to="/" className="flex items-center gap-2 shrink-0 no-underline" style={{ maxWidth: "calc(100% - 56px)" }}>
           <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="36" height="36" rx="4" fill="#c8d400" />
@@ -35,7 +36,6 @@ function Navbar() {
           </div>
         </Link>
 
-        {/* Desktop nav links */}
         <ul className="hidden lg:flex items-center gap-7 xl:gap-9 list-none flex-1 justify-center m-0 p-0">
           {navLinks.map((item) => (
             <li key={item.key}>
@@ -49,10 +49,9 @@ function Navbar() {
           ))}
         </ul>
 
-        {/* Desktop phone + CTA */}
         <div className="hidden lg:flex items-center gap-5 xl:gap-6 shrink-0">
-          <a href="tel:+31165205617" className="text-gray-800 text-[16px] font-medium no-underline hover:text-[#8ab61e] transition-colors duration-200 whitespace-nowrap">
-            +31 (0)165 205 617
+          <a href={`tel:${phone.replace(/[\s()]/g, "")}`} className="text-gray-800 text-[16px] font-medium no-underline hover:text-[#8ab61e] transition-colors duration-200 whitespace-nowrap">
+            {phone}
           </a>
           <Link
             to="/contact"
@@ -65,28 +64,17 @@ function Navbar() {
           </Link>
         </div>
 
-        {/* Mobile hamburger */}
         <button
           className="site-menu-button lg:hidden flex flex-col justify-center items-center gap-1.5 w-10 h-10 bg-transparent border-none cursor-pointer p-0"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label={t("nav.menuToggle", "Toggle menu")}
         >
-          <span
-            className="block w-6 h-0.5 bg-gray-800 transition-all duration-300"
-            style={{ transform: menuOpen ? "rotate(45deg) translateY(8px)" : "none" }}
-          />
-          <span
-            className="block w-6 h-0.5 bg-gray-800 transition-all duration-300"
-            style={{ opacity: menuOpen ? 0 : 1 }}
-          />
-          <span
-            className="block w-6 h-0.5 bg-gray-800 transition-all duration-300"
-            style={{ transform: menuOpen ? "rotate(-45deg) translateY(-8px)" : "none" }}
-          />
+          <span className="block w-6 h-0.5 bg-gray-800 transition-all duration-300" style={{ transform: menuOpen ? "rotate(45deg) translateY(8px)" : "none" }} />
+          <span className="block w-6 h-0.5 bg-gray-800 transition-all duration-300" style={{ opacity: menuOpen ? 0 : 1 }} />
+          <span className="block w-6 h-0.5 bg-gray-800 transition-all duration-300" style={{ transform: menuOpen ? "rotate(-45deg) translateY(-8px)" : "none" }} />
         </button>
       </div>
 
-      {/* Mobile menu dropdown */}
       {menuOpen && (
         <div className="lg:hidden bg-white border-t border-gray-100 px-6 py-4 flex flex-col gap-4">
           {navLinks.map((item) => (
@@ -99,8 +87,8 @@ function Navbar() {
               {t(`nav.${item.key}`, item.key)}
             </Link>
           ))}
-          <a href="tel:+31165205617" className="text-gray-800 text-[16px] font-medium no-underline py-3">
-            +31 (0)165 205 617
+          <a href={`tel:${phone.replace(/[\s()]/g, "")}`} className="text-gray-800 text-[16px] font-medium no-underline py-3">
+            {phone}
           </a>
           <Link
             to="/contact"

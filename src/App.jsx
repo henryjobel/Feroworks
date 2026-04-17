@@ -18,7 +18,9 @@ import BlogDetailPage from './pages/BlogDetailPage'
 import DienstenPage from './pages/DienstenPage'
 import DienstDetailPage from './pages/DienstDetailPage'
 import SectorenPage from './pages/SectorenPage'
+import ManagedContentPage from './pages/ManagedContentPage'
 import AdminPage from './pages/AdminPage'
+import RouteSeo from './seo/RouteSeo'
 
 function HomePage() {
   return (
@@ -39,6 +41,7 @@ function HomePage() {
 function PublicLayout() {
   return (
     <>
+      <RouteSeo />
       <Navbar />
       <Outlet />
       <Footer />
@@ -46,24 +49,32 @@ function PublicLayout() {
   )
 }
 
-function App() {
+export function AppRoutes() {
   return (
-    <CmsProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<PublicLayout />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/over-ons" element={<OverOnsPage />} />
-            <Route path="/diensten" element={<DienstenPage />} />
-            <Route path="/diensten/:id" element={<DienstDetailPage />} />
-            <Route path="/sectoren" element={<SectorenPage />} />
-            <Route path="/blog" element={<BlogPage />} />
-            <Route path="/blog/:id" element={<BlogDetailPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-          </Route>
-          <Route path="/admin" element={<AdminPage />} />
-        </Routes>
-      </BrowserRouter>
+    <Routes>
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/over-ons" element={<OverOnsPage />} />
+        <Route path="/diensten" element={<DienstenPage />} />
+        <Route path="/diensten/:slug" element={<DienstDetailPage />} />
+        <Route path="/sectoren" element={<SectorenPage />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:slug" element={<BlogDetailPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/privacy-policy" element={<ManagedContentPage />} />
+        <Route path="/algemene-voorwaarden" element={<ManagedContentPage />} />
+      </Route>
+      <Route path="/admin/*" element={<AdminPage />} />
+    </Routes>
+  )
+}
+
+function App({ RouterComponent = BrowserRouter, routerProps = {}, initialCms = null }) {
+  return (
+    <CmsProvider initialCms={initialCms}>
+      <RouterComponent {...routerProps}>
+        <AppRoutes />
+      </RouterComponent>
     </CmsProvider>
   )
 }

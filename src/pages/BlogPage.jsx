@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { api } from "../api/client";
 import { Link } from "react-router-dom";
 import heroBg from "../assets/hero-background.jpeg";
 import imgPost1 from "../assets/past work/kwaliteitscontrole-lassen-featured-300x225.webp";
@@ -163,7 +164,7 @@ function FeaturedPost({ post, imgSrc }) {
           </p>
 
           <Link
-            to={`/blog/${post.id}`}
+            to={`/blog/${post.slug || post.id}`}
             style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "#c8d400", padding: "16px 32px", textDecoration: "none", display: "inline-block", transition: "background .2s" }}
             onMouseEnter={e => e.currentTarget.style.background = "#b3be00"}
             onMouseLeave={e => e.currentTarget.style.background = "#c8d400"}
@@ -228,7 +229,7 @@ function BlogCard({ post, imgSrc, delay = 0 }) {
         </p>
 
         <Link
-          to={`/blog/${post.id}`}
+          to={`/blog/${post.slug || post.id}`}
           style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#c8d400", textDecoration: "none", marginTop: "auto" }}
           onMouseEnter={e => e.currentTarget.style.gap = "10px"}
           onMouseLeave={e => e.currentTarget.style.gap = "6px"}
@@ -316,10 +317,17 @@ function NewsletterCta() {
   const [ref, vis] = useInView(0.2);
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
+  const [error, setError] = useState("");
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    if (email) setDone(true);
+    try {
+      await api.subscribeNewsletter(email);
+      setDone(true);
+      setError("");
+    } catch (err) {
+      setError(err.message || "Inschrijven mislukt.");
+    }
   }
 
   return (
@@ -364,6 +372,7 @@ function NewsletterCta() {
               </button>
             </form>
           )}
+          {error && <p style={{ color: "#fca5a5", fontSize: "13px", marginTop: "14px" }}>{error}</p>}
         </div>
       </div>
     </section>

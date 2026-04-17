@@ -1,11 +1,12 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { api } from "../api/client";
 import { DEFAULT_CMS } from "./defaultContent";
 
 const CmsContext = createContext(null);
 
 function deepMerge(defaults, saved) {
   const result = { ...defaults };
-  for (const key of Object.keys(saved)) {
+  for (const key of Object.keys(saved || {})) {
     if (
       key in defaults &&
       typeof defaults[key] === "object" &&
@@ -23,44 +24,53 @@ function deepMerge(defaults, saved) {
   return result;
 }
 
-export function CmsProvider({ children }) {
-  const [cms, setCms] = useState(() => {
+export function CmsProvider({ children, initialCms = null }) {
+  const [cms, setCms] = useState(() => deepMerge(DEFAULT_CMS, initialCms || {}));
+  const [loading, setLoading] = useState(!initialCms);
+  const [error, setError] = useState("");
+
+  const refreshCms = async () => {
+    setLoading(true);
     try {
-      const raw = localStorage.getItem("ferroworks_cms");
-      if (raw) {
-        const saved = JSON.parse(raw);
-        return deepMerge(DEFAULT_CMS, saved);
-      }
-    } catch {
-      // corrupted localStorage — use defaults
+      const data = await api.getCms();
+      setCms(deepMerge(DEFAULT_CMS, data));
+      setError("");
+    } catch (err) {
+      setCms(DEFAULT_CMS);
+      setError(err.message || "Kon CMS data niet laden.");
+    } finally {
+      setLoading(false);
     }
-    return DEFAULT_CMS;
-  });
-
-  // Update a top-level CMS key (e.g. "hero", "stats", "blog", "diensten")
-  const updateCms = (key, value) => {
-    setCms((prev) => {
-      const next = { ...prev, [key]: value };
-      try {
-        localStorage.setItem("ferroworks_cms", JSON.stringify(next));
-      } catch {
-        // storage full — ignore
-      }
-      return next;
-    });
   };
 
-  // Reset entire CMS to defaults
-  const resetCms = () => {
-    localStorage.removeItem("ferroworks_cms");
-    setCms(DEFAULT_CMS);
+  useEffect(() => {
+    if (!initialCms) {
+      refreshCms();
+    }
+  }, [initialCms]);
+
+  const updateCms = async (key, value) => {
+    try {
+      await api.updateSection(key, value);
+      setCms((prev) => ({ ...prev, [key]: value }));
+      setError("");
+      return true;
+    } catch (err) {
+      setError(err.message || "Opslaan mislukt.");
+      return false;
+    }
   };
 
-  return (
-    <CmsContext.Provider value={{ cms, updateCms, resetCms }}>
-      {children}
-    </CmsContext.Provider>
+  const resetCms = async () => {
+    await refreshCms();
+  };
+
+  const value = useMemo(
+    () => ({ cms, updateCms, resetCms, refreshCms, loading, error }),
+    [cms, loading, error],
   );
+
+  return <CmsContext.Provider value={value}>{children}</CmsContext.Provider>;
 }
 
 export function useCms() {

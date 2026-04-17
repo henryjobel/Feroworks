@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { api } from "../api/client";
 import { Link } from "react-router-dom";
 import heroBg from "../assets/hero-background.jpeg";
 import { useCms } from "../cms/CmsContext";
@@ -19,6 +20,10 @@ function useInView(threshold = 0.12) {
 
 /* ── 1. HERO ─────────────────────────────────────────────────────────── */
 function PageHero() {
+  const { cms } = useCms();
+  const contact = cms.contact || {};
+  const hero = contact.hero || {};
+
   return (
     <section style={{ position: "relative", width: "100%", minHeight: "340px", display: "flex", alignItems: "center", overflow: "hidden", background: "#141616" }}>
       <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${heroBg})`, backgroundSize: "cover", backgroundPosition: "center right" }} />
@@ -32,10 +37,10 @@ function PageHero() {
         </div>
 
         <h1 style={{ margin: "0 0 16px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(28px, 4vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.5px", textTransform: "uppercase" }}>
-          <span style={{ color: "#c8d400" }}>NEEM </span><span style={{ color: "#fff" }}>CONTACT OP</span>
+          <span style={{ color: "#c8d400" }}>{hero.title1 || "NEEM"} </span><span style={{ color: "#fff" }}>{hero.title2 || "CONTACT OP"}</span>
         </h1>
         <p style={{ margin: 0, color: "#bbb", fontSize: "clamp(14px, 1.6vw, 17px)", lineHeight: 1.6, maxWidth: "520px" }}>
-          Stuur uw tekening op of stel uw vraag. Wij reageren binnen 24 uur.
+          {hero.subtitle || "Stuur uw tekening op of stel uw vraag. Wij reageren binnen 24 uur."}
         </p>
         <div style={{ width: "56px", height: "4px", background: "#c8d400", marginTop: "28px", borderRadius: "2px" }} />
       </div>
@@ -48,13 +53,16 @@ function ContactMain() {
   const [ref, vis] = useInView(0.08);
   const { cms } = useCms();
   const c = cms.contact || {};
+  const site = cms.site || {};
   const [formData, setFormData] = useState({ naam: "", bedrijf: "", email: "", telefoon: "", bericht: "" });
+  const [attachment, setAttachment] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
-  const tel = c.tel || "+31 (0)165 205 601";
-  const email = c.email || "info@ferroworks.nl";
-  const adres = c.adres || "Westelijke Havendijk 31\n4703 RL Roosendaal";
+  const tel = site.tel || c.tel || "+31 (0)165 205 601";
+  const email = site.email || c.email || "info@ferroworks.nl";
+  const adres = site.adres || c.adres || "Westelijke Havendijk 31\n4703 RL Roosendaal";
   const openingstijden = c.openingstijden
     ? c.openingstijden.split("\n").map(line => { const parts = line.split(":"); const time = parts.slice(1).join(":").trim(); return [parts[0].trim(), time]; }).filter(p => p[0])
     : [["Maandag \u2013 Vrijdag", "07:30 \u2013 17:00"], ["Zaterdag", "Op afspraak"], ["Zondag", "Gesloten"]];
@@ -63,14 +71,27 @@ function ContactMain() {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     setSending(true);
-    // Simulate async submit
-    setTimeout(() => {
+    setError("");
+    try {
+      const payload = new FormData();
+      payload.append("naam", formData.naam);
+      payload.append("bedrijf", formData.bedrijf);
+      payload.append("email", formData.email);
+      payload.append("telefoon", formData.telefoon);
+      payload.append("bericht", formData.bericht);
+      if (attachment) {
+        payload.append("attachment", attachment);
+      }
+      await api.submitContact(payload);
       setSending(false);
       setSubmitted(true);
-    }, 1200);
+    } catch (err) {
+      setSending(false);
+      setError(err.message || "Versturen mislukt.");
+    }
   }
 
   const inputStyle = {
@@ -207,6 +228,7 @@ function ContactMain() {
                   <input
                     type="file"
                     accept=".pdf,.dwg,.dxf,.jpg,.jpeg,.png"
+                    onChange={(e) => setAttachment(e.target.files?.[0] || null)}
                     style={{ position: "absolute", inset: 0, opacity: 0, cursor: "pointer", width: "100%", height: "100%" }}
                   />
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" style={{ margin: "0 auto 8px" }}>
@@ -215,9 +237,11 @@ function ContactMain() {
                     <line x1="12" y1="3" x2="12" y2="15" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" />
                   </svg>
                   <p style={{ fontSize: "13px", color: "#888", margin: 0 }}>Sleep een bestand of <span style={{ color: "#c8d400", fontWeight: 700 }}>klik om te uploaden</span></p>
-                  <p style={{ fontSize: "11px", color: "#bbb", margin: "4px 0 0" }}>PDF, DWG, DXF, JPG, PNG</p>
+                  <p style={{ fontSize: "11px", color: "#bbb", margin: "4px 0 0" }}>{attachment ? attachment.name : "PDF, DWG, DXF, JPG, PNG"}</p>
                 </div>
               </div>
+
+              {error && <div style={{ color: "#dc2626", fontSize: "13px" }}>{error}</div>}
 
               <button
                 type="submit"
@@ -326,7 +350,8 @@ function ContactMain() {
 function MapSection() {
   const { cms } = useCms();
   const c = cms.contact || {};
-  const adres = c.adres || "Westelijke Havendijk 31\n4703 RL Roosendaal";
+  const site = cms.site || {};
+  const adres = site.adres || c.adres || "Westelijke Havendijk 31\n4703 RL Roosendaal";
   const mapSrc = c.mapEmbed || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2478.8!2d4.4630!3d51.5300!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c417d4d3e40000%3A0x0!2sWestelijke+Havendijk+31%2C+4703+RL+Roosendaal!5e0!3m2!1snl!2snl!4v1";
   return (
     <section style={{ background: "#f4f4f4", padding: "0" }}>
@@ -355,9 +380,10 @@ function ContactStrip() {
   const [ref, vis] = useInView(0.2);
   const { cms } = useCms();
   const c = cms.contact || {};
-  const tel = c.tel || "+31 (0)165 205 601";
-  const email = c.email || "info@ferroworks.nl";
-  const adres = c.adres || "Westelijke Havendijk 31\nRoosendaal";
+  const site = cms.site || {};
+  const tel = site.tel || c.tel || "+31 (0)165 205 601";
+  const email = site.email || c.email || "info@ferroworks.nl";
+  const adres = site.adres || c.adres || "Westelijke Havendijk 31\nRoosendaal";
   const items = [
     {
       icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.1 11.9a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" stroke="#c8d400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,

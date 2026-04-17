@@ -7,6 +7,7 @@ import imgAbout3 from "../assets/about/about-us3.jpeg";
 import imgMachine from "../assets/over-ons1.png";
 import imgLandscape from "../assets/over-ons2.png";
 import { useCms } from "../cms/CmsContext";
+import RichTextContent from "../components/RichTextContent";
 
 const FALLBACK_IMAGES = [imgAbout1, imgMachine, imgLandscape, imgAbout2, imgAbout3];
 
@@ -88,7 +89,9 @@ function SectorBlock({ sector, index }) {
       <h2 style={{ margin: "12px 0 16px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px,2.6vw,36px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px", color: "#1c1c1c" }}>
         {sector.naam}
       </h2>
-      <p style={{ color: "#666", fontSize: "15px", lineHeight: 1.7, margin: "0 0 28px 0" }}>{sector.intro || sector.tagline}</p>
+      {sector.intro && /<[^>]+>/.test(sector.intro)
+        ? <RichTextContent html={sector.intro} style={{ color: "#666", fontSize: "15px", lineHeight: 1.7, margin: "0 0 28px 0" }} />
+        : <p style={{ color: "#666", fontSize: "15px", lineHeight: 1.7, margin: "0 0 28px 0" }}>{sector.intro || sector.tagline}</p>}
       <div style={{ display: "flex", flexDirection: "column", gap: "11px", marginBottom: "32px" }}>
         {checkItems.map((item, i) => (
           <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>

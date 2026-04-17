@@ -362,4 +362,24 @@ export const DEFAULT_CMS = {
     openingstijden: "Ma–Vr: 07:30 – 17:00",
     mapEmbed:       "",
   },
+  pages: [
+    { key: "home", name: "Homepage", path: "/", metaTitle: "FerroWorks – Metaalmaatwerk in Staal, RVS & Aluminium", metaDescription: "FerroWorks levert maatwerk metaalconstructies voor industrie, bouw en architectuur. Engineering, productie, coating en montage onder één dak.", heroTitle: "", heroSubtitle: "", body: "", isIndexed: true },
+    { key: "about", name: "Over Ons", path: "/over-ons", metaTitle: "Over Ons | FerroWorks", metaDescription: "Meer over FerroWorks, onze werkwijze en vakmanschap in staal, RVS en aluminium.", heroTitle: "", heroSubtitle: "", body: "", isIndexed: true },
+    { key: "services", name: "Diensten", path: "/diensten", metaTitle: "Diensten | FerroWorks", metaDescription: "Engineering, productie, coating, montage en onderhoud voor maatwerk metaalprojecten.", heroTitle: "", heroSubtitle: "", body: "", isIndexed: true },
+    { key: "sectors", name: "Sectoren", path: "/sectoren", metaTitle: "Sectoren | FerroWorks", metaDescription: "Metaalmaatwerk voor bouw, industrie, architectuur en maritieme toepassingen.", heroTitle: "", heroSubtitle: "", body: "", isIndexed: true },
+    { key: "blog", name: "Blog", path: "/blog", metaTitle: "Blog | FerroWorks", metaDescription: "Kennisartikelen, projectverhalen en technische inzichten van FerroWorks.", heroTitle: "", heroSubtitle: "", body: "", isIndexed: true },
+    { key: "contactPage", name: "Contact", path: "/contact", metaTitle: "Contact | FerroWorks", metaDescription: "Neem contact op met FerroWorks voor advies, offerte of technische afstemming.", heroTitle: "NEEM CONTACT OP", heroSubtitle: "Stuur uw tekening op of stel uw vraag. Wij reageren binnen 24 uur.", body: "", isIndexed: true },
+    { key: "privacy", name: "Privacy Policy", path: "/privacy-policy", metaTitle: "Privacy Policy | FerroWorks", metaDescription: "Lees hoe FerroWorks persoonsgegevens verwerkt en beschermt.", heroTitle: "PRIVACY POLICY", heroSubtitle: "Heldere informatie over welke gegevens wij verwerken en waarom.", body: "<h2>1. Wie wij zijn</h2><p>FerroWorks verwerkt persoonsgegevens in het kader van offerteaanvragen, klantcommunicatie en dienstverlening.</p><h2>2. Welke gegevens wij verzamelen</h2><p>Wij verwerken contactgegevens, bedrijfsgegevens en informatie die u actief met ons deelt via formulieren, e-mail of telefonisch contact.</p><h2>3. Waarom wij deze gegevens gebruiken</h2><p>Wij gebruiken deze gegevens om aanvragen te beantwoorden, offertes op te stellen, opdrachten uit te voeren en onze dienstverlening te verbeteren.</p><h2>4. Bewaartermijnen</h2><p>Wij bewaren persoonsgegevens niet langer dan nodig is voor het doel waarvoor ze zijn verzameld, tenzij een wettelijke bewaartermijn geldt.</p><h2>5. Uw rechten</h2><p>U kunt verzoeken om inzage, correctie of verwijdering van uw persoonsgegevens door contact op te nemen via onze contactgegevens op deze website.</p>", isIndexed: true },
+    { key: "terms", name: "Algemene Voorwaarden", path: "/algemene-voorwaarden", metaTitle: "Algemene Voorwaarden | FerroWorks", metaDescription: "De algemene voorwaarden van FerroWorks.", heroTitle: "ALGEMENE VOORWAARDEN", heroSubtitle: "De voorwaarden die van toepassing zijn op offertes, leveringen en opdrachten.", body: "<h2>1. Toepasselijkheid</h2><p>Deze voorwaarden zijn van toepassing op alle offertes, overeenkomsten en leveringen van FerroWorks.</p><h2>2. Offertes en opdrachten</h2><p>Offertes zijn vrijblijvend tenzij uitdrukkelijk anders vermeld. Een opdracht komt tot stand na schriftelijke bevestiging.</p><h2>3. Levering en uitvoering</h2><p>Opgegeven levertijden zijn indicatief. FerroWorks spant zich in om afspraken zorgvuldig na te komen.</p><h2>4. Betaling</h2><p>Facturen dienen te worden voldaan binnen de overeengekomen betaaltermijn. Bij overschrijding kunnen aanvullende kosten in rekening worden gebracht.</p><h2>5. Aansprakelijkheid</h2><p>Onze aansprakelijkheid is beperkt tot directe schade en tot het bedrag dat in het betreffende geval door onze verzekering wordt gedekt of anderszins contractueel is overeengekomen.</p>", isIndexed: true },
+  ],
+
+  websiteSettings: {
+    robotsText: "User-agent: *\nAllow: /\nSitemap: {{siteUrl}}/sitemap.xml",
+    extraHeadHtml: "",
+    defaultOgImage: "",
+    googleAnalyticsId: "",
+    googleTagManagerId: "",
+    metaPixelId: "",
+    linkedInInsightTagId: "",
+  },
 };

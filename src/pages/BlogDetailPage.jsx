@@ -8,6 +8,7 @@ import imgPost4 from "../assets/past work/lascertificaat-verplicht-featured-300x
 import imgPost5 from "../assets/over-ons1.png";
 import imgPost6 from "../assets/over-ons2.png";
 import { useCms } from "../cms/CmsContext";
+import RichTextContent from "../components/RichTextContent";
 
 const BLOG_FALLBACK_IMAGES = [imgPost1, imgPost2, imgPost3, imgPost4, imgPost5, imgPost6];
 
@@ -509,22 +510,28 @@ function ArticleBody({ post, allPosts }) {
 
         {/* Main article */}
         <article className="ab-wrap ab-body">
-          {post.body.map((block, i) => {
-            if (block.type === "intro") return <p key={i} className="intro-p">{block.text}</p>;
-            if (block.type === "h2") return <h2 key={i}>{block.text}</h2>;
-            if (block.type === "quote") return <blockquote key={i}>"{block.text}"</blockquote>;
-            if (block.type === "bullets") return (
-              <ul key={i}>
-                {block.items.map((item, j) => <li key={j}>{item}</li>)}
-              </ul>
-            );
-            return <p key={i}>{block.text}</p>;
-          })}
+          {typeof post.body === "string"
+            ? /<[^>]+>/.test(post.body)
+              ? <RichTextContent html={post.body} />
+              : post.body.split("\n\n").map((paragraph, i) => (
+                  i === 0 ? <p key={i} className="intro-p">{paragraph}</p> : <p key={i}>{paragraph}</p>
+                ))
+            : post.body.map((block, i) => {
+                if (block.type === "intro") return <p key={i} className="intro-p">{block.text}</p>;
+                if (block.type === "h2") return <h2 key={i}>{block.text}</h2>;
+                if (block.type === "quote") return <blockquote key={i}>"{block.text}"</blockquote>;
+                if (block.type === "bullets") return (
+                  <ul key={i}>
+                    {block.items.map((item, j) => <li key={j}>{item}</li>)}
+                  </ul>
+                );
+                return <p key={i}>{block.text}</p>;
+              })}
 
           {/* Tags */}
           <div style={{ marginTop: "48px", paddingTop: "32px", borderTop: "1.5px solid #e0e0e0" }}>
             <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "1.5px", textTransform: "uppercase", color: "#aaa", marginRight: "12px" }}>Tags:</span>
-            {post.tags.map((tag, i) => (
+            {(post.tags || []).map((tag, i) => (
               <span key={i} style={{ display: "inline-block", background: "#e8e8e8", color: "#555", fontSize: "12px", fontWeight: 700, padding: "4px 12px", marginRight: "8px", marginBottom: "8px", letterSpacing: "0.3px" }}>{tag}</span>
             ))}
           </div>
@@ -589,7 +596,7 @@ function Sidebar({ post, allPosts }) {
           {others.map(p => (
             <Link
               key={p.id}
-              to={`/blog/${p.id}`}
+              to={`/blog/${p.slug || p.id}`}
               style={{ display: "flex", gap: "12px", textDecoration: "none", alignItems: "flex-start" }}
               onMouseEnter={e => e.currentTarget.querySelector(".rel-title").style.color = "#c8d400"}
               onMouseLeave={e => e.currentTarget.querySelector(".rel-title").style.color = "#1c1c1c"}
@@ -644,7 +651,7 @@ function MorePosts({ currentId, allPosts }) {
           {related.map(p => (
             <Link
               key={p.id}
-              to={`/blog/${p.id}`}
+              to={`/blog/${p.slug || p.id}`}
               className="mp-card"
               style={{ textDecoration: "none", background: "#252525", display: "block", transition: "transform .25s ease, box-shadow .25s ease" }}
               onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 8px 28px rgba(0,0,0,0.3)"; }}
@@ -701,12 +708,12 @@ function CtaStrip() {
 
 /* ── PAGE EXPORT ──────────────────────────────────────────────────────── */
 export default function BlogDetailPage() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const { cms } = useCms();
 
   const allPosts = (cms.blog && cms.blog.length) ? cms.blog : FALLBACK_POSTS;
-  const post = allPosts.find(p => p.id === parseInt(id, 10)) || allPosts.find(p => String(p.id) === String(id));
+  const post = allPosts.find(p => p.slug === slug) || allPosts.find(p => String(p.id) === String(slug));
   const postIdx = allPosts.indexOf(post);
   const imgSrc = post ? (post.image || BLOG_FALLBACK_IMAGES[postIdx % BLOG_FALLBACK_IMAGES.length]) : null;
 

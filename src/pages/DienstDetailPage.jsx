@@ -7,6 +7,7 @@ import imgAbout3 from "../assets/about/about-us3.jpeg";
 import imgMachine from "../assets/over-ons1.png";
 import imgLandscape from "../assets/over-ons2.png";
 import { useCms } from "../cms/CmsContext";
+import RichTextContent from "../components/RichTextContent";
 
 const FALLBACK_IMAGES = { engineering: imgAbout1, productie: imgMachine, coating: imgLandscape, montage: imgAbout2, reparatie: imgAbout3 };
 
@@ -426,11 +427,13 @@ function DienstBody({ dienst, allDiensten = [] }) {
         {/* Main article */}
         <article className="db-wrap db-article">
           {typeof dienst.body === "string"
-            ? dienst.body.split("\n\n").map((para, i) =>
-                i === 0
-                  ? <p key={i} className="intro-p">{para}</p>
-                  : <p key={i}>{para}</p>
-              )
+            ? /<[^>]+>/.test(dienst.body)
+              ? <RichTextContent html={dienst.body} />
+              : dienst.body.split("\n\n").map((para, i) =>
+                  i === 0
+                    ? <p key={i} className="intro-p">{para}</p>
+                    : <p key={i}>{para}</p>
+                )
             : (dienst.body || []).map((block, i) => {
                 if (block.type === "intro")   return <p key={i} className="intro-p">{block.text}</p>;
                 if (block.type === "h2")      return <h2 key={i}>{block.text}</h2>;
@@ -634,12 +637,12 @@ function CtaStrip() {
 
 /* ── PAGE EXPORT ──────────────────────────────────────────────────────── */
 export default function DienstDetailPage() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const { cms } = useCms();
 
   const allDiensten = cms.diensten && cms.diensten.length ? cms.diensten : diensten_fallback;
-  const dienst = allDiensten.find(d => d.id === id);
+  const dienst = allDiensten.find(d => d.id === slug);
 
   useEffect(() => {
     if (!dienst) navigate("/diensten", { replace: true });
