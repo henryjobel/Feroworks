@@ -26,6 +26,7 @@ import RichTextEditor from "../components/RichTextEditor";
 import { stripHtml } from "../components/RichTextContent";
 import { localizeCmsContent } from "../i18n/content-localization.js";
 import { DEFAULT_THEME_SETTINGS, FONT_OPTIONS } from "../theme/themeConfig";
+import { resolveMediaUrl } from "../utils/media";
 
 const DEFAULT_LOCALIZATION_SETTINGS = {
   enabled: false,
@@ -341,7 +342,7 @@ function ImageUpload({ label = "Afbeelding", value, onChange }) {
       <FieldLabel>{label}</FieldLabel>
       <label style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "10px", border: "2px dashed #e0e0e0", borderRadius: "6px", padding: "20px", cursor: "pointer", background: value ? "transparent" : "#fafafa", overflow: "hidden", minHeight: "120px", position: "relative", transition: "border-color .15s" }}>
         {value ? (
-          <img src={value} alt="preview" style={{ maxHeight: "160px", maxWidth: "100%", objectFit: "contain", borderRadius: "4px" }} />
+          <img src={resolveMediaUrl(value)} alt="preview" style={{ maxHeight: "160px", maxWidth: "100%", objectFit: "contain", borderRadius: "4px" }} />
         ) : (
           <>
             <SvgIcon d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4 M17 8l-5-5-5 5 M12 3v12" size={28} stroke="var(--fw-dashboard-primary)" strokeWidth={1.8} />

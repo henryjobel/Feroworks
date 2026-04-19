@@ -4,6 +4,7 @@ import { isLocalizationEnabled, localizeCmsContent } from "../i18n/content-local
 import { api } from "../api/client";
 import { useLanguage } from "../i18n/LanguageContext";
 import { DEFAULT_CMS } from "./defaultContent";
+import { resolveCmsMedia } from "../utils/media";
 
 export const CmsContext = createContext(null);
 
@@ -31,7 +32,7 @@ export function CmsProvider({ children, initialCms = null }) {
   const { language } = useLanguage();
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
-  const [rawCms, setRawCms] = useState(() => deepMerge(DEFAULT_CMS, initialCms || {}));
+  const [rawCms, setRawCms] = useState(() => resolveCmsMedia(deepMerge(DEFAULT_CMS, initialCms || {})));
   const [loading, setLoading] = useState(!initialCms);
   const [error, setError] = useState("");
 
@@ -39,7 +40,7 @@ export function CmsProvider({ children, initialCms = null }) {
     setLoading(true);
     try {
       const data = await api.getCms();
-      setRawCms(deepMerge(DEFAULT_CMS, data));
+      setRawCms(resolveCmsMedia(deepMerge(DEFAULT_CMS, data)));
       setError("");
     } catch (err) {
       setRawCms(DEFAULT_CMS);
@@ -58,7 +59,7 @@ export function CmsProvider({ children, initialCms = null }) {
   const updateCms = async (key, value) => {
     try {
       await api.updateSection(key, value);
-      setRawCms((prev) => ({ ...prev, [key]: value }));
+      setRawCms((prev) => resolveCmsMedia({ ...prev, [key]: value }));
       setError("");
       return true;
     } catch (err) {
