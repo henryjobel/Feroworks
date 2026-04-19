@@ -4,17 +4,24 @@ import verwater from "../assets/cleint logo/logo_verwater_jubileum.svg";
 import dekok from "../assets/cleint logo/logo-de-kok-staalbouw.svg";
 import ivens from "../assets/cleint logo/ivens-logo.png";
 import actemium from "../assets/cleint logo/actemium-vector-logo.svg";
+import { useCms } from "../cms/CmsContext";
 
-const logos = [
-  { src: volkerwessels, alt: "VolkerWessels" },
-  { src: polytec,       alt: "Polytec" },
-  { src: verwater,      alt: "Verwater" },
-  { src: dekok,         alt: "De Kok Staalbouw" },
-  { src: ivens,         alt: "Ivens" },
-  { src: actemium,      alt: "Actemium" },
+const fallbackLogos = [
+  { image: volkerwessels, alt: "VolkerWessels" },
+  { image: polytec, alt: "Polytec" },
+  { image: verwater, alt: "Verwater" },
+  { image: dekok, alt: "De Kok Staalbouw" },
+  { image: ivens, alt: "Ivens" },
+  { image: actemium, alt: "Actemium" },
 ];
 
 function ClientLogosSection() {
+  const { cms } = useCms();
+  const logos = (cms.clientLogos?.items || fallbackLogos).map((item, index) => ({
+    image: item.image || fallbackLogos[index]?.image,
+    alt: item.alt || fallbackLogos[index]?.alt || `Logo ${index + 1}`,
+  }));
+
   return (
     <section style={{ background: "#fff", borderTop: "1px solid #e8e8e8", borderBottom: "1px solid #e8e8e8", padding: "36px 0" }}>
       <style>{`
@@ -56,13 +63,13 @@ function ClientLogosSection() {
         {/* First set */}
         {logos.map((logo, i) => (
           <div className="logo-item" key={`a-${i}`}>
-            <img src={logo.src} alt={logo.alt} />
+            <img src={logo.image} alt={logo.alt} />
           </div>
         ))}
         {/* Duplicate for seamless loop */}
         {logos.map((logo, i) => (
           <div className="logo-item" key={`b-${i}`}>
-            <img src={logo.src} alt={logo.alt} />
+            <img src={logo.image} alt={logo.alt} />
           </div>
         ))}
         </div>

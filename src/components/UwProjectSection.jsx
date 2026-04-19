@@ -1,11 +1,15 @@
 ﻿import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { useCms } from "../cms/CmsContext";
 import img1 from "../assets/about/about-us1.jpeg";
 import img2 from "../assets/about/about-us2.jpeg";
 import img3 from "../assets/about/about-us3.jpeg";
 
 function UwProjectSection() {
+  const { cms } = useCms();
   const ref = useRef(null);
   const [vis, setVis] = useState(false);
+  const section = cms.uwProject || {};
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -80,7 +84,7 @@ function UwProjectSection() {
             }}
           >
             <img
-              src={img2}
+              src={section.image1 || img2}
               alt="Ferna medewerker"
               style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }}
             />
@@ -101,7 +105,7 @@ function UwProjectSection() {
             }}
           >
             <img
-              src={img1}
+              src={section.image2 || img1}
               alt="Ferna werkplaats"
               style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }}
             />
@@ -122,7 +126,7 @@ function UwProjectSection() {
             }}
           >
             <img
-              src={img3}
+              src={section.image3 || img3}
               alt="Ferna directie"
               style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }}
             />
@@ -141,20 +145,20 @@ function UwProjectSection() {
               letterSpacing: "-0.3px",
             }}
           >
-            <span style={{ color: "var(--fw-website-primary)" }}>UW PROJECT IN </span>
-            <span style={{ color: "#1c1c1c" }}>GOEDE HANDEN</span>
+            <span style={{ color: "var(--fw-website-primary)" }}>{section.titleAccent || "UW PROJECT IN"} </span>
+            <span style={{ color: "#1c1c1c" }}>{section.titleMain || "GOEDE HANDEN"}</span>
           </h2>
 
           <p style={{ fontSize: "15px", color: "#555", lineHeight: 1.7, margin: "0 0 20px 0" }}>
-            FerroWorks is opgericht als familiebedrijf en werkt nog steeds zo. Korte lijnen, persoonlijke betrokkenheid, Ã©Ã©n partner voor het volledige traject.
+            {section.text1 || "FerroWorks is opgericht als familiebedrijf en werkt nog steeds zo. Korte lijnen, persoonlijke betrokkenheid, één partner voor het volledige traject."}
           </p>
 
           <p style={{ fontSize: "15px", color: "#555", lineHeight: 1.7, margin: "0 0 36px 0" }}>
-            Van ontwerp en engineering tot productie, coating en montage op locatie. Specialist in maatwerk staal, RVS en aluminium projecten voor industrie, bouw, architectuur en maritiem.
+            {section.text2 || "Van ontwerp en engineering tot productie, coating en montage op locatie. Specialist in maatwerk staal, RVS en aluminium projecten voor industrie, bouw, architectuur en maritiem."}
           </p>
 
-          <a
-            href="/contact"
+          <Link
+            to={section.ctaLink || "/contact"}
             style={{
               display: "inline-block",
               background: "var(--fw-website-primary-strong)",
@@ -169,11 +173,11 @@ function UwProjectSection() {
               textDecoration: "none",
               transition: "background 0.2s",
             }}
-            onMouseEnter={e => e.currentTarget.style.background = "#7aa318"}
+            onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary)"}
             onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
           >
-            NEEM CONTACT OP
-          </a>
+            {section.ctaLabel || "NEEM CONTACT OP"}
+          </Link>
         </div>
       </div>
     </section>

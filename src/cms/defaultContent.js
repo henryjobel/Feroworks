@@ -126,6 +126,38 @@ export const DEFAULT_CMS = {
   ],
 
   /* ── OVER ONS PAGE ────────────────────────────────────────────────── */
+  clientLogos: {
+    items: [
+      { alt: "VolkerWessels", image: null },
+      { alt: "Polytec", image: null },
+      { alt: "Verwater", image: null },
+      { alt: "De Kok Staalbouw", image: null },
+      { alt: "Ivens", image: null },
+      { alt: "Actemium", image: null },
+    ],
+  },
+
+  sectorenHighlight: {
+    title: "ONZE SECTOREN",
+    subtitle: "MAATWERK VOOR ELKE SECTOR",
+    cardCtaLabel: "LEES MEER",
+    cardCtaLink: "/contact",
+    bottomCtaLabel: "NEEM CONTACT OP",
+    bottomCtaLink: "/contact",
+  },
+
+  uwProject: {
+    titleAccent: "UW PROJECT IN",
+    titleMain: "GOEDE HANDEN",
+    text1: "FerroWorks is opgericht als familiebedrijf en werkt nog steeds zo. Korte lijnen, persoonlijke betrokkenheid, één partner voor het volledige traject.",
+    text2: "Van ontwerp en engineering tot productie, coating en montage op locatie. Specialist in maatwerk staal, RVS en aluminium projecten voor industrie, bouw, architectuur en maritiem.",
+    ctaLabel: "NEEM CONTACT OP",
+    ctaLink: "/contact",
+    image1: null,
+    image2: null,
+    image3: null,
+  },
+
   overOns: {
     verhaal: {
       title1: "GEBOUWD OP",

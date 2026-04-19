@@ -1521,6 +1521,9 @@ function HomepagePage() {
   const [anders, setAnders] = useState(cms.anders || { items: [] });
   const [projecten, setProjecten] = useState(cms.projecten || []);
   const [faq, setFaq] = useState(cms.faq || []);
+  const [clientLogos, setClientLogos] = useState(cms.clientLogos || { items: [] });
+  const [sectorenHighlight, setSectorenHighlight] = useState(cms.sectorenHighlight || {});
+  const [uwProject, setUwProject] = useState(cms.uwProject || {});
   const [statsText, setStatsText] = useState(() => (cms.stats || []).map((item) => `${item.number} | ${item.desc}`).join("\n"));
   const [saved, setSaved] = useState("");
 
@@ -1675,6 +1678,9 @@ function HomepageEditorPage() {
     setAnders(getLocalizedSectionValue(cms, locale, "anders") || { items: [] });
     setProjecten(getLocalizedSectionValue(cms, locale, "projecten") || []);
     setFaq(getLocalizedSectionValue(cms, locale, "faq") || []);
+    setClientLogos(getLocalizedSectionValue(cms, locale, "clientLogos") || { items: [] });
+    setSectorenHighlight(getLocalizedSectionValue(cms, locale, "sectorenHighlight") || {});
+    setUwProject(getLocalizedSectionValue(cms, locale, "uwProject") || {});
     const localizedStats = getLocalizedSectionValue(cms, locale, "stats") || [];
     setStatsText(localizedStats.map((item) => `${item.number} | ${item.desc}`).join("\n"));
   }, [cms, locale]);
@@ -1694,8 +1700,11 @@ function HomepageEditorPage() {
     anders,
     projecten,
     faq,
+    clientLogos,
+    sectorenHighlight,
+    uwProject,
     stats: parsedStats,
-  }), [anders, cms, faq, hero, parsedStats, projecten, watFerna]);
+  }), [anders, clientLogos, cms, faq, hero, parsedStats, projecten, sectorenHighlight, uwProject, watFerna]);
 
   const saveSection = async (key, value) => {
     let ok = false;
@@ -1739,7 +1748,20 @@ function HomepageEditorPage() {
       key: "logos",
       title: "Client Logos",
       preview: <ClientLogosSection />,
-      note: "Deze sectie gebruikt vaste logo-assets en heeft daarom alleen preview in deze editor.",
+      note: "Beheer hier de logo's in de homepage-strip. Laat een afbeelding leeg om het standaardlogo uit het ontwerp te blijven gebruiken.",
+      fields: (
+        <div style={{ display: "grid", gap: "16px" }}>
+          {(clientLogos.items || []).map((item, index) => (
+            <Card key={index} style={{ padding: "18px", background: "#fafafa", boxShadow: "none" }}>
+              <div style={{ display: "grid", gap: "14px" }}>
+                <FormField label={`Logo alt tekst ${index + 1}`} value={item.alt} onChange={(value) => setClientLogos((prev) => ({ ...prev, items: prev.items.map((row, rowIndex) => rowIndex === index ? { ...row, alt: value } : row) }))} />
+                <ImageUpload label={`Logo afbeelding ${index + 1}`} value={item.image || ""} onChange={(value) => setClientLogos((prev) => ({ ...prev, items: prev.items.map((row, rowIndex) => rowIndex === index ? { ...row, image: value } : row) }))} />
+              </div>
+            </Card>
+          ))}
+          <SaveBar saving={false} message={saved === "clientLogos" ? "Logo-sectie opgeslagen." : ""} onSave={() => saveSection("clientLogos", clientLogos)} />
+        </div>
+      ),
     },
     {
       key: "watFerna",
@@ -1794,6 +1816,23 @@ function HomepageEditorPage() {
       key: "sectoren",
       title: "Sectoren Highlight",
       preview: <OnzeSectorenSection />,
+      fields: (
+        <div style={{ display: "grid", gap: "16px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <FormField label="Sectie titel" value={sectorenHighlight.title} onChange={(value) => setSectorenHighlight((prev) => ({ ...prev, title: value }))} />
+            <FormField label="Sectie subtitel" value={sectorenHighlight.subtitle} onChange={(value) => setSectorenHighlight((prev) => ({ ...prev, subtitle: value }))} />
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <FormField label="Card CTA label" value={sectorenHighlight.cardCtaLabel} onChange={(value) => setSectorenHighlight((prev) => ({ ...prev, cardCtaLabel: value }))} />
+            <FormField label="Card CTA link" value={sectorenHighlight.cardCtaLink} onChange={(value) => setSectorenHighlight((prev) => ({ ...prev, cardCtaLink: value }))} />
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <FormField label="Onderste CTA label" value={sectorenHighlight.bottomCtaLabel} onChange={(value) => setSectorenHighlight((prev) => ({ ...prev, bottomCtaLabel: value }))} />
+            <FormField label="Onderste CTA link" value={sectorenHighlight.bottomCtaLink} onChange={(value) => setSectorenHighlight((prev) => ({ ...prev, bottomCtaLink: value }))} />
+          </div>
+          <SaveBar saving={false} message={saved === "sectorenHighlight" ? "Sectoren-highlight opgeslagen." : ""} onSave={() => saveSection("sectorenHighlight", sectorenHighlight)} />
+        </div>
+      ),
       note: "De inhoud van deze cards komt uit de sectorencollectie. Pas de teksten aan via Collections → Sectoren.",
     },
     {
@@ -1819,7 +1858,27 @@ function HomepageEditorPage() {
       key: "cta",
       title: "Uw Project In Goede Handen",
       preview: <UwProjectSection />,
-      note: "Deze CTA-sectie is nog statisch opgebouwd. Ik kan die in een volgende stap ook CMS-beheerbaar maken als je wilt.",
+      fields: (
+        <div style={{ display: "grid", gap: "16px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <FormField label="Titel accent" value={uwProject.titleAccent} onChange={(value) => setUwProject((prev) => ({ ...prev, titleAccent: value }))} />
+            <FormField label="Titel hoofd" value={uwProject.titleMain} onChange={(value) => setUwProject((prev) => ({ ...prev, titleMain: value }))} />
+          </div>
+          <FormField label="Tekst 1" value={uwProject.text1} onChange={(value) => setUwProject((prev) => ({ ...prev, text1: value }))} multiline rows={4} />
+          <FormField label="Tekst 2" value={uwProject.text2} onChange={(value) => setUwProject((prev) => ({ ...prev, text2: value }))} multiline rows={4} />
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <FormField label="CTA label" value={uwProject.ctaLabel} onChange={(value) => setUwProject((prev) => ({ ...prev, ctaLabel: value }))} />
+            <FormField label="CTA link" value={uwProject.ctaLink} onChange={(value) => setUwProject((prev) => ({ ...prev, ctaLink: value }))} />
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "16px" }}>
+            <ImageUpload label="Afbeelding links" value={uwProject.image1 || ""} onChange={(value) => setUwProject((prev) => ({ ...prev, image1: value }))} />
+            <ImageUpload label="Afbeelding boven" value={uwProject.image2 || ""} onChange={(value) => setUwProject((prev) => ({ ...prev, image2: value }))} />
+            <ImageUpload label="Afbeelding rechts" value={uwProject.image3 || ""} onChange={(value) => setUwProject((prev) => ({ ...prev, image3: value }))} />
+          </div>
+          <SaveBar saving={false} message={saved === "uwProject" ? "CTA-sectie opgeslagen." : ""} onSave={() => saveSection("uwProject", uwProject)} />
+        </div>
+      ),
+      note: "Deze CTA-sectie is nu volledig beheerbaar, inclusief headline, teksten, knop en alle drie de afbeeldingen.",
     },
     {
       key: "faq",

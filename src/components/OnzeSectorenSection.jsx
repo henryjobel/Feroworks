@@ -71,11 +71,11 @@ function SectorCard({ item }) {
       </p>
 
       <Link
-        to="/contact"
+        to={item.cardLink || "/contact"}
         className="home-sector-link mt-auto inline-block font-black uppercase tracking-[-0.2px]"
         style={{ fontFamily: "var(--fw-website-heading-font)", color: "var(--fw-website-primary-strong)" }}
       >
-        LEES MEER
+        {item.cardLabel || "LEES MEER"}
       </Link>
     </div>
   );
@@ -83,11 +83,14 @@ function SectorCard({ item }) {
 
 function OnzeSectoren() {
   const { cms } = useCms();
+  const section = cms.sectorenHighlight || {};
   // Merge CMS text into sectorItems (keep SVG icons)
   const mergedItems = sectorItems.map((item, i) => ({
     ...item,
     title: (cms.sectoren && cms.sectoren[i]) ? cms.sectoren[i].naam.replace(" & ", " &\n") : item.title,
     description: (cms.sectoren && cms.sectoren[i]) ? cms.sectoren[i].description : item.description,
+    cardLabel: section.cardCtaLabel || "LEES MEER",
+    cardLink: section.cardCtaLink || "/contact",
   }));
   return (
     <section className="w-full bg-[#f3f3f3] pt-[48px] pb-[100px]">
@@ -229,14 +232,14 @@ function OnzeSectoren() {
             className="site-heading text-[#333333] uppercase font-black text-[34px] leading-none tracking-[-0.8px] mb-[16px]"
             style={{ fontFamily: "var(--fw-website-heading-font)" }}
           >
-            ONZE SECTOREN
+            {section.title || "ONZE SECTOREN"}
           </h2>
 
           <p
             className="site-heading text-[#6f6f6f] uppercase font-black text-[16px] tracking-[-0.2px]"
             style={{ fontFamily: "var(--fw-website-heading-font)" }}
           >
-            MAATWERK VOOR ELKE SECTOR
+            {section.subtitle || "MAATWERK VOOR ELKE SECTOR"}
           </p>
         </div>
 
@@ -248,11 +251,11 @@ function OnzeSectoren() {
 
         <div className="flex justify-center">
           <Link
-            to="/contact"
+            to={section.bottomCtaLink || "/contact"}
             className="site-heading inline-flex items-center justify-center min-w-[188px] h-[52px] rounded-full uppercase font-black text-[14px] px-8 hover:opacity-95 transition"
             style={{ fontFamily: "var(--fw-website-heading-font)", background: "var(--fw-website-primary-strong)", color: "var(--fw-website-secondary)" }}
           >
-            NEEM CONTACT OP
+            {section.bottomCtaLabel || "NEEM CONTACT OP"}
           </Link>
         </div>
       </div>
