@@ -1514,144 +1514,6 @@ function SectorFormPage() {
   );
 }
 
-function HomepagePage() {
-  const { cms, updateCms } = useCms();
-  const [hero, setHero] = useState(cms.hero || {});
-  const [watFerna, setWatFerna] = useState(cms.watFerna || {});
-  const [anders, setAnders] = useState(cms.anders || { items: [] });
-  const [projecten, setProjecten] = useState(cms.projecten || []);
-  const [faq, setFaq] = useState(cms.faq || []);
-  const [clientLogos, setClientLogos] = useState(cms.clientLogos || { items: [] });
-  const [sectorenHighlight, setSectorenHighlight] = useState(cms.sectorenHighlight || {});
-  const [uwProject, setUwProject] = useState(cms.uwProject || {});
-  const [statsText, setStatsText] = useState(() => (cms.stats || []).map((item) => `${item.number} | ${item.desc}`).join("\n"));
-  const [saved, setSaved] = useState("");
-
-  useEffect(() => {
-    setHero(cms.hero || {});
-    setWatFerna(cms.watFerna || {});
-    setAnders(cms.anders || { items: [] });
-    setProjecten(cms.projecten || []);
-    setFaq(cms.faq || []);
-    setStatsText((cms.stats || []).map((item) => `${item.number} | ${item.desc}`).join("\n"));
-  }, [cms]);
-
-  const saveSection = async (key, value) => {
-    const ok = await updateCms(key, value);
-    if (ok) {
-      setSaved(key);
-      window.setTimeout(() => setSaved(""), 1600);
-    }
-  };
-
-  return (
-    <div style={{ display: "grid", gap: "24px", maxWidth: "1040px" }}>
-      <SectionHeader title="Homepage" sub="Elke homepage-sectie heeft hier zijn eigen blok" />
-
-      <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <LocaleToggle enabled={localizationSettings.enabled} locale={locale} onChange={setLocale} />
-      </div>
-      {!localizationSettings.enabled ? (
-        <Card style={{ padding: "18px", background: "#fffbe6", boxShadow: "none", border: "1px solid #f4e5a7" }}>
-          <div style={{ color: "#7c6200", fontSize: "13px", lineHeight: 1.6 }}>
-            Meertaligheid staat uit. Je bewerkt nu alleen de Nederlandse basiscontent. Zet dit aan in Settings om ook aparte EN-content te beheren.
-          </div>
-        </Card>
-      ) : null}
-
-      <Card style={{ padding: "24px" }}>
-        <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "12px", textTransform: "uppercase", marginBottom: "16px" }}>Hero</div>
-        <div style={{ display: "grid", gap: "16px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-            <FormField label="Titel regel 1" value={hero.line1} onChange={(value) => setHero((prev) => ({ ...prev, line1: value }))} />
-            <FormField label="Titel regel 2" value={hero.line2} onChange={(value) => setHero((prev) => ({ ...prev, line2: value }))} />
-          </div>
-          <FormField label="Subtitel" value={hero.subtitle} onChange={(value) => setHero((prev) => ({ ...prev, subtitle: value }))} multiline rows={4} />
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-            <FormField label="CTA tekst" value={hero.cta} onChange={(value) => setHero((prev) => ({ ...prev, cta: value }))} />
-            <FormField label="CTA link" value={hero.ctaLink} onChange={(value) => setHero((prev) => ({ ...prev, ctaLink: value }))} />
-          </div>
-          <FormField label="USP's (één per regel)" value={toMultiline(hero.checkItems)} onChange={(value) => setHero((prev) => ({ ...prev, checkItems: parseLines(value) }))} multiline rows={5} />
-          <ImageUpload label="Hero afbeelding" value={hero.image || ""} onChange={(value) => setHero((prev) => ({ ...prev, image: value }))} />
-        </div>
-        <SaveBar saving={false} message={saved === "hero" ? "Hero opgeslagen." : ""} onSave={() => saveSection("hero", hero)} />
-      </Card>
-
-      <Card style={{ padding: "24px" }}>
-        <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "12px", textTransform: "uppercase", marginBottom: "16px" }}>Stats</div>
-        <FormField label="Één item per regel in formaat: getal | omschrijving" value={statsText} onChange={setStatsText} multiline rows={6} />
-        <SaveBar saving={false} message={saved === "stats" ? "Stats opgeslagen." : ""} onSave={() => saveSection("stats", parseLines(statsText).map((line) => {
-          const [number, ...descParts] = line.split("|");
-          return { number: (number || "").trim(), desc: descParts.join("|").trim() };
-        }))} />
-      </Card>
-
-      <Card style={{ padding: "24px" }}>
-        <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "12px", textTransform: "uppercase", marginBottom: "16px" }}>Wat FerroWorks Voor Je Doet</div>
-        <div style={{ display: "grid", gap: "16px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-            <FormField label="Titel regel 1" value={watFerna.title1} onChange={(value) => setWatFerna((prev) => ({ ...prev, title1: value }))} />
-            <FormField label="Titel regel 2" value={watFerna.title2} onChange={(value) => setWatFerna((prev) => ({ ...prev, title2: value }))} />
-          </div>
-          <FormField label="Bullet items (één per regel)" value={toMultiline(watFerna.bulletItems)} onChange={(value) => setWatFerna((prev) => ({ ...prev, bulletItems: parseLines(value) }))} multiline rows={8} />
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-            <ImageUpload label="Afbeelding 1" value={watFerna.image1 || ""} onChange={(value) => setWatFerna((prev) => ({ ...prev, image1: value }))} />
-            <ImageUpload label="Afbeelding 2" value={watFerna.image2 || ""} onChange={(value) => setWatFerna((prev) => ({ ...prev, image2: value }))} />
-          </div>
-        </div>
-        <SaveBar saving={false} message={saved === "watFerna" ? "Sectie opgeslagen." : ""} onSave={() => saveSection("watFerna", watFerna)} />
-      </Card>
-
-      <Card style={{ padding: "24px" }}>
-        <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "12px", textTransform: "uppercase", marginBottom: "16px" }}>Wat Ons Anders Maakt</div>
-        <div style={{ display: "grid", gap: "16px" }}>
-          {(anders.items || []).map((item, index) => (
-            <Card key={index} style={{ padding: "18px", background: "#fafafa", boxShadow: "none" }}>
-              <div style={{ display: "grid", gap: "14px" }}>
-                <FormField label={`Titel ${index + 1}`} value={item.title} onChange={(value) => setAnders((prev) => ({ ...prev, items: prev.items.map((row, rowIndex) => rowIndex === index ? { ...row, title: value } : row) }))} />
-                <FormField label="Omschrijving" value={item.desc} onChange={(value) => setAnders((prev) => ({ ...prev, items: prev.items.map((row, rowIndex) => rowIndex === index ? { ...row, desc: value } : row) }))} multiline rows={3} />
-              </div>
-            </Card>
-          ))}
-          <ImageUpload label="Sectie afbeelding" value={anders.image || ""} onChange={(value) => setAnders((prev) => ({ ...prev, image: value }))} />
-        </div>
-        <SaveBar saving={false} message={saved === "anders" ? "Sectie opgeslagen." : ""} onSave={() => saveSection("anders", anders)} />
-      </Card>
-
-      <Card style={{ padding: "24px" }}>
-        <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "12px", textTransform: "uppercase", marginBottom: "16px" }}>Projecten</div>
-        <div style={{ display: "grid", gap: "16px" }}>
-          {projecten.map((project, index) => (
-            <Card key={index} style={{ padding: "18px", background: "#fafafa", boxShadow: "none" }}>
-              <div style={{ display: "grid", gap: "14px" }}>
-                <FormField label="Titel" value={project.title} onChange={(value) => setProjecten((prev) => prev.map((row, rowIndex) => rowIndex === index ? { ...row, title: value } : row))} />
-                <FormField label="Beschrijving" value={project.desc} onChange={(value) => setProjecten((prev) => prev.map((row, rowIndex) => rowIndex === index ? { ...row, desc: value } : row))} multiline rows={3} />
-                <ImageUpload label="Afbeelding" value={project.image || ""} onChange={(value) => setProjecten((prev) => prev.map((row, rowIndex) => rowIndex === index ? { ...row, image: value } : row))} />
-              </div>
-            </Card>
-          ))}
-        </div>
-        <SaveBar saving={false} message={saved === "projecten" ? "Projecten opgeslagen." : ""} onSave={() => saveSection("projecten", projecten)} />
-      </Card>
-
-      <Card style={{ padding: "24px" }}>
-        <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "12px", textTransform: "uppercase", marginBottom: "16px" }}>FAQ</div>
-        <div style={{ display: "grid", gap: "16px" }}>
-          {faq.map((item, index) => (
-            <Card key={index} style={{ padding: "18px", background: "#fafafa", boxShadow: "none" }}>
-              <div style={{ display: "grid", gap: "14px" }}>
-                <FormField label="Vraag" value={item.q} onChange={(value) => setFaq((prev) => prev.map((row, rowIndex) => rowIndex === index ? { ...row, q: value } : row))} />
-                <FormField label="Antwoord" value={item.a} onChange={(value) => setFaq((prev) => prev.map((row, rowIndex) => rowIndex === index ? { ...row, a: value } : row))} multiline rows={4} />
-              </div>
-            </Card>
-          ))}
-        </div>
-        <SaveBar saving={false} message={saved === "faq" ? "FAQ opgeslagen." : ""} onSave={() => saveSection("faq", faq)} />
-      </Card>
-    </div>
-  );
-}
-
 function HomepageEditorPage() {
   const { cms, updateCms } = useCms();
   const localizationSettings = getLocalizationSettings(cms.websiteSettings || {});
@@ -1662,6 +1524,9 @@ function HomepageEditorPage() {
   const [anders, setAnders] = useState(cms.anders || { items: [] });
   const [projecten, setProjecten] = useState(cms.projecten || []);
   const [faq, setFaq] = useState(cms.faq || []);
+  const [clientLogos, setClientLogos] = useState(cms.clientLogos || { items: [] });
+  const [sectorenHighlight, setSectorenHighlight] = useState(cms.sectorenHighlight || {});
+  const [uwProject, setUwProject] = useState(cms.uwProject || {});
   const [statsText, setStatsText] = useState(() => (cms.stats || []).map((item) => `${item.number} | ${item.desc}`).join("\n"));
   const [saved, setSaved] = useState("");
   const [openSection, setOpenSection] = useState("hero");
