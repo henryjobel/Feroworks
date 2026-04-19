@@ -3,6 +3,7 @@ import { useCms } from "../cms/CmsContext";
 import heroBg from "../assets/hero-background.jpeg";
 import RichTextContent from "../components/RichTextContent";
 import { useLanguage } from "../i18n/LanguageContext";
+import { resolveMediaUrl } from "../utils/media";
 
 export default function ManagedContentPage() {
   const { cms } = useCms();
@@ -13,6 +14,12 @@ export default function ManagedContentPage() {
   if (!page) {
     return null;
   }
+
+  const pdfUrl = page.pdfUrl ? resolveMediaUrl(page.pdfUrl) : "";
+  const pdfLabel = page.pdfLabel || t("managedPage.pdfLabel", "Bekijk document");
+  const pdfDownloadOnly = Boolean(page.pdfDownloadOnly);
+  const isLegalPage = ["privacy", "terms"].includes(page.key);
+  const pdfFilename = pdfUrl ? pdfUrl.split("/").pop() : "";
 
   return (
     <>
@@ -39,6 +46,44 @@ export default function ManagedContentPage() {
           <div style={{ background: "#fff", padding: "48px", boxShadow: "0 10px 35px rgba(0,0,0,0.05)" }}>
             <RichTextContent html={page.body || `<p>${t("managedPage.noContent", "No content configured yet.")}</p>`} className="managed-content-page" />
           </div>
+          {pdfUrl ? (
+            <div style={{ background: "#fff", padding: "28px 32px", boxShadow: "0 10px 35px rgba(0,0,0,0.05)", marginTop: "24px", display: "grid", gap: "20px" }}>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "16px", flexWrap: "wrap" }}>
+                <div style={{ display: "grid", gap: "8px" }}>
+                  <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "12px", textTransform: "uppercase", color: "#1c1c1c", marginBottom: "2px" }}>
+                    {isLegalPage ? "Officieel document" : "Document"}
+                  </div>
+                  <div style={{ fontSize: "14px", color: "#666", lineHeight: 1.7 }}>
+                    {pdfDownloadOnly
+                      ? t("managedPage.pdfDownloadDescription", "Download the attached PDF document for this page.")
+                      : t("managedPage.pdfDescription", "Open or download the attached PDF document for this page.")}
+                  </div>
+                  <div style={{ fontSize: "12px", color: "#999", wordBreak: "break-all" }}>
+                    {pdfFilename}
+                  </div>
+                </div>
+                <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                  <a
+                    href={pdfUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "12px 22px", borderRadius: "999px", background: "var(--fw-website-primary)", color: "var(--fw-website-secondary)", textDecoration: "none", fontWeight: 800, fontSize: "13px", letterSpacing: "0.4px", textTransform: "uppercase", whiteSpace: "nowrap" }}
+                  >
+                    {pdfLabel}
+                  </a>
+                </div>
+              </div>
+              {!pdfDownloadOnly ? (
+                <div style={{ border: "1px solid #ececec", borderRadius: "10px", overflow: "hidden", background: "#f9f9f9" }}>
+                  <iframe
+                    src={pdfUrl}
+                    title={`${page.name} PDF`}
+                    style={{ width: "100%", minHeight: "720px", border: "none", display: "block" }}
+                  />
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       </section>
 

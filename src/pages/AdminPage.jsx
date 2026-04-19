@@ -361,6 +361,55 @@ function ImageUpload({ label = "Afbeelding", value, onChange }) {
   );
 }
 
+function FileUpload({ label = "Bestand", value, onChange, accept = ".pdf", helper = "PDF" }) {
+  const [uploading, setUploading] = useState(false);
+  const filename = value ? value.split("/").pop() : "";
+
+  const handleFile = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const asset = await api.uploadCmsMedia(file);
+      onChange(asset.publicUrl);
+    } catch (error) {
+      window.alert(error.message || "Upload mislukt.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  return (
+    <div>
+      <FieldLabel>{label}</FieldLabel>
+      <label style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "10px", border: "2px dashed #e0e0e0", borderRadius: "6px", padding: "20px", cursor: "pointer", background: value ? "#fff" : "#fafafa", overflow: "hidden", minHeight: "120px", position: "relative", transition: "border-color .15s" }}>
+        {value ? (
+          <>
+            <SvgIcon d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8" size={28} stroke="var(--fw-dashboard-primary)" strokeWidth={1.8} />
+            <span style={{ fontSize: "13px", color: "#555", textAlign: "center", wordBreak: "break-all" }}>{filename}</span>
+            <span style={{ fontSize: "11px", color: "#aaa" }}>Klik om bestand te vervangen</span>
+          </>
+        ) : (
+          <>
+            <SvgIcon d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z M14 2v6h6 M12 18v-6 M9 15l3-3 3 3" size={28} stroke="var(--fw-dashboard-primary)" strokeWidth={1.8} />
+            <span style={{ fontSize: "13px", color: "#aaa" }}>{uploading ? "Uploaden..." : "Klik om bestand te uploaden"}</span>
+            <span style={{ fontSize: "11px", color: "#ccc" }}>{helper}</span>
+          </>
+        )}
+        <input type="file" accept={accept} onChange={handleFile} style={{ position: "absolute", inset: 0, opacity: 0, cursor: "pointer", width: "100%", height: "100%" }} />
+      </label>
+      {value ? (
+        <button type="button" onClick={() => onChange("")} style={{ marginTop: "8px", fontSize: "11px", color: "#dc2626", background: "none", border: "none", cursor: "pointer", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, padding: 0 }}>
+          Bestand verwijderen
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
 function SaveBar({ saving, message, onSave, saveLabel = "Opslaan" }) {
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "14px", marginTop: "28px", flexWrap: "wrap" }}>
@@ -1959,6 +2008,7 @@ function PagesPage() {
   }, [activeKey, cms, locale]);
 
   const activePage = pages.find((item) => item.key === activeKey) || pages[0];
+  const isLegalPage = ["privacy", "terms"].includes(activePage?.key);
 
   const updatePage = (field, value) => {
     setPages((prev) => prev.map((item) => item.key === activePage.key ? { ...item, [field]: value } : item));
@@ -2021,6 +2071,34 @@ function PagesPage() {
               <FormField label="Hero title" value={activePage.heroTitle} onChange={(value) => updatePage("heroTitle", value)} />
               <FormField label="Hero subtitle" value={activePage.heroSubtitle} onChange={(value) => updatePage("heroSubtitle", value)} />
             </div>
+            {isLegalPage ? (
+              <Card style={{ padding: "18px", background: "#fafafa", boxShadow: "none" }}>
+                <div style={{ display: "grid", gap: "16px" }}>
+                  <div>
+                    <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", color: "#1c1c1c", marginBottom: "8px" }}>
+                      Juridisch document
+                    </div>
+                    <div style={{ color: "#666", fontSize: "13px", lineHeight: 1.6 }}>
+                      Upload hier het officiële PDF-document voor deze juridische pagina. Op de website tonen we dit als nette documentkaart met duidelijke acties voor bekijken en downloaden.
+                    </div>
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+                    <FormField label="PDF knoplabel" value={activePage.pdfLabel || ""} onChange={(value) => updatePage("pdfLabel", value)} placeholder="Bekijk document" />
+                    <FormField label="PDF URL" value={activePage.pdfUrl || ""} onChange={(value) => updatePage("pdfUrl", value)} placeholder="/uploads/document.pdf" />
+                  </div>
+                  {activePage.pdfUrl ? (
+                    <div style={{ display: "grid", gap: "8px" }}>
+                      <FieldLabel>Bestandsnaam</FieldLabel>
+                      <div style={{ ...baseInputStyle(), background: "#f7f7f7", color: "#666" }}>
+                        {activePage.pdfUrl.split("/").pop()}
+                      </div>
+                    </div>
+                  ) : null}
+                  <FileUpload label="PDF upload" value={activePage.pdfUrl || ""} onChange={(value) => updatePage("pdfUrl", value)} accept=".pdf,application/pdf" helper="PDF bestanden tot 10 MB" />
+                  <CheckboxField label="Alleen download tonen, geen ingebedde preview" checked={Boolean(activePage.pdfDownloadOnly)} onChange={(value) => updatePage("pdfDownloadOnly", value)} />
+                </div>
+              </Card>
+            ) : null}
             {["privacy", "terms"].includes(activePage.key) ? <RichTextEditor label="Pagina-inhoud" value={activePage.body || ""} onChange={(value) => updatePage("body", value)} /> : null}
           </div>
           <SaveBar saving={false} message={saved} onSave={save} />
