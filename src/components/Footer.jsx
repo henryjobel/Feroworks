@@ -1,5 +1,6 @@
 import { useCms } from "../cms/CmsContext";
 import { useLanguage } from "../i18n/LanguageContext";
+import BrandLogo from "./BrandLogo";
 
 function Footer() {
   const { cms } = useCms();
@@ -24,22 +25,7 @@ function Footer() {
           gap: "28px",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
-          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-            <rect width="36" height="36" fill="var(--fw-website-primary)" />
-            <rect x="7" y="7" width="10" height="22" fill="#1c1c1c" />
-            <rect x="19" y="7" width="10" height="10" fill="#1c1c1c" />
-          </svg>
-          <div style={{ lineHeight: 1 }}>
-            <div style={{ display: "flex", alignItems: "baseline", gap: "1px" }}>
-              <span className="site-title" style={{ fontWeight: 900, fontSize: "22px", color: "#fff", letterSpacing: "-0.5px" }}>FERRO</span>
-              <span className="site-title theme-primary-text" style={{ fontWeight: 900, fontSize: "22px", letterSpacing: "-0.5px" }}>WORKS</span>
-            </div>
-            <div className="theme-primary-text" style={{ fontStyle: "italic", fontSize: "11px", marginTop: "1px", letterSpacing: "0.5px" }}>
-              {site.tagline || t("nav.brandTagline", "metalwork")}
-            </div>
-          </div>
-        </div>
+        <BrandLogo variant="footer" />
 
         <div style={{ color: "#ccc", fontSize: "13px", lineHeight: 1.7, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.2px" }}>
           {addressLines.map((line) => <div key={line}>{line}</div>)}

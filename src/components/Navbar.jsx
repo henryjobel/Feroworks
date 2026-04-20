@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useCms } from "../cms/CmsContext";
+import BrandLogo from "./BrandLogo";
 import { useLanguage } from "../i18n/LanguageContext";
 import { getActiveLocales, isLocalizationEnabled } from "../i18n/content-localization.js";
 
@@ -23,20 +24,8 @@ function Navbar() {
   return (
     <nav className="w-full bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
       <div className="w-full max-w-7xl mx-auto px-6 md:px-8 flex items-center justify-between" style={{ height: "78px" }}>
-        <Link to={localizePath("/")} className="flex items-center gap-2 shrink-0 no-underline" style={{ maxWidth: "calc(100% - 56px)" }}>
-          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="36" height="36" rx="4" fill="var(--fw-website-primary)" />
-            <path d="M7 28 L11 14 L16 22 L21 14 L25 28" stroke="#1a1a1a" strokeWidth="2.5" fill="none" strokeLinejoin="round" />
-          </svg>
-          <div className="flex flex-col leading-none">
-            <div className="flex items-baseline">
-              <span className="site-title text-[24px] font-black text-gray-900 tracking-tight">FERRO</span>
-              <span className="site-title text-[24px] font-black tracking-tight theme-primary-text">WORKS</span>
-            </div>
-            <span className="text-[13px] italic text-gray-500 font-normal">
-              {t("nav.brandTagline", "metalwork")}
-            </span>
-          </div>
+        <Link to={localizePath("/")} className="shrink-0 no-underline">
+          <BrandLogo variant="header" />
         </Link>
 
         <ul className="hidden lg:flex items-center gap-7 xl:gap-9 list-none flex-1 justify-center m-0 p-0">
@@ -180,4 +169,3 @@ function Navbar() {
 }
 
 export default Navbar;
-

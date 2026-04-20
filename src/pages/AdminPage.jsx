@@ -2371,6 +2371,15 @@ function SettingsPage() {
 
         {tab === "website" ? (
           <div style={{ display: "grid", gap: "18px" }}>
+            <Card style={{ padding: "18px", background: "#fafafa", boxShadow: "none" }}>
+              <div style={{ display: "grid", gap: "16px" }}>
+                <div style={{ fontFamily: "var(--fw-dashboard-heading-font)", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", color: "#1c1c1c" }}>Branding</div>
+                <div style={{ color: "#666", fontSize: "13px", lineHeight: 1.6 }}>
+                  Upload hier het hoofdlogo voor de publieke website. Als dit veld leeg blijft, gebruikt de site automatisch het standaard FerroWorks-woordmerk.
+                </div>
+                <ImageUpload label="Website logo" value={websiteSettings.logoImage || ""} onChange={(value) => setWebsiteSettings((prev) => ({ ...prev, logoImage: value }))} accept="image/*" />
+              </div>
+            </Card>
             <FormField label="Default OG image URL" value={websiteSettings.defaultOgImage || ""} onChange={(value) => setWebsiteSettings((prev) => ({ ...prev, defaultOgImage: value }))} />
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
               <FormField label="Google Analytics ID" value={websiteSettings.googleAnalyticsId || ""} onChange={(value) => setWebsiteSettings((prev) => ({ ...prev, googleAnalyticsId: value }))} placeholder="G-XXXXXXXXXX" />

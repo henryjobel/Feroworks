@@ -408,6 +408,7 @@ export const DEFAULT_CMS = {
   websiteSettings: {
     robotsText: "User-agent: *\nAllow: /\nSitemap: {{siteUrl}}/sitemap.xml",
     extraHeadHtml: "",
+    logoImage: "",
     defaultOgImage: "",
     googleAnalyticsId: "",
     googleTagManagerId: "",
