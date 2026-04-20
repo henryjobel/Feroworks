@@ -27,6 +27,7 @@ import { stripHtml } from "../components/RichTextContent";
 import { localizeCmsContent } from "../i18n/content-localization.js";
 import { DEFAULT_THEME_SETTINGS, FONT_OPTIONS } from "../theme/themeConfig";
 import { resolveMediaUrl } from "../utils/media";
+import BrandLogo from "../components/BrandLogo.jsx";
 
 const DEFAULT_LOCALIZATION_SETTINGS = {
   enabled: false,
@@ -498,18 +499,10 @@ function Sidebar({ collapsed, setCollapsed }) {
 
   return (
     <aside style={{ width: collapsed ? 72 : 240, background: "#141616", minHeight: "100vh", display: "flex", flexDirection: "column", position: "fixed", top: 0, left: 0, zIndex: 200, height: "100vh", overflowY: "auto", transition: "width .2s ease", flexShrink: 0 }}>
-      <div onClick={() => setCollapsed(!collapsed)} style={{ padding: "18px 16px", borderBottom: "1px solid #252525", display: "flex", alignItems: "center", gap: "12px", cursor: "pointer", userSelect: "none" }}>
-        <div style={{ width: "38px", height: "38px", background: "var(--fw-dashboard-primary)", borderRadius: "6px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-          <svg width="22" height="22" viewBox="0 0 36 36" fill="none"><path d="M7 28 L11 14 L16 22 L21 14 L25 28" stroke="#1a1a1a" strokeWidth="2.8" fill="none" strokeLinejoin="round" /></svg>
-        </div>
-        {!collapsed ? (
-          <div>
-            <div style={{ fontFamily: "var(--fw-dashboard-heading-font)", fontWeight: 900, fontSize: "15px", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-              <span style={{ color: "#fff" }}>FERRO</span><span style={{ color: "var(--fw-dashboard-primary)" }}>WORKS</span>
-            </div>
-            <div style={{ fontSize: "10px", color: "#555", fontStyle: "italic", marginTop: "2px" }}>Admin Panel</div>
-          </div>
-        ) : null}
+      <div  style={{ padding: "18px 16px", borderBottom: "1px solid #252525", display: "flex", alignItems: "center", gap: "12px", userSelect: "none" }}>
+              <Link to="/" className="shrink-0 no-underline">
+          <BrandLogo variant="header" />
+        </Link>
       </div>
 
       <nav style={{ padding: "12px 0", flex: 1 }}>
@@ -569,7 +562,7 @@ function Sidebar({ collapsed, setCollapsed }) {
   );
 }
 
-function TopBar({ onLogout }) {
+function TopBar({ onLogout, collapsed, setCollapsed }) {
   const location = useLocation();
   const { user } = useAuth();
   const meta = pageMeta(location.pathname);
@@ -590,10 +583,16 @@ function TopBar({ onLogout }) {
 
   return (
     <header style={{ background: "#fff", borderBottom: "1px solid #ebebeb", padding: "0 28px", minHeight: "72px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "20px", flexShrink: 0 }}>
-      <div>
+      <div className="flex items-center gap-2">
+        {/* <div onClick={() => setCollapsed(!collapsed)}>
+        <ChevronIcon className="cursor-pointer" size={20} color="#666" />
+        </div> */}
+        <div>
         <h1 style={{ fontFamily: "var(--fw-dashboard-heading-font)", fontWeight: 900, fontSize: "17px", textTransform: "uppercase", color: "var(--fw-dashboard-secondary)", margin: 0, letterSpacing: "-0.2px" }}>{meta.title}</h1>
         <p style={{ fontSize: "12px", color: "#aaa", margin: 0 }}>{meta.sub}</p>
+        </div>
       </div>
+          
       <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap", justifyContent: "flex-end" }}>
         <div ref={menuRef} style={{ position: "relative" }}>
           <button
@@ -689,7 +688,7 @@ function AdminShell() {
     <div style={{ display: "flex", minHeight: "100vh", background: "#f2f3f5", fontFamily: "system-ui, -apple-system, sans-serif" }}>
       <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
       <div style={{ flex: 1, marginLeft: sidebarWidth, transition: "margin-left .2s ease", display: "flex", flexDirection: "column", minWidth: 0, minHeight: "100vh" }}>
-        <TopBar onLogout={logout} />
+        <TopBar onLogout={logout} collapsed={collapsed} setCollapsed={setCollapsed}/>
         <main style={{ flex: 1, overflowY: "auto", padding: "28px 32px" }}>
           <Outlet />
         </main>
