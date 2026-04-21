@@ -488,7 +488,7 @@ function pageMeta(pathname) {
   return list.find((item) => pathname.startsWith(item.match)) || list[0];
 }
 
-function Sidebar({ collapsed, setCollapsed }) {
+function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
   const location = useLocation();
   const { can } = useAuth();
   const [openGroups, setOpenGroups] = useState(() => ({ Content: true, Collections: true, Platform: true, Overzicht: true }));
@@ -498,9 +498,9 @@ function Sidebar({ collapsed, setCollapsed }) {
   })).filter((group) => group.items.length);
 
   return (
-    <aside style={{ width: collapsed ? 72 : 240, background: "#141616", minHeight: "100vh", display: "flex", flexDirection: "column", position: "fixed", top: 0, left: 0, zIndex: 200, height: "100vh", overflowY: "auto", transition: "width .2s ease", flexShrink: 0 }}>
+    <aside className={`admin-sidebar ${mobileOpen ? "mobile-open" : ""}`} style={{ width: collapsed ? 72 : 240, background: "#141616", minHeight: "100vh", display: "flex", flexDirection: "column", position: "fixed", top: 0, left: 0, zIndex: 200, height: "100vh", overflowY: "auto", transition: "transform .2s ease, width .2s ease", flexShrink: 0 }}>
       <div  style={{ padding: "18px 16px", borderBottom: "1px solid #252525", display: "flex", alignItems: "center", gap: "12px", userSelect: "none" }}>
-              <Link to="/" className="shrink-0 no-underline">
+              <Link to="/" className="shrink-0 no-underline" onClick={() => setMobileOpen && setMobileOpen(false)}>
           <BrandLogo variant="header" />
         </Link>
       </div>
@@ -524,6 +524,7 @@ function Sidebar({ collapsed, setCollapsed }) {
                 <NavLink
                   key={item.to}
                   to={item.to}
+                  onClick={() => setMobileOpen && setMobileOpen(false)}
                   style={{
                     width: "100%",
                     display: "flex",
@@ -553,7 +554,7 @@ function Sidebar({ collapsed, setCollapsed }) {
       </nav>
 
       <div style={{ padding: "14px 16px", borderTop: "1px solid #252525" }}>
-        <Link to="/" target="_blank" style={{ display: "flex", alignItems: "center", gap: "9px", justifyContent: collapsed ? "center" : "flex-start", color: "#555", fontSize: "11px", textDecoration: "none", fontFamily: "var(--fw-dashboard-heading-font)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.4px" }}>
+        <Link to="/" target="_blank" onClick={() => setMobileOpen && setMobileOpen(false)} style={{ display: "flex", alignItems: "center", gap: "9px", justifyContent: collapsed ? "center" : "flex-start", color: "#555", fontSize: "11px", textDecoration: "none", fontFamily: "var(--fw-dashboard-heading-font)", fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.4px" }}>
           <SvgIcon d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6 M15 3h6v6 M10 14L21 3" size={16} />
           {!collapsed ? "Bekijk site" : null}
         </Link>
@@ -562,7 +563,7 @@ function Sidebar({ collapsed, setCollapsed }) {
   );
 }
 
-function TopBar({ onLogout, collapsed, setCollapsed }) {
+function TopBar({ onLogout, collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
   const location = useLocation();
   const { user } = useAuth();
   const meta = pageMeta(location.pathname);
@@ -582,14 +583,17 @@ function TopBar({ onLogout, collapsed, setCollapsed }) {
   }, []);
 
   return (
-    <header style={{ background: "#fff", borderBottom: "1px solid #ebebeb", padding: "0 28px", minHeight: "72px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "20px", flexShrink: 0 }}>
+    <header style={{ background: "#fff", borderBottom: "1px solid #ebebeb", padding: "0 20px", minHeight: "72px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", flexShrink: 0 }}>
       <div className="flex items-center gap-2">
-        {/* <div onClick={() => setCollapsed(!collapsed)}>
-        <ChevronIcon className="cursor-pointer" size={20} color="#666" />
-        </div> */}
+        <button className="admin-mobile-toggle" onClick={() => setMobileOpen(!mobileOpen)}>
+          <SvgIcon d="M3 12h18M3 6h18M3 18h18" size={24} stroke="#1c1c1c" />
+        </button>
+        <button className="admin-desktop-toggle" onClick={() => setCollapsed(!collapsed)}>
+          <SvgIcon d="M3 12h18M3 6h18M3 18h18" size={24} stroke="#1c1c1c" />
+        </button>
         <div>
         <h1 style={{ fontFamily: "var(--fw-dashboard-heading-font)", fontWeight: 900, fontSize: "17px", textTransform: "uppercase", color: "var(--fw-dashboard-secondary)", margin: 0, letterSpacing: "-0.2px" }}>{meta.title}</h1>
-        <p style={{ fontSize: "12px", color: "#aaa", margin: 0 }}>{meta.sub}</p>
+        <p style={{ fontSize: "12px", color: "#aaa", margin: 0 }} className="admin-topbar-sub">{meta.sub}</p>
         </div>
       </div>
           
@@ -674,6 +678,7 @@ function LoginScreen() {
 function AdminShell() {
   const { user, loading, logout } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const sidebarWidth = collapsed ? 72 : 240;
 
   if (loading) {
@@ -686,9 +691,10 @@ function AdminShell() {
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: "#f2f3f5", fontFamily: "system-ui, -apple-system, sans-serif" }}>
-      <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
-      <div style={{ flex: 1, marginLeft: sidebarWidth, transition: "margin-left .2s ease", display: "flex", flexDirection: "column", minWidth: 0, minHeight: "100vh" }}>
-        <TopBar onLogout={logout} collapsed={collapsed} setCollapsed={setCollapsed}/>
+      {mobileOpen ? <div className="admin-overlay" onClick={() => setMobileOpen(false)}></div> : null}
+      <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
+      <div className="admin-main-wrapper" style={{ flex: 1, marginLeft: sidebarWidth, transition: "margin-left .2s ease", display: "flex", flexDirection: "column", minWidth: 0, minHeight: "100vh" }}>
+        <TopBar onLogout={logout} collapsed={collapsed} setCollapsed={setCollapsed} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
         <main style={{ flex: 1, overflowY: "auto", padding: "28px 32px" }}>
           <Outlet />
         </main>
@@ -761,7 +767,7 @@ function DashboardPage() {
   return (
     <div>
       <SectionHeader title="Dashboard" sub="Snel overzicht van de belangrijkste contentblokken" />
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: "18px", marginBottom: "24px" }}>
+      <div className="admin-stats-grid">
         {stats.map((item) => (
           <Card key={item.label} style={{ padding: "22px", display: "flex", alignItems: "center", gap: "16px" }}>
             <div style={{ width: "46px", height: "46px", borderRadius: "8px", background: `${item.color}1a`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -775,7 +781,7 @@ function DashboardPage() {
         ))}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 320px", gap: "20px" }}>
+      <div className="admin-layout-grid">
         <Card>
           <div style={{ padding: "18px 22px", borderBottom: "1px solid #f2f2f2", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", color: "#1c1c1c" }}>Recente blogposts</span>
@@ -783,7 +789,7 @@ function DashboardPage() {
           </div>
           <div style={{ padding: "10px 22px 22px" }}>
             {recentBlog.length ? recentBlog.map((post) => (
-              <div key={post.slug || post.id} style={{ display: "grid", gridTemplateColumns: "1fr auto auto", gap: "16px", padding: "16px 0", borderBottom: "1px solid #f3f3f3", alignItems: "center" }}>
+              <div key={post.slug || post.id} className="admin-recent-grid">
                 <div>
                   <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "12px", textTransform: "uppercase", color: "#1c1c1c", marginBottom: "5px" }}>{post.title}</div>
                   <div style={{ fontSize: "12px", color: "#888" }}>{post.category} • {post.date}</div>
@@ -894,7 +900,7 @@ function LeadsPage() {
         sub={mailConfigured ? "Nieuwe inzendingen uit het contactformulier" : "Nieuwe inzendingen uit het contactformulier. SMTP is nog niet geconfigureerd."}
       />
       <Card>
-        <div style={{ padding: "18px 22px", borderBottom: "1px solid #f2f2f2", display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 120px 1.2fr", gap: "16px", fontSize: "11px", color: "#bbb", fontFamily: "Arial Black, Arial, sans-serif", textTransform: "uppercase" }}>
+        <div className="admin-leads-header" style={{ padding: "18px 22px", borderBottom: "1px solid #f2f2f2", fontSize: "11px", color: "#bbb", fontFamily: "Arial Black, Arial, sans-serif", textTransform: "uppercase" }}>
           <div>Naam</div>
           <div>E-mail</div>
           <div>Datum</div>
@@ -905,7 +911,7 @@ function LeadsPage() {
         {!loadingLeads && leadError ? <div style={{ padding: "24px", color: "#dc2626" }}>{leadError}</div> : null}
         {!loadingLeads && !leadError && !leads.length ? <div style={{ padding: "24px", color: "#999" }}>Nog geen contactaanvragen ontvangen.</div> : null}
         {!loadingLeads && !leadError ? leads.map((lead) => (
-          <div key={lead.id} style={{ padding: "18px 22px", borderBottom: "1px solid #f5f5f5", display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 120px 1.2fr", gap: "16px", alignItems: "center" }}>
+          <div key={lead.id} className="admin-leads-row" style={{ padding: "18px 22px", borderBottom: "1px solid #f5f5f5", alignItems: "center" }}>
             <div>
               <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "13px", color: "#1c1c1c", marginBottom: "5px" }}>{lead.name}</div>
               <div style={{ fontSize: "12px", color: "#888" }}>{lead.company || stripHtml(lead.message).slice(0, 90)}</div>
@@ -1042,14 +1048,14 @@ function BlogListPage() {
         }
       />
       <Card>
-        <div style={{ padding: "20px 22px", borderBottom: "1px solid #f2f2f2", display: "grid", gridTemplateColumns: "2fr 1fr 120px 1fr", gap: "16px", fontSize: "11px", color: "#bbb", fontFamily: "Arial Black, Arial, sans-serif", textTransform: "uppercase" }}>
+        <div className="admin-table-row admin-hide-on-mobile" style={{ padding: "20px 22px", borderBottom: "1px solid #f2f2f2", fontSize: "11px", color: "#bbb", fontFamily: "Arial Black, Arial, sans-serif", textTransform: "uppercase" }}>
           <div>Titel</div>
           <div>Categorie</div>
           <div>Status</div>
           <div style={{ textAlign: "right" }}>Acties</div>
         </div>
         {blogItems.map((post) => (
-          <div key={post.slug || post.id} style={{ padding: "18px 22px", borderBottom: "1px solid #f5f5f5", display: "grid", gridTemplateColumns: "2fr 1fr 120px 1fr", gap: "16px", alignItems: "center" }}>
+          <div key={post.slug || post.id} className="admin-table-row" style={{ padding: "18px 22px", borderBottom: "1px solid #f5f5f5", alignItems: "center" }}>
             <div>
               <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "13px", color: "#1c1c1c", marginBottom: "5px" }}>{post.title}</div>
               <div style={{ fontSize: "12px", color: "#888" }}>{stripHtml(post.excerpt).slice(0, 120)}</div>
@@ -1157,7 +1163,7 @@ function SectorListPage() {
       />
       <Card>
         {sectorItems.map((item) => (
-          <div key={item.id} style={{ padding: "18px 22px", borderBottom: "1px solid #f5f5f5", display: "grid", gridTemplateColumns: "90px 1.5fr 1fr", gap: "16px", alignItems: "center" }}>
+          <div key={item.id} className="admin-table-row-4" style={{ padding: "18px 22px", borderBottom: "1px solid #f5f5f5", alignItems: "center" }}>
             <div style={{ fontFamily: "Arial Black, Arial, sans-serif", color: "#c8d400" }}>{item.nr}</div>
             <div>
               <div style={{ fontFamily: "Arial Black, Arial, sans-serif", fontSize: "13px", color: "#1c1c1c", marginBottom: "5px" }}>{item.naam}</div>
@@ -2475,7 +2481,7 @@ function SettingsPage() {
                     {emailSettings.mailConfigured ? "Configuratie lijkt compleet." : "Sla eerst host, poort, afzender en credentials op."}
                   </div>
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "10px", minWidth: "360px", flex: "1 1 360px" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "10px", minWidth: 0, flex: "1 1 360px" }}>
                   <FormField label="Test e-mail naar" value={testEmail} onChange={setTestEmail} type="email" placeholder="naam@bedrijf.nl" />
                   <PrimaryButton type="button" onClick={sendTest} disabled={emailBusy || !testEmail} style={{ alignSelf: "end", opacity: emailBusy || !testEmail ? 0.65 : 1 }}>
                     {emailBusy ? "Bezig..." : "Test mail"}
