@@ -86,7 +86,7 @@ function DienstBlock({ dienst, index }) {
   const [ref, vis] = useInView();
   const { t, localizePath } = useLanguage();
   const isEven = index % 2 === 0;
-  const hideMarkedTag = ["productie", "montage", "reparatie"].includes(dienst.id);
+  const hideMarkedTag = ["engineering", "productie", "montage", "reparatie"].includes(dienst.id);
   const hideMarkedAccent = ["engineering", "productie", "montage", "reparatie"].includes(dienst.id);
   const bg = isEven ? "#f4f4f4" : "#fff";
   const img = dienst.image || FALLBACK_IMAGES[index % FALLBACK_IMAGES.length];
@@ -115,13 +115,14 @@ function DienstBlock({ dienst, index }) {
           </div>
         ))}
       </div>
-      <Link to={localizePath(`/diensten/${dienst.id}`)}
+      {/* delete request: hide "MEER INFORMATIE" button on diensten page */}
+      {/* <Link to={localizePath(`/diensten/${dienst.id}`)}
         style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "var(--fw-website-primary)", padding: "14px 28px", textDecoration: "none" }}
         onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
         onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}>
         {t("servicesPage.moreInfo", "MORE INFORMATION")}
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="#1c1c1c" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-      </Link>
+      </Link> */}
     </div>
   );
 

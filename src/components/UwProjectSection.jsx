@@ -55,8 +55,8 @@ function UwProjectSection() {
           className="up-photos"
           style={{ position: "relative", height: "500px" }}
         >
-          {/* Lime square â€” bottom left, behind all images */}
-          <div
+          {/* delete request: hide decorative lime square */}
+          {/* <div
             className="up-sq"
             style={{
               position: "absolute",
@@ -67,7 +67,7 @@ function UwProjectSection() {
               background: "var(--fw-website-primary)",
               zIndex: 1,
             }}
-          />
+          /> */}
 
           {/* about-us2: left tall portrait (man with glasses) */}
           <div

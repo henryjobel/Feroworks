@@ -83,8 +83,8 @@ function WatFernaSection() {
         {/* RIGHT — overlapping images */}
         <div className="wf-visual" style={{ position:"relative", height:"360px" }}>
 
-          {/* Lime square — bottom right, z=1 (behind portrait) */}
-          <div
+          {/* delete request: hide decorative lime square */}
+          {/* <div
             className="wf-sq"
             style={{
               position:"absolute",
@@ -95,7 +95,7 @@ function WatFernaSection() {
               background:"var(--fw-website-primary)",
               zIndex:1,
             }}
-          />
+          /> */}
 
           {/* Landscape image — top-left of right col, bigger */}
           <div

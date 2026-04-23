@@ -82,7 +82,7 @@ function SectorBlock({ sector, index }) {
   const [ref, vis] = useInView();
   const { t, localizePath } = useLanguage();
   const isEven = index % 2 === 0;
-  const hideMarkedTag = index > 0;
+  const hideMarkedTag = true;
   const bg = isEven ? "#f4f4f4" : "#fff";
   const img = sector.image || FALLBACK_IMAGES[index % FALLBACK_IMAGES.length];
   const checkItems = sector.items ? sector.items.split("\n").filter(Boolean) : [];
@@ -107,13 +107,14 @@ function SectorBlock({ sector, index }) {
           </div>
         ))}
       </div>
-      <Link to={localizePath("/contact")}
+      {/* delete request: hide sector block action button */}
+      {/* <Link to={localizePath("/contact")}
         style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "var(--fw-website-primary)", padding: "14px 28px", textDecoration: "none" }}
         onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
         onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}>
         {t("common.getQuote", "REQUEST A QUOTE")}
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="#1c1c1c" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-      </Link>
+      </Link> */}
     </div>
   );
 

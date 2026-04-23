@@ -1,6 +1,7 @@
-﻿import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import heroBg from "../assets/hero-background.jpeg";
 import { useCms } from "../cms/CmsContext";
+import BrandLogo from "./BrandLogo";
 
 function HeroBanner() {
   const { cms } = useCms();
@@ -49,13 +50,19 @@ function HeroBanner() {
         className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8"
         style={{ paddingTop: "60px", paddingBottom: "60px" }}
       >
-        {/* Ferna icon - hidden on mobile */}
-        <div className="hidden md:block" style={{ position: "absolute", top: "0px", right: "32px" }}>
-          <svg width="96" height="108" viewBox="0 0 102 115" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M13 13H56V28H28V87H13V13Z" stroke="var(--fw-website-primary)" strokeWidth="7" />
-            <path d="M89 102H46V87H74V28H89V102Z" stroke="var(--fw-website-primary)" strokeWidth="7" />
-            <path d="M28 28H46V68H56V28H74" stroke="var(--fw-website-primary)" strokeWidth="7" fill="none" />
-          </svg>
+        {/* Same logo as header, positioned in hero visual */}
+        <div
+          className="hidden md:block"
+          style={{
+            position: "absolute",
+            top: "48px",
+            right: "52px",
+            zIndex: 2,
+            pointerEvents: "none",
+            opacity: 0.96,
+          }}
+        >
+          <BrandLogo variant="header" />
         </div>
 
         {/* Headings */}

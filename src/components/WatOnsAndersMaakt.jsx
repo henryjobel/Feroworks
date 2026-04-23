@@ -142,7 +142,8 @@ function WatOnsAndersMaakt() {
           </div>
 
           {/* Lime square â€” bottom right, slightly outside image */}
-          <div
+          {/* delete request: hide decorative lime square */}
+          {/* <div
             className="woa-sq"
             style={{
               position: "absolute",
@@ -153,7 +154,7 @@ function WatOnsAndersMaakt() {
               background: "var(--fw-website-primary)",
               zIndex: 1,
             }}
-          />
+          /> */}
         </div>
       </div>
 
