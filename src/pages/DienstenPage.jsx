@@ -86,17 +86,22 @@ function DienstBlock({ dienst, index }) {
   const [ref, vis] = useInView();
   const { t, localizePath } = useLanguage();
   const isEven = index % 2 === 0;
+  const hideMarkedTag = ["productie", "montage", "reparatie"].includes(dienst.id);
+  const hideMarkedAccent = ["engineering", "productie", "montage", "reparatie"].includes(dienst.id);
   const bg = isEven ? "#f4f4f4" : "#fff";
   const img = dienst.image || FALLBACK_IMAGES[index % FALLBACK_IMAGES.length];
   const checkItems = dienst.checklist ? dienst.checklist.split("\n").filter(Boolean) : [];
 
   const textBlock = (
     <div>
-      <div style={{ display: "inline-block", background: isEven ? "var(--fw-website-primary)" : "#1c1c1c", padding: "6px 14px", marginBottom: "20px" }}>
-        <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "10px", letterSpacing: "1.5px", textTransform: "uppercase", color: isEven ? "#1c1c1c" : "var(--fw-website-primary)" }}>
-          {dienst.nr} â€” {dienst.title}
-        </span>
-      </div>
+      {/* delete request: hide section tag for marked service blocks */}
+      {!hideMarkedTag && (
+        <div style={{ display: "inline-block", background: isEven ? "var(--fw-website-primary)" : "#1c1c1c", padding: "6px 14px", marginBottom: "20px" }}>
+          <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "10px", letterSpacing: "1.5px", textTransform: "uppercase", color: isEven ? "#1c1c1c" : "var(--fw-website-primary)" }}>
+            {dienst.nr} â€” {dienst.title}
+          </span>
+        </div>
+      )}
       <h2 style={{ margin: "0 0 12px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px,2.6vw,34px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px", color: "#1c1c1c" }}>
         {dienst.title}
       </h2>
@@ -122,7 +127,10 @@ function DienstBlock({ dienst, index }) {
 
   const imageBlock = (
     <div style={{ position: "relative" }}>
-      <div className="service-accent" style={{ position: "absolute", ...(isEven ? { top: "-16px", right: "-16px" } : { bottom: "-16px", left: "-16px" }), width: "72px", height: "72px", background: "var(--fw-website-primary)", zIndex: 0 }} />
+      {/* delete request: hide accent square for marked service blocks */}
+      {!hideMarkedAccent && (
+        <div className="service-accent" style={{ position: "absolute", ...(isEven ? { top: "-16px", right: "-16px" } : { bottom: "-16px", left: "-16px" }), width: "72px", height: "72px", background: "var(--fw-website-primary)", zIndex: 0 }} />
+      )}
       <div style={{ position: "relative", zIndex: 1, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.12)" }}>
         <img className="service-image" src={img} alt={dienst.title} style={{ width: "100%", height: "380px", objectFit: "cover", objectPosition: "center", display: "block" }} />
       </div>
@@ -184,7 +192,8 @@ export default function DienstenPage() {
   return (
     <>
       <PageHero />
-      <IntroStrip />
+      {/* delete request: intro stats strip */}
+      {/* <IntroStrip /> */}
       {(cms.diensten || []).map((dienst, i) => <DienstBlock key={dienst.id} dienst={dienst} index={i} />)}
       <CtaSection />
     </>

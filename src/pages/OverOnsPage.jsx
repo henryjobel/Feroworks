@@ -97,7 +97,8 @@ function OnsVerhaal() {
         </div>
 
         <div className="ov-photos" style={{ position: "relative", height: "380px" }}>
-          <div className="ov-sq" style={{ position: "absolute", top: 0, right: 0, width: "80px", height: "80px", background: "var(--fw-website-primary)", zIndex: 1 }} />
+          {/* delete request: top-right accent square */}
+          {/* <div className="ov-sq" style={{ position: "absolute", top: 0, right: 0, width: "80px", height: "80px", background: "var(--fw-website-primary)", zIndex: 1 }} /> */}
           <div className="ov-img1" style={{ position: "absolute", top: "40px", left: 0, width: "56%", height: "65%", overflow: "hidden", zIndex: 2, boxShadow: "0 4px 18px rgba(0,0,0,0.13)" }}>
             <img src={v.image1 || imgLandscape} alt="FerroWorks productie" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }} />
           </div>
@@ -185,7 +186,8 @@ function WatWeDoen() {
         </div>
 
         <div className="wwd-right" style={{ position: "relative" }}>
-          <div className="wwd-accent" style={{ position: "absolute", bottom: "-16px", right: "-16px", width: "64px", height: "64px", background: "var(--fw-website-primary)", zIndex: 0 }} />
+          {/* delete request: bottom-right accent square */}
+          {/* <div className="wwd-accent" style={{ position: "absolute", bottom: "-16px", right: "-16px", width: "64px", height: "64px", background: "var(--fw-website-primary)", zIndex: 0 }} /> */}
           <div style={{ position: "relative", zIndex: 1, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.12)" }}>
             <img className="wwd-image" src={wwd.image || imgMachine} alt="FerroWorks productie" style={{ width: "100%", height: "340px", objectFit: "cover", objectPosition: "center", display: "block" }} />
           </div>
@@ -231,9 +233,10 @@ function WatOnsAnders() {
         <div className="fw-three-col-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "32px" }}>
           {differentiators.map((d, i) => (
             <div key={i} className="woa2-card" style={{ background: "#fff", padding: "36px 28px", borderBottom: "4px solid var(--fw-website-primary)" }}>
-              <div style={{ width: "40px", height: "40px", background: "var(--fw-website-primary)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "20px" }}>
+              {/* delete request: card icon square */}
+              {/* <div style={{ width: "40px", height: "40px", background: "var(--fw-website-primary)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "20px" }}>
                 <CheckIcon />
-              </div>
+              </div> */}
               <h3 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "14px", textTransform: "uppercase", letterSpacing: "0.2px", color: "#1c1c1c", margin: "0 0 12px 0", lineHeight: 1.25 }}>{d.title}</h3>
               <p style={{ fontSize: "14px", color: "#666", lineHeight: 1.7, margin: 0 }}>{d.desc}</p>
             </div>
@@ -269,13 +272,15 @@ function TeamSection() {
         style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "center" }}>
 
         <div className="tm2-photos" style={{ position: "relative", height: "480px" }}>
-          <div className="tm2-sq" style={{ position: "absolute", bottom: 0, left: "6%", width: "84px", height: "84px", background: "var(--fw-website-primary)", zIndex: 1 }} />
+          {/* delete request: bottom-left accent square */}
+          {/* <div className="tm2-sq" style={{ position: "absolute", bottom: 0, left: "6%", width: "84px", height: "84px", background: "var(--fw-website-primary)", zIndex: 1 }} /> */}
           <div className="tm2-img1" style={{ position: "absolute", top: "60px", left: 0, width: "44%", height: "66%", overflow: "hidden", zIndex: 2, boxShadow: "0 4px 18px rgba(0,0,0,0.13)" }}>
             <img src={team.image1 || imgAbout2} alt="FerroWorks medewerker" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }} />
           </div>
-          <div className="tm2-img2" style={{ position: "absolute", top: 0, left: "36%", width: "30%", height: "30%", overflow: "hidden", zIndex: 3, boxShadow: "0 4px 18px rgba(0,0,0,0.13)" }}>
+          {/* delete request: top overlay image */}
+          {/* <div className="tm2-img2" style={{ position: "absolute", top: 0, left: "36%", width: "30%", height: "30%", overflow: "hidden", zIndex: 3, boxShadow: "0 4px 18px rgba(0,0,0,0.13)" }}>
             <img src={team.image2 || imgAbout1} alt="FerroWorks werkplaats" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }} />
-          </div>
+          </div> */}
           <div className="tm2-img3" style={{ position: "absolute", bottom: 0, right: 0, width: "54%", height: "60%", overflow: "hidden", zIndex: 4, boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }}>
             <img src={team.image3 || imgAbout3} alt="FerroWorks team" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }} />
           </div>
@@ -456,11 +461,13 @@ export default function OverOnsPage() {
     <>
       <PageHero />
       <OnsVerhaal />
-      <StatsRow />
+      {/* delete request: stats section */}
+      {/* <StatsRow /> */}
       <WatWeDoen />
       <WatOnsAnders />
       <TeamSection />
-      <SectorenOverzicht />
+      {/* delete request: sectors section */}
+      {/* <SectorenOverzicht /> */}
       <Certificeringen />
       <CtaSection />
     </>

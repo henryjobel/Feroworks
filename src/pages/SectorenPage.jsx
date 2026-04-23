@@ -82,13 +82,17 @@ function SectorBlock({ sector, index }) {
   const [ref, vis] = useInView();
   const { t, localizePath } = useLanguage();
   const isEven = index % 2 === 0;
+  const hideMarkedTag = index > 0;
   const bg = isEven ? "#f4f4f4" : "#fff";
   const img = sector.image || FALLBACK_IMAGES[index % FALLBACK_IMAGES.length];
   const checkItems = sector.items ? sector.items.split("\n").filter(Boolean) : [];
 
   const textBlock = (
     <div>
-      <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", color: "var(--fw-website-primary)", textTransform: "uppercase", letterSpacing: "1.5px" }}>{sector.nr} - {t("sectorsPage.sectorLabel", "SECTOR")}</span>
+      {/* delete request: hide section tag for marked sector blocks */}
+      {!hideMarkedTag && (
+        <span style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", color: "var(--fw-website-primary)", textTransform: "uppercase", letterSpacing: "1.5px" }}>{sector.nr} - {t("sectorsPage.sectorLabel", "SECTOR")}</span>
+      )}
       <h2 style={{ margin: "12px 0 16px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px,2.6vw,36px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px", color: "#1c1c1c" }}>
         {sector.naam}
       </h2>
@@ -115,7 +119,8 @@ function SectorBlock({ sector, index }) {
 
   const imageBlock = (
     <div style={{ position: "relative" }}>
-      <div className="sector-accent" style={{ position: "absolute", ...(isEven ? { top: "-16px", right: "-16px" } : { bottom: "-16px", left: "-16px" }), width: "72px", height: "72px", background: "var(--fw-website-primary)", zIndex: 0 }} />
+      {/* delete request: image accent square */}
+      {/* <div className="sector-accent" style={{ position: "absolute", ...(isEven ? { top: "-16px", right: "-16px" } : { bottom: "-16px", left: "-16px" }), width: "72px", height: "72px", background: "var(--fw-website-primary)", zIndex: 0 }} /> */}
       <div style={{ position: "relative", zIndex: 1, overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.12)" }}>
         <img className="sector-image" src={img} alt={sector.naam} style={{ width: "100%", height: "400px", objectFit: "cover", objectPosition: "center", display: "block" }} />
       </div>
@@ -213,9 +218,11 @@ export default function SectorenPage() {
   return (
     <>
       <PageHero />
-      <IntroStrip />
+      {/* delete request: intro stats strip */}
+      {/* <IntroStrip /> */}
       {(cms.sectoren || []).map((sector, i) => <SectorBlock key={sector.id} sector={sector} index={i} />)}
-      <DienstenBanner />
+      {/* delete request: related services banner */}
+      {/* <DienstenBanner /> */}
       <CtaSection />
     </>
   );
