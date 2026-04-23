@@ -65,7 +65,7 @@ function ContactMain() {
 
   const tel = site.tel || c.tel || "+31 (0)165 205 601";
   const email = site.email || c.email || "info@ferroworks.nl";
-  const adres = site.adres || c.adres || "Westelijke Havendijk 31\n4703 RL Roosendaal";
+  const adres = site.adres || c.adres || "Rijneveld 83a\n2771 XW Boskoop, Netherlands";
   const openingstijden = c.openingstijden
     ? c.openingstijden.split("\n").map(line => { const parts = line.split(":"); const time = parts.slice(1).join(":").trim(); return [parts[0].trim(), time]; }).filter(p => p[0])
     : [["Maandag \u2013 Vrijdag", "07:30 \u2013 17:00"], ["Zaterdag", "Op afspraak"], ["Zondag", "Gesloten"]];
@@ -355,8 +355,8 @@ function MapSection() {
   const { t } = useLanguage();
   const c = cms.contact || {};
   const site = cms.site || {};
-  const adres = site.adres || c.adres || "Westelijke Havendijk 31\n4703 RL Roosendaal";
-  const mapSrc = c.mapEmbed || "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2478.8!2d4.4630!3d51.5300!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c417d4d3e40000%3A0x0!2sWestelijke+Havendijk+31%2C+4703+RL+Roosendaal!5e0!3m2!1snl!2snl!4v1";
+  const adres = site.adres || c.adres || "Rijneveld 83a\n2771 XW Boskoop, Netherlands";
+  const mapSrc = c.mapEmbed || "https://www.google.com/maps?q=Rijneveld+83a,+2771+XW+Boskoop,+Netherlands&z=17&output=embed";
   return (
     <section style={{ background: "#f4f4f4", padding: "0" }}>
       <div style={{ width: "100%", height: "420px", position: "relative", overflow: "hidden" }}>
@@ -388,7 +388,7 @@ function ContactStrip() {
   const site = cms.site || {};
   const tel = site.tel || c.tel || "+31 (0)165 205 601";
   const email = site.email || c.email || "info@ferroworks.nl";
-  const adres = site.adres || c.adres || "Westelijke Havendijk 31\nRoosendaal";
+  const adres = site.adres || c.adres || "Rijneveld 83a\n2771 XW Boskoop, Netherlands";
   const items = [
     {
       icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.1 11.9a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" stroke="var(--fw-website-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>,
