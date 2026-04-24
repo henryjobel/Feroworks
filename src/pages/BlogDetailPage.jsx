@@ -9,6 +9,7 @@ import imgPost5 from "../assets/over-ons1.png";
 import imgPost6 from "../assets/over-ons2.png";
 import { useCms } from "../cms/CmsContext";
 import RichTextContent from "../components/RichTextContent";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const BLOG_FALLBACK_IMAGES = [imgPost1, imgPost2, imgPost3, imgPost4, imgPost5, imgPost6];
 
@@ -394,6 +395,8 @@ export const FALLBACK_POSTS = [
 
 /* â”€â”€ HERO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function PostHero({ post, imgSrc }) {
+  const { t, localizePath } = useLanguage();
+
   return (
     <section style={{ position: "relative", width: "100%", minHeight: "400px", display: "flex", alignItems: "flex-end", overflow: "hidden", background: "#141616" }}>
       <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${imgSrc})`, backgroundSize: "cover", backgroundPosition: "center" }} />
@@ -402,9 +405,9 @@ function PostHero({ post, imgSrc }) {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8" style={{ paddingBottom: "56px", paddingTop: "96px" }}>
         {/* Breadcrumb */}
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "20px", flexWrap: "wrap" }}>
-          <Link to="/" style={{ color: "var(--fw-website-primary)", fontSize: "12px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Home</Link>
+          <Link to={localizePath("/")} style={{ color: "var(--fw-website-primary)", fontSize: "12px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>{t("common.home", "Home")}</Link>
           <span style={{ color: "#555", fontSize: "12px" }}>â€º</span>
-          <Link to="/blog" style={{ color: "var(--fw-website-primary)", fontSize: "12px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Blog</Link>
+          <Link to={localizePath("/blog")} style={{ color: "var(--fw-website-primary)", fontSize: "12px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>{t("nav.blog", "Blog")}</Link>
           <span style={{ color: "#555", fontSize: "12px" }}>â€º</span>
           <span style={{ color: "#888", fontSize: "12px", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>{post.category}</span>
         </div>
@@ -420,11 +423,11 @@ function PostHero({ post, imgSrc }) {
         </h1>
 
         {/* Meta */}
-        <div style={{ display: "flex", alignItems: "center", gap: "20px", flexWrap: "wrap" }}>
+        {/* <div style={{ display: "flex", alignItems: "center", gap: "20px", flexWrap: "wrap" }}>
           <span style={{ color: "#888", fontSize: "13px" }}>{post.date}</span>
           <span style={{ width: "4px", height: "4px", background: "var(--fw-website-primary)", borderRadius: "50%", flexShrink: 0 }} />
           <span style={{ color: "#888", fontSize: "13px" }}>{post.readTime} leestijd</span>
-        </div>
+        </div> */}
 
         <div style={{ width: "56px", height: "4px", background: "var(--fw-website-primary)", marginTop: "28px", borderRadius: "2px" }} />
       </div>
@@ -666,7 +669,7 @@ function MorePosts({ currentId, allPosts }) {
               <div style={{ padding: "22px 20px" }}>
                 <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
                   <span style={{ background: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "9px", letterSpacing: "1px", textTransform: "uppercase", color: "#1c1c1c", padding: "3px 8px" }}>{p.category}</span>
-                  <span style={{ color: "#666", fontSize: "12px" }}>{p.date}</span>
+                  {/* <span style={{ color: "#666", fontSize: "12px" }}>{p.date}</span> */}
                 </div>
                 <h3 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", color: "#fff", margin: "0 0 10px 0", lineHeight: 1.3, letterSpacing: "-0.1px" }}>{p.title}</h3>
                 <span style={{ color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.5px" }}>LEES MEER â†’</span>
@@ -733,5 +736,3 @@ export default function BlogDetailPage() {
     </>
   );
 }
-
-

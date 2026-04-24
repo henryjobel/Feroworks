@@ -103,7 +103,7 @@ function PageHero() {
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "24px" }}>
           <Link to={localizePath("/")} style={{ color: "var(--fw-website-primary)", fontSize: "13px", textDecoration: "none", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>{t("common.home", "Home")}</Link>
           <span style={{ color: "#666", fontSize: "13px" }}>{">"}</span>
-          <span style={{ color: "#aaa", fontSize: "13px", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>Blog</span>
+          <span style={{ color: "#aaa", fontSize: "13px", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>{t("nav.blog", "Project")}</span>
         </div>
 
         <h1 style={{ margin: "0 0 16px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(28px, 4vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.5px", textTransform: "uppercase" }}>
@@ -152,8 +152,8 @@ function FeaturedPost({ post, imgSrc }) {
         <div className="fp-right">
           <div className="fp-meta" style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
             <span style={{ background: "#1c1c1c", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "10px", letterSpacing: "1.5px", textTransform: "uppercase", padding: "4px 10px" }}>{post.category}</span>
-            <span style={{ color: "#aaa", fontSize: "13px" }}>{post.date}</span>
-            <span style={{ color: "#aaa", fontSize: "13px" }}>· {post.readTime} {t("blogPage.readTime", "read time")}</span>
+            {/* <span style={{ color: "#aaa", fontSize: "13px" }}>{post.date}</span> */}
+            {/* <span style={{ color: "#aaa", fontSize: "13px" }}>· {post.readTime} {t("blogPage.readTime", "read time")}</span> */}
           </div>
 
           <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(20px, 2.4vw, 28px)", lineHeight: 1.15, letterSpacing: "-0.3px", color: "#1c1c1c", textTransform: "uppercase", margin: "0 0 20px 0" }}>
@@ -217,10 +217,10 @@ function BlogCard({ post, imgSrc, delay = 0 }) {
 
       {/* Body */}
       <div style={{ padding: "28px 24px", display: "flex", flexDirection: "column", flex: 1 }}>
-        <div className="blog-meta" style={{ display: "flex", gap: "12px", marginBottom: "12px" }}>
+        {/* <div className="blog-meta" style={{ display: "flex", gap: "12px", marginBottom: "12px" }}>
           <span style={{ color: "#aaa", fontSize: "12px" }}>{post.date}</span>
           <span style={{ color: "#aaa", fontSize: "12px" }}>· {post.readTime} {t("blogPage.readTime", "read time")}</span>
-        </div>
+        </div> */}
 
         <h3 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "16px", lineHeight: 1.25, letterSpacing: "-0.2px", color: "#1c1c1c", textTransform: "uppercase", margin: "0 0 14px 0" }}>
           {post.title}
@@ -437,5 +437,4 @@ export default function BlogPage() {
     </>
   );
 }
-
 

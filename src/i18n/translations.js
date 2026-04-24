@@ -8,7 +8,7 @@ export const translations = {
       overOns: "Over ons",
       diensten: "Diensten",
       sectoren: "Sectoren",
-      blog: "Blog",
+      blog: "Project",
       contact: "Contact",
       cta: "NEEM CONTACT OP",
       brandTagline: "metaalwerk",
