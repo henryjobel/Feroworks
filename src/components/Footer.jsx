@@ -76,7 +76,7 @@ function Footer() {
         }}
       >
         <p style={{ color: "#888", fontSize: "12.5px", margin: 0 }}>
-          {t("footer.rights", "© FerroWorks. All Rights Reserved | Marketing by")}{" "}
+          {t("footer.rights", "© FerroWorks. All Rights Reserved")}{" "}
           <a href="https://leadi.nl" target="_blank" rel="noopener noreferrer" style={{ color: "#888", textDecoration: "underline" }}>
             Leadi
           </a>
@@ -84,8 +84,8 @@ function Footer() {
 
         <nav style={{ display: "flex", gap: "32px", flexWrap: "wrap" }}>
           {[
-            { label: t("footer.vacancies", "VACATURES"), href: "#" },
-            { label: t("footer.machinePark", "MACHINEPARK"), href: "#" },
+            // { label: t("footer.vacancies", "VACATURES"), href: "#" },
+            // { label: t("footer.machinePark", "MACHINEPARK"), href: "#" },
             { label: t("footer.privacy", "PRIVACY POLICY"), href: localizePath("/privacy-policy") },
             { label: t("footer.terms", "ALGEMENE VOORWAARDEN"), href: localizePath("/algemene-voorwaarden") },
           ].map((link) => (

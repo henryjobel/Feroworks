@@ -432,7 +432,7 @@ export default function BlogPage() {
       <PageHero />
       {featured && <FeaturedPost post={featured} imgSrc={featuredImgSrc} />}
       <BlogGrid posts={posts} />
-      <NewsletterCta />
+      
       <CtaStrip />
     </>
   );

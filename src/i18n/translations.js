@@ -8,7 +8,7 @@ export const translations = {
       overOns: "Over ons",
       diensten: "Diensten",
       sectoren: "Sectoren",
-      blog: "Project",
+      blog: "Projecten",
       contact: "Contact",
       cta: "NEEM CONTACT OP",
       brandTagline: "metaalwerk",
@@ -28,7 +28,7 @@ export const translations = {
       loading: "Laden...",
     },
     footer: {
-      rights: "© FerroWorks. All Rights Reserved | Marketing door",
+      rights: "© FerroWorks. All Rights Reserved",
       vacancies: "VACATURES",
       machinePark: "MACHINEPARK",
       privacy: "PRIVACY POLICY",
