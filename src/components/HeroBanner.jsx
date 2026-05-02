@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import heroBg from "../assets/hero-background.jpeg";
 import { useCms } from "../cms/CmsContext";
-import BrandLogo from "./BrandLogo";
 
 function HeroBanner() {
   const { cms } = useCms();
@@ -50,21 +49,6 @@ function HeroBanner() {
         className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8"
         style={{ paddingTop: "60px", paddingBottom: "60px" }}
       >
-        {/* Same logo as header, positioned in hero visual */}
-        <div
-          className="hidden md:block"
-          style={{
-            position: "absolute",
-            top: "48px",
-            right: "52px",
-            zIndex: 2,
-            pointerEvents: "none",
-            opacity: 0.96,
-          }}
-        >
-          <BrandLogo variant="header" />
-        </div>
-
         {/* Headings */}
         <h1
           style={{
@@ -147,7 +131,7 @@ function HeroBanner() {
             display: "inline-block",
             textDecoration: "none",
             backgroundColor: "var(--fw-website-primary)",
-            color: "var(--fw-website-secondary)",
+            color: "#fff",
             borderRadius: "999px",
             padding: "15px 32px",
             fontSize: "13px",

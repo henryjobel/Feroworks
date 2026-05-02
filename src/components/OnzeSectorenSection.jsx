@@ -57,8 +57,6 @@ const sectorItems = [
 function SectorCard({ item }) {
   return (
     <div className="home-sector-card bg-[#f6f6f6] shadow-[0_18px_34px_rgba(0,0,0,0.06)] flex flex-col">
-      <div className="home-sector-icon">{item.icon}</div>
-
       <h3
         className="home-sector-title text-[#333333] font-black uppercase whitespace-pre-line leading-[1.08] tracking-[-0.6px]"
         style={{ fontFamily: "Arial Black, Arial, sans-serif" }}
@@ -69,14 +67,6 @@ function SectorCard({ item }) {
       <p className="home-sector-desc text-[#7b7b7b] font-medium">
         {item.description}
       </p>
-
-      <Link
-        to={item.cardLink || "/contact"}
-        className="home-sector-link mt-auto inline-block font-black uppercase tracking-[-0.2px]"
-        style={{ fontFamily: "var(--fw-website-heading-font)", color: "var(--fw-website-primary-strong)" }}
-      >
-        {item.cardLabel || "LEES MEER"}
-      </Link>
     </div>
   );
 }
@@ -89,8 +79,6 @@ function OnzeSectoren() {
     ...item,
     title: (cms.sectoren && cms.sectoren[i]) ? cms.sectoren[i].naam.replace(" & ", " &\n") : item.title,
     description: (cms.sectoren && cms.sectoren[i]) ? cms.sectoren[i].description : item.description,
-    cardLabel: section.cardCtaLabel || "LEES MEER",
-    cardLink: section.cardCtaLink || "/contact",
   }));
   return (
     <section className="w-full bg-[#f3f3f3] pt-[48px] pb-[100px]">
@@ -103,7 +91,7 @@ function OnzeSectoren() {
         }
 
         .home-sector-card {
-          min-height: 382px;
+          min-height: 300px;
           padding: 42px 30px 34px;
           position: relative;
           overflow: hidden;
@@ -111,27 +99,10 @@ function OnzeSectoren() {
           transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
         }
 
-        .home-sector-card::after {
-          content: "";
-          position: absolute;
-          top: 0;
-          right: 0;
-          width: 46px;
-          height: 46px;
-          background: var(--fw-website-primary);
-          opacity: .14;
-          transform: translate(16px, -16px);
-        }
-
         .home-sector-card:hover {
           transform: translateY(-4px);
           border-color: var(--fw-website-primary);
           box-shadow: 0 18px 38px rgba(0,0,0,.1);
-        }
-
-        .home-sector-icon {
-          margin-bottom: 34px;
-          color: #2f2f2f;
         }
 
         .home-sector-title {
@@ -198,12 +169,7 @@ function OnzeSectoren() {
           .home-sector-desc {
             font-size: 12px;
             line-height: 1.45;
-            margin-bottom: 16px;
-          }
-
-          .home-sector-link {
-            font-size: 11px;
-            color: var(--fw-website-primary-strong);
+            margin-bottom: 0;
           }
         }
 
@@ -253,7 +219,7 @@ function OnzeSectoren() {
           <Link
             to={section.bottomCtaLink || "/contact"}
             className="site-heading inline-flex items-center justify-center min-w-[188px] h-[52px] rounded-full uppercase font-black text-[14px] px-8 hover:opacity-95 transition"
-            style={{ fontFamily: "var(--fw-website-heading-font)", background: "var(--fw-website-primary-strong)", color: "var(--fw-website-secondary)" }}
+            style={{ fontFamily: "var(--fw-website-heading-font)", background: "var(--fw-website-primary-strong)", color: "#fff" }}
           >
             {section.bottomCtaLabel || "NEEM CONTACT OP"}
           </Link>
@@ -264,5 +230,3 @@ function OnzeSectoren() {
 }
 
 export default OnzeSectoren;
-
-

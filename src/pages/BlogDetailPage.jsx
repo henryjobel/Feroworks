@@ -563,7 +563,7 @@ function Sidebar({ post, allPosts }) {
         </p>
         <Link
           to="/contact"
-          style={{ display: "block", textAlign: "center", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "var(--fw-website-primary)", padding: "14px 20px", textDecoration: "none", transition: "background .2s" }}
+          style={{ display: "block", textAlign: "center", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#fff", background: "var(--fw-website-primary)", padding: "14px 20px", textDecoration: "none", transition: "background .2s" }}
           onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
           onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}
         >
@@ -697,7 +697,7 @@ function CtaStrip() {
           <Link
             to="/contact"
             className="fw-primary-action"
-            style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "var(--fw-website-primary)", padding: "16px 32px", textDecoration: "none", display: "inline-block", transition: "background .2s", flexShrink: 0 }}
+            style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#fff", background: "var(--fw-website-primary)", padding: "16px 32px", textDecoration: "none", display: "inline-block", transition: "background .2s", flexShrink: 0 }}
             onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
             onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}
           >

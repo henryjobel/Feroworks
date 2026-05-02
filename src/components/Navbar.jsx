@@ -93,7 +93,7 @@ function Navbar() {
           <Link
             to={localizePath("/contact")}
             className="site-heading no-underline text-white text-[14px] font-bold tracking-wide px-6 py-3 rounded-full whitespace-nowrap transition-colors duration-200 theme-primary-bg"
-            style={{ color: "var(--fw-website-secondary)" }}
+            style={{ color: "#fff" }}
             onMouseEnter={(e) => (e.currentTarget.style.filter = "brightness(0.94)")}
             onMouseLeave={(e) => (e.currentTarget.style.filter = "none")}
           >
@@ -157,7 +157,7 @@ function Navbar() {
           <Link
             to={localizePath("/contact")}
             className="site-heading no-underline text-[14px] font-bold tracking-wide px-6 py-3 rounded-full text-center theme-primary-bg"
-            style={{ color: "var(--fw-website-secondary)" }}
+            style={{ color: "#fff" }}
             onClick={() => setMenuOpen(false)}
           >
             {t("nav.cta", "CONTACT US")}
