@@ -12,6 +12,7 @@ import OnzeSectorenSection from './components/OnzeSectorenSection'
 import UwProjectSection from './components/UwProjectSection'
 import ProjectenSlider from './components/ProjectenSlider'
 import FaqSection from './components/FaqSection'
+import CtaSection from './components/CtaSection'
 import Footer from './components/Footer'
 import OverOnsPage from './pages/OverOnsPage'
 import ContactPage from './pages/ContactPage'
@@ -53,6 +54,7 @@ function HomePage() {
       <ProjectenSlider />
       <UwProjectSection />
       <FaqSection />
+      <CtaSection />
     </>
   )
 }
