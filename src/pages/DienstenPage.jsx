@@ -195,7 +195,8 @@ export default function DienstenPage() {
       <PageHero />
       {/* delete request: intro stats strip */}
       {/* <IntroStrip /> */}
-      {(cms.diensten || []).map((dienst, i) => <DienstBlock key={dienst.id} dienst={dienst} index={i} />)}
+      {/* coating section commented out */}
+      {(cms.diensten || []).filter(d => d.id !== "coating").map((dienst, i) => <DienstBlock key={dienst.id} dienst={dienst} index={i} />)}
       <CtaSection />
     </>
   );
