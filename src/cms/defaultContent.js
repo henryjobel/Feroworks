@@ -26,7 +26,7 @@ export const DEFAULT_CMS = {
     line1:    "VORMGEVERS IN METAAL.",
     line2:    "VAN ONTWERP TOT MONTAGE.",
     subtitle: "FerroWorks begeleidt metaalprojecten van ontwerp en engineering\ntot productie en montage. Specialist in Staal, RVS & Aluminium.",
-    cta:      "STUUR UW TEKENING OP",
+    cta:      "NEEM CONTACT OP",
     ctaLink:  "/contact",
     checkItems: [
       "Ruim 15 jaar ervaring",
@@ -128,12 +128,12 @@ export const DEFAULT_CMS = {
   /* ── OVER ONS PAGE ────────────────────────────────────────────────── */
   clientLogos: {
     items: [
-      { alt: "VolkerWessels", image: null },
-      { alt: "Polytec", image: null },
-      { alt: "Verwater", image: null },
-      { alt: "De Kok Staalbouw", image: null },
+      { alt: "Scope", image: null },
+      { alt: "Donker Groep", image: null },
+      { alt: "Van der Plas", image: null },
+      { alt: "Rondeltap Tuinen", image: null },
       { alt: "Ivens", image: null },
-      { alt: "Actemium", image: null },
+      { alt: "VolkerWessels", image: null },
     ],
   },
 
@@ -141,9 +141,9 @@ export const DEFAULT_CMS = {
     title: "ONZE SECTOREN",
     subtitle: "MAATWERK VOOR ELKE SECTOR",
     cardCtaLabel: "LEES MEER",
-    cardCtaLink: "/contact",
-    bottomCtaLabel: "NEEM CONTACT OP",
-    bottomCtaLink: "/contact",
+    cardCtaLink: "/sectoren",
+    bottomCtaLabel: "MEER INFORMATIE",
+    bottomCtaLink: "/sectoren",
   },
 
   uwProject: {

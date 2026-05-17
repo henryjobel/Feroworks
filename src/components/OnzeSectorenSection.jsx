@@ -54,9 +54,14 @@ const sectorItems = [
   },
 ];
 
-function SectorCard({ item }) {
+function SectorCard({ item, section }) {
   return (
     <div className="home-sector-card bg-[#f6f6f6] shadow-[0_18px_34px_rgba(0,0,0,0.06)] flex flex-col">
+      {item.icon && (
+        <div className="home-sector-icon" style={{ marginBottom: "20px", color: "#2f2f2f" }}>
+          {item.icon}
+        </div>
+      )}
       <h3
         className="home-sector-title text-[#333333] font-black uppercase whitespace-pre-line leading-[1.08] tracking-[-0.6px]"
         style={{ fontFamily: "Arial Black, Arial, sans-serif" }}
@@ -67,6 +72,26 @@ function SectorCard({ item }) {
       <p className="home-sector-desc text-[#7b7b7b] font-medium">
         {item.description}
       </p>
+
+      <Link
+        to={section?.cardCtaLink || "/sectoren"}
+        className="home-sector-link"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "6px",
+          fontFamily: "Arial Black, Arial, sans-serif",
+          fontWeight: 900,
+          fontSize: "13px",
+          textTransform: "uppercase",
+          letterSpacing: "0.5px",
+          color: "var(--fw-website-primary)",
+          textDecoration: "none",
+          marginTop: "auto",
+        }}
+      >
+        {section?.cardCtaLabel || "LEES MEER"} →
+      </Link>
     </div>
   );
 }
@@ -106,7 +131,7 @@ function OnzeSectoren() {
         }
 
         .home-sector-title {
-          font-size: 27px;
+          font-size: 20px;
           margin-bottom: 18px;
         }
 
@@ -160,7 +185,7 @@ function OnzeSectoren() {
           }
 
           .home-sector-title {
-            font-size: 15px;
+            font-size: 13px;
             line-height: 1.16;
             letter-spacing: 0;
             margin-bottom: 10px;
@@ -211,7 +236,7 @@ function OnzeSectoren() {
 
         <div className="home-sector-grid">
           {mergedItems.map((item, index) => (
-            <SectorCard key={index} item={item} />
+            <SectorCard key={index} item={item} section={section} />
           ))}
         </div>
 

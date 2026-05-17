@@ -112,7 +112,7 @@ function UwProjectSection() {
           </div>
 
           {/* about-us3: bottom right big portrait (older man) */}
-          <div
+          {/* <div
             className="up-img3"
             style={{
               position: "absolute",
@@ -130,7 +130,7 @@ function UwProjectSection() {
               alt="Ferna directie"
               style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }}
             />
-          </div>
+          </div> */}
         </div>
 
         {/* RIGHT â€” text */}

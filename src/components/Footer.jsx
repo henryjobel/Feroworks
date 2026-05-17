@@ -1,6 +1,5 @@
 import { useCms } from "../cms/CmsContext";
 import { useLanguage } from "../i18n/LanguageContext";
-import BrandLogo from "./BrandLogo";
 
 function Footer() {
   const { cms } = useCms();
@@ -25,7 +24,11 @@ function Footer() {
           gap: "28px",
         }}
       >
-        <BrandLogo variant="footer" />
+        <img
+          src="/whitelogo.png"
+          alt={site.naam || "FerroWorks"}
+          style={{ height: "42px", width: "auto", maxWidth: "200px", objectFit: "contain", display: "block" }}
+        />
 
         <div style={{ color: "#ccc", fontSize: "13px", lineHeight: 1.7, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.2px" }}>
           {addressLines.map((line) => <div key={line}>{line}</div>)}

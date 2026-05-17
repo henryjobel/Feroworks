@@ -94,9 +94,14 @@ const FALLBACK_POSTS = [
 /* â”€â”€ HERO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function PageHero() {
   const { t, localizePath } = useLanguage();
+  const { cms } = useCms();
+  const blogPage = (cms.pages || []).find(p => p.key === "blog") || {};
+  const cmsTitle = blogPage.heroTitle || "";
+  const cmsText = blogPage.heroSubtitle || "";
+
   return (
     <section style={{ position: "relative", width: "100%", minHeight: "340px", display: "flex", alignItems: "center", overflow: "hidden", background: "#141616" }}>
-      <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${heroBg})`, backgroundSize: "cover", backgroundPosition: "center right" }} />
+      <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${cms.hero?.image || heroBg})`, backgroundSize: "cover", backgroundPosition: "center right" }} />
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(20,22,22,0.93) 0%, rgba(20,22,22,0.75) 55%, rgba(20,22,22,0.4) 100%)" }} />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8" style={{ paddingTop: "64px", paddingBottom: "64px" }}>
@@ -107,10 +112,17 @@ function PageHero() {
         </div>
 
         <h1 style={{ margin: "0 0 16px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(28px, 4vw, 56px)", lineHeight: 1.05, letterSpacing: "-0.5px", textTransform: "uppercase" }}>
-          <span style={{ color: "var(--fw-website-primary)" }}>{t("blogPage.heroTitle", "KNOWLEDGE & ")}</span><span style={{ color: "#fff" }}>{t("blogPage.heroAccent", "INSIGHTS")}</span>
+          {cmsTitle ? (
+            <span style={{ color: "var(--fw-website-primary)" }}>{cmsTitle}</span>
+          ) : (
+            <>
+              <span style={{ color: "var(--fw-website-primary)" }}>{t("blogPage.heroTitle", "KENNIS & ")}</span>
+              <span style={{ color: "#fff" }}>{t("blogPage.heroAccent", "INZICHTEN")}</span>
+            </>
+          )}
         </h1>
         <p style={{ margin: 0, color: "#bbb", fontSize: "clamp(14px, 1.6vw, 17px)", lineHeight: 1.6, maxWidth: "520px" }}>
-          {t("blogPage.heroText", "Industry articles, project stories and technical insights from FerroWorks' day-to-day practice.")}
+          {cmsText || t("blogPage.heroText", "Vakartikelen, projectverhalen en technische inzichten vanuit de dagelijkse praktijk van FerroWorks.")}
         </p>
         <div style={{ width: "56px", height: "4px", background: "var(--fw-website-primary)", marginTop: "28px", borderRadius: "2px" }} />
       </div>

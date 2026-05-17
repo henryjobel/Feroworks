@@ -126,7 +126,7 @@ function HeroBanner() {
 
         {/* CTA Button */}
         <Link
-          to="/contact"
+          to={hero.ctaLink || "/contact"}
           style={{
             display: "inline-block",
             textDecoration: "none",

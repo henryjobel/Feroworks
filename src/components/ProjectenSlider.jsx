@@ -1,4 +1,5 @@
 ﻿import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import img1 from "../assets/past work/Afwerking-staalconstructie-met-natlak-300x225.webp";
 import img2 from "../assets/past work/kwaliteitscontrole-lassen-featured-300x225.webp";
 import img3 from "../assets/past work/lascertificaat-verplicht-featured-300x158.webp";
@@ -32,11 +33,32 @@ const defaultSlides = [
 
 function ProjectenSlider() {
   const { cms } = useCms();
-  const slides = cms.projecten && cms.projecten.length ? cms.projecten : defaultSlides;
+
+  // Use blog posts as primary source (featured first, then newest-first).
+  // Fall back to cms.projecten, then hardcoded defaults.
+  const slides = (() => {
+    const blog = cms.blog && cms.blog.length ? cms.blog : null;
+    if (blog) {
+      const featured = blog.filter(p => p.featured);
+      const rest = blog.filter(p => !p.featured).slice().reverse();
+      return [...featured, ...rest].map(p => ({
+        title: p.title,
+        desc: p.excerpt || p.body || "",
+        image: p.image || null,
+        slug: p.slug || p.id,
+      }));
+    }
+    return cms.projecten && cms.projecten.length ? cms.projecten : defaultSlides;
+  })();
   const [current, setCurrent] = useState(0);
   const [animating, setAnimating] = useState(false);
   const ref = useRef(null);
   const [vis, setVis] = useState(false);
+
+  // Reset to first slide if slides change
+  useEffect(() => {
+    setCurrent(0);
+  }, [slides.length]);
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -178,8 +200,8 @@ function ProjectenSlider() {
 
         {/* CTA */}
         <div style={{ textAlign: "center", marginTop: "36px" }}>
-          <a
-            href="/contact"
+          <Link
+            to="/contact"
             style={{
               display: "inline-block",
               background: "var(--fw-website-primary-strong)",
@@ -198,7 +220,7 @@ function ProjectenSlider() {
             onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
           >
             NEEM CONTACT OP
-          </a>
+          </Link>
         </div>
       </div>
 

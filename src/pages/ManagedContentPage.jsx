@@ -24,7 +24,7 @@ export default function ManagedContentPage() {
   return (
     <>
       <section style={{ position: "relative", width: "100%", minHeight: "320px", display: "flex", alignItems: "center", overflow: "hidden", background: "#141616" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${heroBg})`, backgroundSize: "cover", backgroundPosition: "center right" }} />
+        <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${cms.hero?.image || heroBg})`, backgroundSize: "cover", backgroundPosition: "center right" }} />
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(20,22,22,0.93) 0%, rgba(20,22,22,0.75) 55%, rgba(20,22,22,0.4) 100%)" }} />
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8" style={{ paddingTop: "64px", paddingBottom: "64px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "24px" }}>

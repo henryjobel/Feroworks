@@ -9,15 +9,16 @@ function BrandLogo({ variant = "header" }) {
   const brandName = site.naam || "FerroWorks";
   const tagline = site.tagline || "Metaalmaatwerk";
 
-  if (logoImage) {
+  if (variant === "footer") {
+    const footerSrc = logoImage || "/whitelogo.png";
     return (
       <img
-        src={logoImage}
+        src={footerSrc}
         alt={brandName}
         style={{
-          height: variant === "footer" ? "42px" : "38px",
+          height: "42px",
           width: "auto",
-          maxWidth: variant === "footer" ? "240px" : "220px",
+          maxWidth: "240px",
           objectFit: "contain",
           display: "block",
         }}
@@ -25,24 +26,19 @@ function BrandLogo({ variant = "header" }) {
     );
   }
 
-  if (variant === "footer") {
+  if (logoImage) {
     return (
-      <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
-        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
-          <rect width="36" height="36" fill="var(--fw-website-primary)" />
-          <rect x="7" y="7" width="10" height="22" fill="#1c1c1c" />
-          <rect x="19" y="7" width="10" height="10" fill="#1c1c1c" />
-        </svg>
-        <div style={{ lineHeight: 1 }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: "1px" }}>
-            <span className="site-title" style={{ fontWeight: 900, fontSize: "22px", color: "#fff", letterSpacing: "-0.5px" }}>FERRO</span>
-            <span className="site-title theme-primary-text" style={{ fontWeight: 900, fontSize: "22px", letterSpacing: "-0.5px" }}>WORKS</span>
-          </div>
-          <div className="theme-primary-text" style={{ fontStyle: "italic", fontSize: "11px", marginTop: "1px", letterSpacing: "0.5px" }}>
-            {tagline}
-          </div>
-        </div>
-      </div>
+      <img
+        src={logoImage}
+        alt={brandName}
+        style={{
+          height: "38px",
+          width: "auto",
+          maxWidth: "220px",
+          objectFit: "contain",
+          display: "block",
+        }}
+      />
     );
   }
 

@@ -35,9 +35,13 @@ function CheckIcon() {
 
 function PageHero() {
   const { t, localizePath } = useLanguage();
+  const { cms } = useCms();
+  const cmsPage = (cms.pages || []).find(p => p.key === "sectors") || {};
+  const cmsTitle = cmsPage.heroTitle || "";
+  const cmsText = cmsPage.heroSubtitle || "";
   return (
     <section style={{ position: "relative", width: "100%", minHeight: "380px", display: "flex", alignItems: "center", overflow: "hidden", background: "#141616" }}>
-      <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${heroBg})`, backgroundSize: "cover", backgroundPosition: "center right" }} />
+      <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${cms.hero?.image || heroBg})`, backgroundSize: "cover", backgroundPosition: "center right" }} />
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg,rgba(20,22,22,0.94) 0%,rgba(20,22,22,0.76) 55%,rgba(20,22,22,0.4) 100%)" }} />
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8" style={{ paddingTop: "64px", paddingBottom: "64px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "24px" }}>
@@ -46,10 +50,12 @@ function PageHero() {
           <span style={{ color: "#aaa", fontSize: "13px", fontWeight: 700, letterSpacing: "0.5px", textTransform: "uppercase" }}>{t("sectorsPage.breadcrumb", "Sectors")}</span>
         </div>
         <h1 style={{ margin: "0 0 16px 0", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(28px,4vw,56px)", lineHeight: 1.05, letterSpacing: "-0.5px", textTransform: "uppercase" }}>
-          <span style={{ color: "var(--fw-website-primary)" }}>{t("sectorsPage.heroTitle", "STEEL, STAINLESS & ALU ")}</span><span style={{ color: "#fff" }}>{t("sectorsPage.heroAccent", "FOR EVERY SECTOR")}</span>
+          {cmsTitle
+            ? <span style={{ color: "var(--fw-website-primary)" }}>{cmsTitle}</span>
+            : <><span style={{ color: "var(--fw-website-primary)" }}>{t("sectorsPage.heroTitle", "STEEL, STAINLESS & ALU ")}</span><span style={{ color: "#fff" }}>{t("sectorsPage.heroAccent", "FOR EVERY SECTOR")}</span></>}
         </h1>
         <p style={{ margin: 0, color: "#bbb", fontSize: "clamp(14px,1.6vw,17px)", lineHeight: 1.6, maxWidth: "540px" }}>
-          {t("sectorsPage.heroText", "FerroWorks delivers custom metal solutions for construction, industry, architecture and maritime applications. Always skilled, always tailored.")}
+          {cmsText || t("sectorsPage.heroText", "FerroWorks delivers custom metal solutions for construction, industry, architecture and maritime applications. Always skilled, always tailored.")}
         </p>
         <div style={{ width: "56px", height: "4px", background: "var(--fw-website-primary)", marginTop: "28px", borderRadius: "2px" }} />
       </div>

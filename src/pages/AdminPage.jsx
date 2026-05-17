@@ -1740,10 +1740,10 @@ function HomepageEditorPage() {
             <FormField label="CTA label" value={uwProject.ctaLabel} onChange={(value) => setUwProject((prev) => ({ ...prev, ctaLabel: value }))} />
             <FormField label="CTA link" value={uwProject.ctaLink} onChange={(value) => setUwProject((prev) => ({ ...prev, ctaLink: value }))} />
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "16px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
             <ImageUpload label="Afbeelding links" value={uwProject.image1 || ""} onChange={(value) => setUwProject((prev) => ({ ...prev, image1: value }))} />
             <ImageUpload label="Afbeelding boven" value={uwProject.image2 || ""} onChange={(value) => setUwProject((prev) => ({ ...prev, image2: value }))} />
-            <ImageUpload label="Afbeelding rechts" value={uwProject.image3 || ""} onChange={(value) => setUwProject((prev) => ({ ...prev, image3: value }))} />
+            {/* <ImageUpload label="Afbeelding rechts" value={uwProject.image3 || ""} onChange={(value) => setUwProject((prev) => ({ ...prev, image3: value }))} /> */}
           </div>
           <SaveBar saving={false} message={saved === "uwProject" ? "CTA-sectie opgeslagen." : ""} onSave={() => saveSection("uwProject", uwProject)} />
         </div>
