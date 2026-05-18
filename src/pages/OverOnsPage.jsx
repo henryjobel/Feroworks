@@ -9,6 +9,8 @@ import imgAbout2 from "../assets/about/about-us2.jpeg";
 import imgAbout3 from "../assets/about/about-us3.jpeg";
 import { useCms } from "../cms/CmsContext";
 import { useLanguage } from "../i18n/LanguageContext";
+import CtaSection from "../components/CtaSection";
+import UwProjectSection from "../components/UwProjectSection";
 
 function useInView(threshold = 0.12) {
   const ref = useRef(null);
@@ -253,70 +255,6 @@ function WatOnsAnders() {
   );
 }
 
-/* 6. TEAM FOTO */
-function TeamSection() {
-  const [ref, vis] = useInView();
-  const { cms } = useCms();
-  const { t } = useLanguage();
-  const team = (cms.overOns && cms.overOns.team) || {};
-  const teamItems = team.items
-    ? (typeof team.items === "string" ? team.items.split("\n").filter(Boolean) : team.items)
-    : ["Ruim 15 jaar ervaring in metaalmaatwerk", "Maakbaar, praktisch en doordacht", "Reparatie en onderhoud op locatie"];
-  return (
-    <section style={{ background: "#fff", padding: "80px 0" }}>
-      <style>{`
-        .tm2-right { opacity:0; transform:translateX(36px); transition: opacity .65s ease, transform .65s ease; }
-        .tm2-img1  { opacity:0; transform:translateX(-28px); transition: opacity .65s .15s ease, transform .65s .15s ease; }
-        .tm2-img2  { opacity:0; transform:translateY(-20px); transition: opacity .65s .3s ease, transform .65s .3s ease; }
-        .tm2-img3  { opacity:0; transform:translateY(28px);  transition: opacity .65s .45s ease, transform .65s .45s ease; }
-        .tm2-sq    { opacity:0; transform:scale(0.4);        transition: opacity .5s .6s ease, transform .5s .6s ease; }
-        .tm2-on .tm2-right, .tm2-on .tm2-img1, .tm2-on .tm2-img2, .tm2-on .tm2-img3, .tm2-on .tm2-sq { opacity:1; transform:none; }
-        @media (max-width: 768px) { .tm2-grid { grid-template-columns: 1fr !important; } .tm2-photos { height: 340px !important; } }
-      `}</style>
-
-      <div ref={ref} className={"max-w-7xl mx-auto px-6 md:px-8 tm2-grid " + (vis ? "tm2-on" : "")}
-        style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "80px", alignItems: "center" }}>
-
-        <div className="tm2-photos" style={{ position: "relative", height: "480px" }}>
-          {/* delete request: bottom-left accent square */}
-          {/* <div className="tm2-sq" style={{ position: "absolute", bottom: 0, left: "6%", width: "84px", height: "84px", background: "var(--fw-website-primary)", zIndex: 1 }} /> */}
-          <div className="tm2-img1" style={{ position: "absolute", top: "60px", left: 0, width: "44%", height: "66%", overflow: "hidden", zIndex: 2, boxShadow: "0 4px 18px rgba(0,0,0,0.13)" }}>
-            <img src={team.image1 || imgAbout2} alt="FerroWorks medewerker" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }} />
-          </div>
-          {/* delete request: top overlay image */}
-          {/* <div className="tm2-img2" style={{ position: "absolute", top: 0, left: "36%", width: "30%", height: "30%", overflow: "hidden", zIndex: 3, boxShadow: "0 4px 18px rgba(0,0,0,0.13)" }}>
-            <img src={team.image2 || imgAbout1} alt="FerroWorks werkplaats" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }} />
-          </div> */}
-          <div className="tm2-img3" style={{ position: "absolute", bottom: 0, right: 0, width: "54%", height: "60%", overflow: "hidden", zIndex: 4, boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }}>
-            <img src={team.image3 || imgAbout3} alt="FerroWorks team" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }} />
-          </div>
-        </div>
-
-        <div className="tm2-right">
-          <p style={{ margin: "0 0 12px 0", color: "var(--fw-website-primary)", fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase" }}>{t("aboutPage.teamEyebrow", "OUR TEAM")}</p>
-          <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(22px, 2.6vw, 34px)", textTransform: "uppercase", lineHeight: 1.1, letterSpacing: "-0.3px", margin: "0 0 24px 0" }}>
-            <span style={{ color: "#1c1c1c" }}>{team.title1 || "VAKMANNEN MET "}</span><span style={{ color: "var(--fw-website-primary)" }}>{team.title2 || "EÃ‰N DOEL"}</span>
-          </h2>
-          <p style={{ color: "#555", fontSize: "15px", lineHeight: 1.75, margin: "0 0 18px 0" }}>
-            {team.tekst1 || "Ons team bestaat uit gespecialiseerde metaalbewerkers, lassers, engineers en projectleiders. Elk met diepgaande kennis van staal, RVS en aluminium."}
-          </p>
-          <p style={{ color: "#555", fontSize: "15px", lineHeight: 1.75, margin: "0 0 32px 0" }}>
-            {team.tekst2 || "Wij werken nauw samen met onze klanten: van de eerste tekening tot de laatste bout op locatie. Altijd Ã©Ã©n aanspreekpunt, altijd persoonlijk."}
-          </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-            {teamItems.map((item, i) => (
-              <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: "10px" }}>
-                <CheckIcon />
-                <span style={{ color: "#555", fontSize: "15px", lineHeight: 1.6 }}>{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* 7. SECTOREN */
 const sectoren = [
   { naam: "Bouw & Utiliteit",    diensten: ["Staalconstructies", "Standaard hekwerken", "Prefab balkons"] },
@@ -423,45 +361,6 @@ function Certificeringen() {
   );
 }
 
-/* 9. CTA */
-function CtaSection() {
-  const { t, localizePath } = useLanguage();
-  return (
-    <section style={{ background: "#f4f4f4", padding: "80px 0" }}>
-      <div className="max-w-7xl mx-auto px-6 md:px-8">
-        <div className="fw-cta-box" style={{ background: "#1c1c1c", padding: "56px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "28px" }}>
-          <div>
-            <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(20px, 2.4vw, 30px)", textTransform: "uppercase", color: "#fff", margin: "0 0 10px 0", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-              {t("common.startProject", "READY TO")} <span style={{ color: "var(--fw-website-primary)" }}>{t("common.startProjectAccent", "GET STARTED?")}</span>
-            </h2>
-            <p style={{ color: "#999", fontSize: "15px", margin: 0, lineHeight: 1.5 }}>
-              {t("common.startProjectText", "Send your drawing or contact us - we respond within 24 hours.")}
-            </p>
-          </div>
-          <div className="fw-cta-actions" style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-            <Link
-              to={localizePath("/contact")}
-              style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#fff", background: "var(--fw-website-primary)", padding: "16px 32px", textDecoration: "none", display: "inline-block" }}
-              onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
-              onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}
-            >
-              {t("common.contactUs", "CONTACT US")}
-            </Link>
-            <a
-              href="tel:+31165205617"
-              style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#fff", background: "transparent", border: "2px solid #555", padding: "14px 28px", textDecoration: "none", display: "inline-block" }}
-              onMouseEnter={e => e.currentTarget.style.borderColor = "var(--fw-website-primary)"}
-              onMouseLeave={e => e.currentTarget.style.borderColor = "#555"}
-            >
-              {t("common.callUs", "CALL US")}
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export default function OverOnsPage() {
   return (
     <>
@@ -471,7 +370,7 @@ export default function OverOnsPage() {
       {/* <StatsRow /> */}
       <WatWeDoen />
       <WatOnsAnders />
-      <TeamSection />
+      <UwProjectSection />
       {/* delete request: sectors section */}
       {/* <SectorenOverzicht /> */}
       <Certificeringen />

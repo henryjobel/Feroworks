@@ -142,7 +142,8 @@ function ProjectenSlider() {
               background: "#fff",
               display: "grid",
               gridTemplateColumns: "1.1fr 1fr",
-              minHeight: "260px",
+              height: "320px",
+              maxHeight: "320px",
               overflow: "hidden",
             }}
           >
@@ -151,7 +152,7 @@ function ProjectenSlider() {
               <img
                 src={slideImg}
                 alt={slide.title}
-                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", minHeight: "240px" }}
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
               />
             </div>
 

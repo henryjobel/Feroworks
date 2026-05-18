@@ -335,6 +335,37 @@ li {
   }
 }
 
+/* ── Global smooth animations ──────────────────────────────────────────── */
+@keyframes fw-fade-up {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes fw-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes fw-fade-left {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes fw-fade-right {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes fw-scale-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Page-level fade-in when route changes */
+@keyframes fw-page-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.fw-page {
+  animation: fw-page-enter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 /* Admin Dashboard Responsive Styles */
 @media (max-width: 900px) {
   .admin-sidebar {

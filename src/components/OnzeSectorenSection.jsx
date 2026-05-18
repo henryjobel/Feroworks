@@ -1,4 +1,5 @@
 ﻿import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import { useCms } from "../cms/CmsContext";
 
 const sectorItems = [
@@ -57,11 +58,6 @@ const sectorItems = [
 function SectorCard({ item, section }) {
   return (
     <div className="home-sector-card bg-[#f6f6f6] shadow-[0_18px_34px_rgba(0,0,0,0.06)] flex flex-col">
-      {item.icon && (
-        <div className="home-sector-icon" style={{ marginBottom: "20px", color: "#2f2f2f" }}>
-          {item.icon}
-        </div>
-      )}
       <h3
         className="home-sector-title text-[#333333] font-black uppercase whitespace-pre-line leading-[1.08] tracking-[-0.6px]"
         style={{ fontFamily: "Arial Black, Arial, sans-serif" }}
@@ -99,6 +95,18 @@ function SectorCard({ item, section }) {
 function OnzeSectoren() {
   const { cms } = useCms();
   const section = cms.sectorenHighlight || {};
+  const ref = useRef(null);
+  const [vis, setVis] = useState(false);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setVis(true); },
+      { threshold: 0.08 }
+    );
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+
   // Merge CMS text into sectorItems (keep SVG icons)
   const mergedItems = sectorItems.map((item, i) => ({
     ...item,
@@ -108,6 +116,17 @@ function OnzeSectoren() {
   return (
     <section className="w-full bg-[#f3f3f3] pt-[48px] pb-[100px]">
       <style>{`
+        .sc-head { opacity:0; transform:translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+        .sc-on .sc-head { opacity:1; transform:none; }
+        .sc-card { opacity:0; transform:translateY(28px); transition: opacity .55s ease, transform .55s ease; }
+        .sc-on .sc-card:nth-child(1) { transition-delay: .05s; }
+        .sc-on .sc-card:nth-child(2) { transition-delay: .14s; }
+        .sc-on .sc-card:nth-child(3) { transition-delay: .23s; }
+        .sc-on .sc-card:nth-child(4) { transition-delay: .32s; }
+        .sc-on .sc-card { opacity:1; transform:none; }
+        .sc-cta { opacity:0; transform:translateY(14px); transition: opacity .5s .42s ease, transform .5s .42s ease; }
+        .sc-on .sc-cta { opacity:1; transform:none; }
+
         .home-sector-grid {
           display: grid;
           grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -217,8 +236,8 @@ function OnzeSectoren() {
           }
         }
       `}</style>
-      <div className="max-w-[1200px] mx-auto px-6">
-        <div className="text-center mb-[44px]">
+      <div ref={ref} className={"max-w-[1200px] mx-auto px-6" + (vis ? " sc-on" : "")}>
+        <div className="text-center mb-[44px] sc-head">
           <h2
             className="site-heading text-[#333333] uppercase font-black text-[34px] leading-none tracking-[-0.8px] mb-[16px]"
             style={{ fontFamily: "var(--fw-website-heading-font)" }}
@@ -236,11 +255,13 @@ function OnzeSectoren() {
 
         <div className="home-sector-grid">
           {mergedItems.map((item, index) => (
-            <SectorCard key={index} item={item} section={section} />
+            <div key={index} className="sc-card">
+              <SectorCard item={item} section={section} />
+            </div>
           ))}
         </div>
 
-        <div className="flex justify-center">
+        <div className="flex justify-center sc-cta">
           <Link
             to={section.bottomCtaLink || "/contact"}
             className="site-heading inline-flex items-center justify-center min-w-[188px] h-[52px] rounded-full uppercase font-black text-[14px] px-8 hover:opacity-95 transition"

@@ -9,6 +9,7 @@ import imgLandscape from "../assets/over-ons2.png";
 import { useCms } from "../cms/CmsContext";
 import RichTextContent from "../components/RichTextContent";
 import { useLanguage } from "../i18n/LanguageContext";
+import CtaSection from "../components/CtaSection";
 
 const FALLBACK_IMAGES = [imgAbout1, imgMachine, imgLandscape, imgAbout2, imgAbout3];
 
@@ -187,37 +188,6 @@ function DienstenBanner() {
   );
 }
 
-function CtaSection() {
-  const { t, localizePath } = useLanguage();
-  return (
-    <section style={{ background: "#f4f4f4", padding: "80px 0" }}>
-      <div className="max-w-7xl mx-auto px-6 md:px-8">
-        <div className="fw-cta-box" style={{ background: "#1c1c1c", padding: "56px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "28px" }}>
-          <div>
-            <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(20px,2.4vw,30px)", textTransform: "uppercase", color: "#fff", margin: "0 0 10px 0", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-              {t("common.startProject", "READY TO")} <span style={{ color: "var(--fw-website-primary)" }}>{t("common.startProjectAccent", "GET STARTED?")}</span>
-            </h2>
-            <p style={{ color: "#999", fontSize: "15px", margin: 0, lineHeight: 1.5 }}>{t("common.startProjectText", "Send your drawing or contact us - we respond within 24 hours.")}</p>
-          </div>
-          <div className="fw-cta-actions" style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-            <Link to={localizePath("/contact")}
-              style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#1c1c1c", background: "var(--fw-website-primary)", padding: "16px 32px", textDecoration: "none", display: "inline-block" }}
-              onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
-              onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}>
-              {t("common.getQuote", "REQUEST A QUOTE")}
-            </Link>
-            <a href="tel:+31165205617"
-              style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#fff", background: "transparent", border: "2px solid #555", padding: "14px 28px", textDecoration: "none", display: "inline-block" }}
-              onMouseEnter={e => e.currentTarget.style.borderColor = "var(--fw-website-primary)"}
-              onMouseLeave={e => e.currentTarget.style.borderColor = "#555"}>
-              {t("common.callUs", "CALL US")}
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 export default function SectorenPage() {
   const { cms } = useCms();

@@ -51,7 +51,7 @@ function HomePage() {
       <WatFernaSection />
       <ClientLogosSection />
       <WatOnsAndersMaakt />
-      <StatsSection />
+      {/* <StatsSection /> */}
       <OnzeSectorenSection />
       <ProjectenSlider />
       <UwProjectSection />
@@ -74,7 +74,9 @@ function PublicLayout() {
     <>
       <RouteSeo />
       <Navbar />
-      <Outlet />
+      <main key={location.pathname} className="fw-page">
+        <Outlet />
+      </main>
       <Footer />
     </>
   )

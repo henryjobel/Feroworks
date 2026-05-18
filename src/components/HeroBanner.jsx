@@ -49,8 +49,19 @@ function HeroBanner() {
         className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-8"
         style={{ paddingTop: "60px", paddingBottom: "60px" }}
       >
+        <style>{`
+          .hero-h1 { animation: fw-fade-up .7s cubic-bezier(.22,1,.36,1) .05s both; }
+          .hero-h2 { animation: fw-fade-up .7s cubic-bezier(.22,1,.36,1) .18s both; }
+          .hero-sub { animation: fw-fade-up .65s cubic-bezier(.22,1,.36,1) .32s both; }
+          .hero-div { animation: fw-fade-in .5s ease .44s both; }
+          .hero-checks { animation: fw-fade-up .6s cubic-bezier(.22,1,.36,1) .5s both; }
+          .hero-cta { animation: fw-scale-in .55s cubic-bezier(.22,1,.36,1) .62s both; }
+          .hero-bg { animation: fw-scale-in 1.2s cubic-bezier(.22,1,.36,1) 0s both; transform-origin: center; }
+        `}</style>
+
         {/* Headings */}
         <h1
+          className="hero-h1"
           style={{
             margin: 0,
             padding: 0,
@@ -67,6 +78,7 @@ function HeroBanner() {
         </h1>
 
         <h2
+          className="hero-h2"
           style={{
             margin: 0,
             padding: 0,
@@ -84,6 +96,7 @@ function HeroBanner() {
 
         {/* Subtitle */}
         <p
+          className="hero-sub"
           style={{
             marginTop: "32px",
             marginBottom: "32px",
@@ -99,6 +112,7 @@ function HeroBanner() {
 
         {/* Divider - full width */}
         <div
+          className="hero-div"
           style={{
             width: "100%",
             height: "1px",
@@ -127,6 +141,7 @@ function HeroBanner() {
         {/* CTA Button */}
         <Link
           to={hero.ctaLink || "/contact"}
+          className="hero-cta"
           style={{
             display: "inline-block",
             textDecoration: "none",

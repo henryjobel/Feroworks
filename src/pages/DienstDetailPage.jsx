@@ -8,6 +8,7 @@ import imgMachine from "../assets/over-ons1.png";
 import imgLandscape from "../assets/over-ons2.png";
 import { useCms } from "../cms/CmsContext";
 import RichTextContent from "../components/RichTextContent";
+import CtaSection from "../components/CtaSection";
 
 const FALLBACK_IMAGES = { engineering: imgAbout1, productie: imgMachine, coating: imgLandscape, montage: imgAbout2, reparatie: imgAbout3 };
 
@@ -599,42 +600,6 @@ function MeerDiensten({ currentId, allDiensten }) {
   );
 }
 
-/* â”€â”€ CTA STRIP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-function CtaStrip() {
-  return (
-    <section style={{ background: "#f4f4f4", padding: "72px 0" }}>
-      <div className="max-w-7xl mx-auto px-6 md:px-8">
-        <div className="fw-cta-box" style={{ background: "#1c1c1c", padding: "48px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "24px" }}>
-          <div>
-            <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(18px, 2.2vw, 26px)", textTransform: "uppercase", color: "#fff", margin: "0 0 8px 0", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-              KLAAR VOOR UW <span style={{ color: "var(--fw-website-primary)" }}>PROJECT?</span>
-            </h2>
-            <p style={{ color: "#888", fontSize: "14px", margin: 0 }}>Stuur uw tekening op of bel ons direct â€” wij reageren binnen 24 uur.</p>
-          </div>
-          <div className="fw-cta-actions" style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
-            <Link
-              to="/contact"
-              style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#fff", background: "var(--fw-website-primary)", padding: "16px 32px", textDecoration: "none", display: "inline-block", transition: "background .2s", flexShrink: 0 }}
-              onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
-              onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}
-            >
-              NEEM CONTACT OP
-            </Link>
-            <a
-              href="tel:+31165205601"
-              style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#fff", background: "transparent", border: "2px solid #555", padding: "14px 28px", textDecoration: "none", display: "inline-block", transition: "border-color .2s", flexShrink: 0 }}
-              onMouseEnter={e => e.currentTarget.style.borderColor = "var(--fw-website-primary)"}
-              onMouseLeave={e => e.currentTarget.style.borderColor = "#555"}
-            >
-              BEL ONS
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* â”€â”€ PAGE EXPORT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export default function DienstDetailPage() {
   const { slug } = useParams();
@@ -656,7 +621,7 @@ export default function DienstDetailPage() {
       <DienstHero dienst={dienst} />
       <DienstBody dienst={dienst} allDiensten={allDiensten} />
       <MeerDiensten currentId={dienst.id} allDiensten={allDiensten} />
-      <CtaStrip />
+      <CtaSection />
     </>
   );
 }

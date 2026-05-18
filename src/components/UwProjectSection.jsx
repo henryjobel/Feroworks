@@ -10,6 +10,7 @@ function UwProjectSection() {
   const ref = useRef(null);
   const [vis, setVis] = useState(false);
   const section = cms.uwProject || {};
+  const team = (cms.overOns && cms.overOns.team) || {};
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -84,35 +85,14 @@ function UwProjectSection() {
             }}
           >
             <img
-              src={section.image1 || img2}
+              src={section.image1 || team.image1 || img2}
               alt="Ferna medewerker"
               style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }}
             />
           </div>
 
-          {/* about-us1: top small square (man working) */}
+          {/* bottom right big overlapping image */}
           <div
-            className="up-img2"
-            style={{
-              position: "absolute",
-              top: "0",
-              left: "36%",
-              width: "30%",
-              height: "30%",
-              overflow: "hidden",
-              zIndex: 3,
-              boxShadow: "0 4px 18px rgba(0,0,0,0.13)",
-            }}
-          >
-            <img
-              src={section.image2 || img1}
-              alt="Ferna werkplaats"
-              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }}
-            />
-          </div>
-
-          {/* about-us3: bottom right big portrait (older man) */}
-          {/* <div
             className="up-img3"
             style={{
               position: "absolute",
@@ -126,11 +106,11 @@ function UwProjectSection() {
             }}
           >
             <img
-              src={section.image3 || img3}
+              src={section.image3 || team.image3 || img3}
               alt="Ferna directie"
               style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }}
             />
-          </div> */}
+          </div>
         </div>
 
         {/* RIGHT â€” text */}

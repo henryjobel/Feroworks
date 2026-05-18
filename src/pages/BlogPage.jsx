@@ -10,6 +10,7 @@ import imgPost5 from "../assets/over-ons1.png";
 import imgPost6 from "../assets/over-ons2.png";
 import { useCms } from "../cms/CmsContext";
 import { useLanguage } from "../i18n/LanguageContext";
+import CtaSection from "../components/CtaSection";
 
 const BLOG_FALLBACK_IMAGES = [imgPost1, imgPost2, imgPost3, imgPost4, imgPost5, imgPost6];
 
@@ -404,34 +405,6 @@ function NewsletterCta() {
   );
 }
 
-/* â”€â”€ CTA STRIP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-function CtaStrip() {
-  const { t, localizePath } = useLanguage();
-  return (
-    <section style={{ background: "#f4f4f4", padding: "72px 0" }}>
-      <div className="max-w-7xl mx-auto px-6 md:px-8">
-        <div className="fw-cta-box" style={{ background: "#1c1c1c", padding: "48px 48px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "24px" }}>
-          <div>
-            <h2 style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "clamp(18px, 2.2vw, 26px)", textTransform: "uppercase", color: "#fff", margin: "0 0 8px 0", lineHeight: 1.1, letterSpacing: "-0.3px" }}>
-              {t("blogPage.ctaTitle", "HAVE A PROJECT ")}<span style={{ color: "var(--fw-website-primary)" }}>{t("blogPage.ctaAccent", "IN MIND?")}</span>
-            </h2>
-            <p style={{ color: "#888", fontSize: "14px", margin: 0 }}>{t("blogPage.ctaText", "Get in touch - we would love to think along with you.")}</p>
-          </div>
-          <Link
-            to={localizePath("/contact")}
-            className="fw-primary-action"
-            style={{ fontFamily: "Arial Black, Arial, sans-serif", fontWeight: 900, fontSize: "13px", textTransform: "uppercase", letterSpacing: "0.5px", color: "#fff", background: "var(--fw-website-primary)", padding: "16px 32px", textDecoration: "none", display: "inline-block", transition: "background .2s", flexShrink: 0 }}
-            onMouseEnter={e => e.currentTarget.style.background = "var(--fw-website-primary-strong)"}
-            onMouseLeave={e => e.currentTarget.style.background = "var(--fw-website-primary)"}
-          >
-            {t("common.contactUs", "CONTACT US")}
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* â”€â”€ PAGE EXPORT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export default function BlogPage() {
   const { cms } = useCms();
@@ -445,7 +418,7 @@ export default function BlogPage() {
       {featured && <FeaturedPost post={featured} imgSrc={featuredImgSrc} />}
       <BlogGrid posts={posts} />
       
-      <CtaStrip />
+      <CtaSection />
     </>
   );
 }
