@@ -107,10 +107,10 @@ function OnsVerhaal() {
         <div className="ov-photos" style={{ position: "relative", height: "380px" }}>
           {/* delete request: top-right accent square */}
           {/* <div className="ov-sq" style={{ position: "absolute", top: 0, right: 0, width: "80px", height: "80px", background: "var(--fw-website-primary)", zIndex: 1 }} /> */}
-          <div className="ov-img1" style={{ position: "absolute", top: "40px", left: 0, width: "56%", height: "65%", overflow: "hidden", zIndex: 2, boxShadow: "0 4px 18px rgba(0,0,0,0.13)" }}>
+          <div className="ov-img1" style={{ position: "absolute", top: 0, left: 0, width: "42%", height: "75%", overflow: "hidden", zIndex: 2, boxShadow: "0 4px 18px rgba(0,0,0,0.13)" }}>
             <img src={v.image1 || imgLandscape} alt="FerroWorks productie" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }} />
           </div>
-          <div className="ov-img2" style={{ position: "absolute", bottom: 0, right: 0, width: "52%", height: "60%", overflow: "hidden", zIndex: 3, boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }}>
+          <div className="ov-img2" style={{ position: "absolute", bottom: 0, right: 0, width: "56%", height: "62%", overflow: "hidden", zIndex: 3, boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }}>
             <img src={v.image2 || imgPortrait} alt="FerroWorks medewerker" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top", display: "block" }} />
           </div>
         </div>

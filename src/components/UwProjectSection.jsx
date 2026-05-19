@@ -70,15 +70,15 @@ function UwProjectSection() {
             }}
           /> */}
 
-          {/* about-us2: left tall portrait (man with glasses) */}
+          {/* left portrait image – top-left */}
           <div
             className="up-img1"
             style={{
               position: "absolute",
-              top: "60px",
+              top: "0",
               left: "0",
-              width: "44%",
-              height: "68%",
+              width: "42%",
+              height: "75%",
               overflow: "hidden",
               zIndex: 2,
               boxShadow: "0 4px 18px rgba(0,0,0,0.13)",
@@ -91,7 +91,7 @@ function UwProjectSection() {
             />
           </div>
 
-          {/* bottom right big overlapping image */}
+          {/* right landscape image – bottom-right */}
           <div
             className="up-img3"
             style={{
